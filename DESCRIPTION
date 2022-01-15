@@ -16,7 +16,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 biocViews:
 Imports:
-    CellChat,
     ClassifyR,
     DelayedArray,
     DelayedMatrixStats,
@@ -35,8 +34,15 @@ Imports:
     reshape2,
     spatstat.core,
     spatstat.geom,
-    tidyr
-Remotes: sqjin/CellChat
+    tidyr,
+    NMF,
+    CellChat,
+    circlize,
+    ComplexHeatmap
+Remotes: 
+    sqjin/CellChat,
+    jokergoo/circlize,
+    jokergoo/ComplexHeatmap
 Suggests: 
     knitr,
     rmarkdown
