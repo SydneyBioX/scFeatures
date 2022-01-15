@@ -2,7 +2,7 @@
 title: "Vignette - detailed explanation of scFeatures"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette}
+  %\VignetteIndexEntry{Vignette_detail}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 ```
 
 
-```{r include=FALSE, paged.print=TRUE}
+```{r eval=TRUE, include=FALSE, paged.print=TRUE}
 
 .libPaths("/albona/nobackup/yuec/scfeatures/scfeatures_package/dependency")
 
@@ -46,7 +46,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 This vignette provides a detailed description of scFeatures, including description for each feature category, the expected output and case studies of using the generated features for classification task and survival analysis.     
 
-For a quick reference (the TLDR version), please see the other vignette "Vignette - summary of scFeatures functions". 
+For a quick starting point (the TLDR version), please see the other vignette "Vignette - summary of scFeatures functions". 
 
 ```{r}
 # Load the package 
@@ -63,33 +63,38 @@ https://www.dropbox.com/sh/z488bq2e59ygh2t/AAAG8ePACI4B5sKLa-pB531ha
 
 # scFeatures on single-cell RNA-seq data
 
-For demonstration purpose, we provide the melanoma pre-treatment dataset as used in our manuscript. The dataset is taken from the study Sade-Feldman et al. (2018). Defining T cell states associated with response to checkpoint immunotherapy in melanoma. Cell, 175(4), 998-1013.
+For demonstration purpose, we provide the melanoma pre-treatment dataset [1] as used in our manuscript. 
 
 scFeatures takes in data as a Seurat object, with the gene expression stored in the assay `RNA`. The required metadata is the `celltype` and `sample` label. The `condition` label is optional, and is only required if users wish to train a classification model on disease condition using the generated features.    
 
-Here, we provide example of how to construct a Seurat object from a count matrix and the corresponding label file. 
+```{r eval=TRUE, include=FALSE, paged.print=TRUE}
 
+setwd("/dskh/nobackup/yuec/scfeatures/scfeatures_package/scFeatures_data")
 
-```{r include=FALSE, paged.print=TRUE}
-setwd("/dskh/nobackup/yuec/scfeatures/scfeatures_package/scFeatures/inst/extdata")
+data_matrix <- readRDS("example_scrnaseq_matrix.rds")
+data_meta <- readRDS("example_scrnaseq_label.rds")
+data <- Seurat::CreateSeuratObject(data_matrix, meta.data = data_meta)
+
 ```
 
 
-```{r eval=TRUE, include=TRUE}
+```{r eval=FALSE, include=TRUE}
+# example of how to construct a Seurat object from a count matrix and the corresponding label file. 
 data_matrix <- readRDS("example_scrnaseq_matrix.rds")
 data_meta <- readRDS("example_scrnaseq_label.rds")
-data <- Seurat::CreateSeuratObject( data_matrix, meta.data = data_meta)
-
-data <- process_data(data) # perform normalisation of the count 
+data <- Seurat::CreateSeuratObject(data_matrix, meta.data = data_meta)
+```
+```{r}
+data <- process_data(data) # some pre-processing, including normalisation 
  
 # confirm the data contain cell types 
-unique( data$celltype )[1:5]
+unique(data$celltype)[1:5]
 
 # confirm the data contain samples  
-unique( data$sample )[1:5]
+unique(data$sample)[1:5]
 
 # disease conditions in this data
-unique( data$condition )
+unique(data$condition)
 ```
 
 
@@ -275,11 +280,25 @@ ggplot(feature_performance$performance , aes( y = value, x = class )) +
 
 # scFeatures on spatial proteomics data
 
-For demonstration purpose, we provide the triple negative breast cancer patients dataset as used in our manuscript. The dataset is taken from the study Keren et al. (2019). MIBI-TOF: A multiplexed imaging platform relates cellular phenotypes and tissue structure. Science advances, 5(10), eaax5851.
+For demonstration purpose, we provide the triple negative breast cancer patients dataset [2] as used in our manuscript.  
 
 For spatial proteomics, the required information are `sample`, `x_cord` and `y_cord` (the x- and y- coordinates of the cell). 
 
-```{r eval=TRUE, include=TRUE}
+
+
+```{r eval=TRUE, include=FALSE, paged.print=TRUE}
+
+setwd("/dskh/nobackup/yuec/scfeatures/scfeatures_package/scFeatures_data")
+
+data <-  readRDS("example_spatial_proteomics.rds")
+
+# here we don't normalise , because the data has already been normalised 
+data <- process_data(data, normalise = F)
+
+```
+
+
+```{r eval=FALSE, include=TRUE}
 data <-  readRDS("example_spatial_proteomics.rds")
 
 # here we don't normalise , because the data has already been normalised 
@@ -388,7 +407,7 @@ ggsurv
 
 # scFeatures on spatial transcriptomics data
 
-For demonstration purpose, we provide the ALS dataset as used in our manuscript. The dataset is taken from the study Maniatis et al. (2019). Spatiotemporal dynamics of molecular pathology in amyotrophic lateral sclerosis. Science, 364(6435), 89-93.
+For demonstration purpose, we provide the ALS dataset [3] as used in our manuscript.  
  
 For spatial transcriptomics, the required information are `sample`, `x_cord` and `y_cord` (the x- and y- coordinates of each spot). 
 
@@ -396,7 +415,31 @@ Additionally, there are two assays needed, the `RNA`, which contains the gene ex
 
 The `predictions` assay is a matrix in the form of cell types x spot, which stores the cell type probability of each spot. This can be obtained from performing cell type prediction using reference data, for example, using `SCTransform` from Seurat (see https://satijalab.org/seurat/articles/spatial_vignette.html). The purpose of having this cell type probability matrix is due to spatial transcriptomics assay contain multiple cells from multiple cell type populations, and this cell type prediction is necessary for generating cell type specific feature types. 
 
-```{r eval=TRUE, include=TRUE}
+
+```{r eval=TRUE, include=FALSE, paged.print=TRUE}
+
+setwd("/dskh/nobackup/yuec/scfeatures/scfeatures_package/scFeatures_data")
+
+data <- readRDS("example_spatial_transcriptomics.rds")
+data <- process_data(data)
+# for spatial transcriptomics, we need to estimate the number of cells in each spot
+data <- get_num_cell_per_spot(data)
+
+# how the prediction assay look like 
+# the rows contain the predicted cell type probability of each spot
+data@assays$predictions[, 1] 
+
+# confirm the data include samples  
+unique(data$sample)[1:5]
+
+# conditions in this data
+unique(data$condition)
+
+```
+
+
+
+```{r eval=FALSE, include=TRUE}
 data <- readRDS("example_spatial_transcriptomics.rds")
 data <- process_data(data)
 # for spatial transcriptomics, we need to estimate the number of cells in each spot
@@ -500,3 +543,8 @@ feature_nn_correlation <- run_nn_correlation(data, type = "spatial_t")
  
 
 
+# Reference 
+
+1. Defining T cell states associated with response to checkpoint immunotherapy in melanoma. Cell, 175(4), 998-1013.    
+2. Keren et al. (2019). MIBI-TOF: A multiplexed imaging platform relates cellular phenotypes and tissue structure. Science advances, 5(10), eaax5851.  
+3. Maniatis et al. (2019). Spatiotemporal dynamics of molecular pathology in amyotrophic lateral sclerosis. Science, 364(6435), 89-93.  

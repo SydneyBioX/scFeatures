@@ -141,17 +141,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
 <p>This vignette provide a list of all functions in scFeatures for quick reference. For detailed explanation of scFeatures and case studies, please refer to the other vigentte “Vignette - detailed explanation of scFeatures”.</p>
 <p>Load the package.<br />
 Each function contains a <code>ncores</code> argument that controls the number of cores. The default is 8 cores.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scFeatures)</span></code></pre></div>
+</div>
+<div id="data-required-for-this-vignette" class="section level1">
+<h1>Data required for this vignette</h1>
+<p>Please click on the link to download all the example data required for this vignette.<br />
+<a href="https://www.dropbox.com/sh/z488bq2e59ygh2t/AAAG8ePACI4B5sKLa-pB531ha" class="uri">https://www.dropbox.com/sh/z488bq2e59ygh2t/AAAG8ePACI4B5sKLa-pB531ha</a></p>
+</div>
 <div id="scfeatures-for-single-cell-rna-seq-data" class="section level1">
 <h1>scFeatures for single-cell RNA-seq data</h1>
 <p>The input data is a Seurat object containing <code>celltype</code> and <code>sample</code> label.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># read in data </span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span>  <span class="fu">readRDS</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_scrnaseq.rds&quot;</span>, <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span>  <span class="fu">readRDS</span>(<span class="st">&quot;example_scrnaseq.rds&quot;</span>)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data, <span class="at">normalise =</span> T) <span class="co">#  perform normalisation </span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a> </span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
@@ -216,7 +224,7 @@ Each function contains a <code>ncores</code> argument that controls the number o
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># read in data </span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span>  <span class="fu">readRDS</span>(  <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_spatial_proteomics.rds&quot;</span>, <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>) )</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span>  <span class="fu">readRDS</span>(<span class="st">&quot;example_spatial_proteomics.rds&quot;</span>)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data, <span class="at">normalise =</span> F) <span class="co"># here we don&#39;t normalise , because the data has already been normalised </span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a> </span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
@@ -260,7 +268,7 @@ Each function contains a <code>ncores</code> argument that controls the number o
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># read in data </span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span>  <span class="fu">readRDS</span>(  <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_spatial_transcriptomics.rds&quot;</span>, <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>) )</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span>  <span class="fu">readRDS</span>(<span class="st">&quot;example_spatial_transcriptomics.rds&quot;</span>)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">get_num_cell_per_spot</span>(data) <span class="co"># for spatial transcriptomics, we need to estimate the number of cells in each spot</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>

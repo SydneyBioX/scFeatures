@@ -2,7 +2,7 @@
 title: "Vignette - summary of scFeatures functions"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette}
+  %\VignetteIndexEntry{Vignette_summary}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -62,14 +62,10 @@ Please click on the link to download all the example data required for this vign
 https://www.dropbox.com/sh/z488bq2e59ygh2t/AAAG8ePACI4B5sKLa-pB531ha 
 
 
-```{r include=FALSE, paged.print=TRUE}
-setwd("/dskh/nobackup/yuec/scfeatures/scfeatures_package/scFeatures/inst/extdata")
-```
-
-
 # scFeatures for single-cell RNA-seq data
 
 The input data is a Seurat object containing `celltype` and `sample` label.
+
 
 ```{r eval=FALSE, include=TRUE}
 #---------------------------------------------------------------------------
