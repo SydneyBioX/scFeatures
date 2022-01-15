@@ -42,6 +42,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 ```
 
+# Introduction 
 
 This vignette provides a detailed description of scFeatures, including description for each feature category, the expected output and case studies of using the generated features for classification task and survival analysis.     
 
