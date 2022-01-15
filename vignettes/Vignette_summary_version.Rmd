@@ -1,0 +1,232 @@
+---
+title: "Vignette - summary of scFeatures functions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+
+.libPaths("/albona/nobackup/yuec/scfeatures/scfeatures_package/dependency")
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+```{r include=FALSE, paged.print=TRUE}
+
+.libPaths("/albona/nobackup/yuec/scfeatures/scfeatures_package/dependency")
+
+library(inline)
+openblas.set.num.threads <- cfunction( signature(ipt="integer"),
+                                       body = 'openblas_set_num_threads(*ipt);',
+                                       otherdefs = c ('extern void openblas_set_num_threads(int);'),
+                                       libargs = c ('/usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so'),
+                                       language = "C",
+                                       convention = ".C"
+)
+openblas.set.num.threads(1)
+
+
+```
+
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+```
+
+
+This vignette provide a list of all functions in scFeatures for quick reference. For detailed explanation of scFeatures and case studies, please refer to the other vigentte "Vignette - detailed explanation of scFeatures".  
+
+Load the package.    
+Each function contains a `ncores` argument that controls the number of cores. The default is 8 cores. 
+
+```{r}
+library(scFeatures)
+```
+
+# scFeatures for single-cell RNA-seq data
+
+The input data is a Seurat object containing `celltype` and `sample` label.
+
+```{r eval=FALSE, include=TRUE}
+#---------------------------------------------------------------------------
+# read in data 
+#---------------------------------------------------------------------------
+data <-  readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+data <- process_data(data, normalise = T) #  perform normalisation 
+ 
+
+#---------------------------------------------------------------------------
+# cell type proportions
+#---------------------------------------------------------------------------
+feature_proportion_raw <- run_proportion_raw(data)
+feature_proportion_logit <- run_proportion_logit(data)
+feature_proportion_ratio <- run_proportion_ratio(data)
+
+
+#---------------------------------------------------------------------------
+# cell type specific gene expressions
+#---------------------------------------------------------------------------
+data_remove_mito <- remove_mito(data) # optional step, run if mitochondria amd ribosomal genes are not of interest 
+feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito)  
+feature_gene_prop_celltype  <- run_gene_prop_celltype(data_remove_mito)
+feature_gene_cor_celltype <- run_gene_cor_celltype(data_remove_mito,
+                                                   num_top_gene = 50)
+# by default, pick around 100 most variable genes per cell type, can change this number through the num_top_gene argument 
+
+
+#---------------------------------------------------------------------------
+# cell type specific pathway expressions 
+#---------------------------------------------------------------------------
+feature_pathway_gsva <- run_pathway_gsva(data, species = "Homo sapiens") 
+feature_pathway_mean <- run_pathway_mean(data , species = "Homo sapiens")
+# by default, use the 50 hallmark pathways, users can also input their gene set of interest in a list format 
+geneset <- list("pathway_a" = c("CAPNS1", "TLCD1"), 
+                "pathway_b" = c("PEX6","DPRXP4" ))  
+feature_pathway_prop <- run_pathway_prop(data, geneset=geneset, species = "Homo sapiens")
+
+
+#---------------------------------------------------------------------------
+# cell type specific cell-cell interactions
+#---------------------------------------------------------------------------
+feature_CCI <- run_CCI(data , species = "Homo sapiens" )
+
+
+#---------------------------------------------------------------------------
+# Bulk expressions 
+#---------------------------------------------------------------------------
+feature_gene_mean_bulk <- run_gene_mean(data )
+feature_gene_cor_bulk <- run_gene_cor(data)
+feature_gene_prop_bulk <- run_gene_prop(data, num_top_gene = 1000)
+# by default, pick 1500 most variable genes, can change this number through the num_top_gene argument 
+
+
+#---------------------------------------------------------------------------
+# run classification model on the generated features 
+#---------------------------------------------------------------------------
+X <- feature_gene_mean_celltype
+y <- data@meta.data[!duplicated(data$sample),  ]
+y <- y[ match(rownames(X), y$sample), ]$condition
+feature_performance <- run_classification( X, y, model = "randomforest", 
+                                           ncores = 8  )
+
+```
+
+
+
+# scFeatures for spatial proteomics 
+
+The input data is a Seurat object containing `celltype`,  `sample`, `x_coord` and `y_coord` label. 
+
+Note that, as spatial proteomics contain few genes, the feature categories of pathway expressions and cell-cell interactions are not applicable. 
+
+```{r eval=FALSE, include=TRUE}
+#---------------------------------------------------------------------------
+# read in data 
+#---------------------------------------------------------------------------
+data <-  readRDS(  system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures") )
+data <- process_data(data, normalise = F) # here we don't normalise , because the data has already been normalised 
+ 
+
+#---------------------------------------------------------------------------
+# cell type proportions
+#---------------------------------------------------------------------------
+feature_proportion_raw <- run_proportion_raw(data, type = "spatial_p"  )
+feature_proportion_logit <- run_proportion_logit(data, type = "spatial_p")
+feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_p")
+
+
+#---------------------------------------------------------------------------
+# cell type specific gene expressions
+#---------------------------------------------------------------------------
+feature_gene_mean_celltype <- run_gene_mean_celltype(data,  type = "spatial_p"  )
+feature_gene_prop_celltype  <- run_gene_prop_celltype( data, type = "spatial_p" )
+feature_gene_cor_celltype <- run_gene_cor_celltype(data, type = "spatial_p" )
+
+
+#---------------------------------------------------------------------------
+# Bulk expressions 
+#---------------------------------------------------------------------------
+feature_gene_mean_bulk <- run_gene_mean(data, type = "spatial_p" )
+feature_gene_prop_bulk <- run_gene_prop(data, type = "spatial_p" )
+feature_gene_cor_bulk <- run_gene_cor(data, type = "spatial_p" )
+
+
+#---------------------------------------------------------------------------
+# Spatial metrics
+#---------------------------------------------------------------------------
+feature_L_stats <- run_L_function( data, type = "spatial_p"   )
+feature_morans_I <- run_Morans_I( data, type = "spatial_p"  )
+feature_celltype_interaction <- run_celltype_interaction( data, type = "spatial_p" )
+feature_nn_correlation <- run_nn_correlation( data, type = "spatial_p"  )
+```
+
+
+
+# scFeature for spatial transcriptomics 
+
+The input data is a Seurat object containing `sample`, `x_cord` and `y_cord`.  
+
+Additionally, there are two assays needed, the `RNA`, which contains the gene expression of each spot and the `predictions`. 
+
+The `predictions` assay is a matrix in the form of cell types x spot, which stores the cell type probability of each spot. This can be obtained from performing cell type prediction using reference data. 
+
+```{r eval=FALSE, include=TRUE}
+#---------------------------------------------------------------------------
+# read in data 
+#---------------------------------------------------------------------------
+data <-  readRDS(  system.file("extdata", "example_spatial_transcriptomics.rds", package = "scFeatures") )
+data <- process_data(data)
+data <- get_num_cell_per_spot(data) # for spatial transcriptomics, we need to estimate the number of cells in each spot
+
+
+#---------------------------------------------------------------------------
+# cell type proportions
+#---------------------------------------------------------------------------
+feature_proportion_raw <- run_proportion_raw(data, type =  "spatial_t"  )
+feature_proportion_logit <- run_proportion_logit(data , type =  "spatial_t" )
+feature_proportion_ratio <- run_proportion_ratio(data, type =  "spatial_t" )
+
+
+#---------------------------------------------------------------------------
+# cell type specific gene expressions
+#---------------------------------------------------------------------------
+data_remove_mito <- remove_mito(data)
+feature_gene_mean_celltype <- run_gene_mean_celltype( data_remove_mito, type =  "spatial_t" )
+
+
+#---------------------------------------------------------------------------
+# cell type specific pathway expressions 
+#---------------------------------------------------------------------------
+feature_pathway_mean <- run_pathway_mean(data, geneset = NULL,
+                                           species = "Mus musculus",
+                                           type =  "spatial_t"  )
+# Here the data is from mouse samples, therefore we need to set the species accordingly.
+
+
+#---------------------------------------------------------------------------
+# Bulk expressions 
+#---------------------------------------------------------------------------
+feature_gene_mean_bulk <- run_gene_mean(data, type =  "spatial_t" )
+feature_gene_prop_bulk <- run_gene_prop(data, type =  "spatial_t" )
+feature_gene_cor_bulk <- run_gene_cor(data, type =  "spatial_t" )
+
+
+#---------------------------------------------------------------------------
+# Spatial metrics
+#---------------------------------------------------------------------------
+feature_L_stats <- run_L_function( data, type = "spatial_t" )
+feature_morans_I <- run_Morans_I( data, type = "spatial_t" )
+feature_celltype_interaction <- run_celltype_interaction( data, type = "spatial_t"  )
+feature_nn_correlation <- run_nn_correlation( data, type = "spatial_t" )
+```
+
