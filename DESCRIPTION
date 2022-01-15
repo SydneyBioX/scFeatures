@@ -40,9 +40,9 @@ Imports:
     circlize,
     ComplexHeatmap
 Remotes: 
-    sqjin/CellChat,
     jokergoo/circlize,
     jokergoo/ComplexHeatmap
+    sqjin/CellChat
 Suggests: 
     knitr,
     rmarkdown
