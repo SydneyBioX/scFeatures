@@ -41,7 +41,7 @@ Imports:
     ComplexHeatmap
 Remotes: 
     jokergoo/circlize,
-    jokergoo/ComplexHeatmap
+    jokergoo/ComplexHeatmap,
     sqjin/CellChat
 Suggests: 
     knitr,
