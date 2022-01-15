@@ -25,8 +25,8 @@ devtools::install_github("SydneyBioX/scFeatures")
 ##  Vignettes
  
 We provide two vignettes in the Vignettes folder of this repo. These can also be viewed below:      
-  * [Brief vignette](https://htmlpreview.github.io/?https://github.com/SydneyBioX/scFeatures/blob/master/vignettes/Vignette_summary_version.html) - The brief vignette is a quick starting point and provides a checklist of the functions to apply on single-cell and spatial data.   
-  * [Detailed vignette](https://htmlpreview.github.io/?https://github.com/SydneyBioX/scFeatures/blob/master/vignettes/Vignette.html) - This provides an in-depth description for each feature types and explanation of the output. It contains a step-by-step case study to the application of scFeatures on i) scRNA-seq data, ii) spatial proteomics data and iii) spatial transcriptomics data   
+  * [Brief vignette](https://htmlpreview.github.io/?https://github.com/SydneyBioX/scFeatures/blob/master/vignettes/Vignette_summary.html) - The brief vignette is a quick starting point and provides a checklist of the functions to apply on single-cell and spatial data.   
+  * [Detailed vignette](https://htmlpreview.github.io/?https://github.com/SydneyBioX/scFeatures/blob/master/vignettes/Vignette_detail.html) - This provides an in-depth description for each feature types and explanation of the output. It contains a step-by-step case study to the application of scFeatures on i) scRNA-seq data, ii) spatial proteomics data and iii) spatial transcriptomics data   
 
 The data required by the vignette can be downloaded from [here]( 
 https://www.dropbox.com/sh/z488bq2e59ygh2t/AAAG8ePACI4B5sKLa-pB531ha).
