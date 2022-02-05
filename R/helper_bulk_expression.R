@@ -1,7 +1,7 @@
 
 
 #  gene mean bulk, default to 1500 variable genes per sample 
-helper_gene_mean <- function( data, num_top_gene = NULL ,  ncores = 8 ){
+helper_gene_mean <- function( data, num_top_gene = NULL ,  ncores = 1 ){
  
   if ( is.null( num_top_gene ) ){
     num_top_gene = min(nrow(data), 1500 ) 
@@ -29,7 +29,7 @@ helper_gene_mean <- function( data, num_top_gene = NULL ,  ncores = 8 ){
 # gene prop bulk 
 # use the proportion expression as the prediction feature 
 # for each variable genes,  calcalate the proportion that it is expressed in each patient 
-helper_gene_prop <- function( data , num_top_gene = NULL ,  ncores = 8  ){
+helper_gene_prop <- function( data , num_top_gene = NULL ,  ncores = 1  ){
   
   if ( is.null( num_top_gene ) ){
     num_top_gene = min(nrow(data), 1500 ) 
@@ -76,7 +76,7 @@ helper_gene_prop <- function( data , num_top_gene = NULL ,  ncores = 8  ){
 
 
 # gene correlation bulk 
-helper_gene_cor <- function( data, num_top_gene = NULL ,  ncores = 8 ) {
+helper_gene_cor <- function( data, num_top_gene = NULL ,  ncores = 1 ) {
   
   if ( is.null( num_top_gene ) ){
     num_top_gene = min(nrow(data), 50 ) 

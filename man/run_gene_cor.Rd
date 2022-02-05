@@ -2,14 +2,16 @@
 % Please edit documentation in R/run_scfeatures.R
 \name{run_gene_cor}
 \alias{run_gene_cor}
-\title{generate bulk gene correlation}
+\title{generate overall aggregated gene correlation}
 \usage{
-run_gene_cor(data, type = "scrna", num_top_gene = NULL, ncores = 8)
+run_gene_cor(data, type = "scrna", num_top_gene = NULL, ncores = 1)
 }
 \arguments{
-\item{data}{input data}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
+
+\item{num_top_gene}{determines how many genes to include. By default, picks 1500 most variable genes.}
 
 \item{ncores}{number of cores}
 }
@@ -17,5 +19,11 @@ run_gene_cor(data, type = "scrna", num_top_gene = NULL, ncores = 8)
 a matrix of samples x features
 }
 \description{
-generate bulk gene correlation
+generate overall aggregated gene correlation
+}
+\examples{
+
+data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+feature_gene_cor <- run_gene_cor(data, type = "scrna" , num_top_gene= 1500, ncores = 1 )
+
 }

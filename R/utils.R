@@ -1,5 +1,38 @@
 
 
+# check that all metadata are in the data
+check_data <- function(data, type = "scrna"){
+  
+  if (class(data) != "Seurat"){
+    print("please make sure the data is in a Seurat object")
+  }
+ 
+  if ( !"celltype" %in% names(data@meta.data) ||  !"sample" %in% names(data@meta.data)){
+      print("please make sure the data contains celltype and sample label")
+      stop()
+  }
+  
+  if (type %in% c( "spatial_t" , "spatial_p")){
+    if ( !"y_cord"  %in% names(data@meta.data) ||  !"x_cord" %in% names(data@meta.data) ) {
+     print("please make sure the data contains x_cord and y_cord")
+     stop()
+   }
+  }
+  
+  if (type == "spatial_t"){
+    if ( ! "predictions" %in% names(data@assays) ) {
+      print("please make sure the data contains a predictions assay")
+      print("see vignette's section on spatial transcriptomics for more explanation")
+      stop()
+    }
+  }
+
+}
+
+
+
+ 
+
 # create pseudo-bulk for each cell type of each sample 
 bulk_sample_celltype <- function(data , ncores = 8  ){
   
@@ -136,9 +169,7 @@ get_num_cell_per_celltype <- function(data){
 
 
 L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
-  L <-  spatstat.core::Lcross(ppp_obj, 
-                              from = from,
-                              to = to,
+  L <-  spatstat.core::Lcross(ppp_obj,  from = from, to = to,
                               verbose = FALSE,
                               correction = "best")
   

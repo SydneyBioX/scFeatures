@@ -9,11 +9,17 @@ run_pathway_prop(
   geneset = NULL,
   species = "Homo sapiens",
   type = "scrna",
-  ncores = 8
+  ncores = 1
 )
 }
 \arguments{
-\item{data}{input data}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
+
+\item{geneset}{By default (when the \code{geneset} argument is not specified),  we use the 50 hallmark gene set from msigdb.
+The users can also provide their geneset of interest in a list format, with each list entry containing a vector of the names of genes in a gene set.
+eg, geneset <- list("pathway_a" = c("CAPNS1", "TLCD1"), "pathway_b" = c("PEX6","DPRXP4" ))}
+
+\item{species}{whether the species is "Homo sapiens" or "Mus musculus". Default is "Homo sapiens".}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
@@ -24,4 +30,10 @@ a matrix of samples x features
 }
 \description{
 generate pathway score using proportion of expression
+}
+\examples{
+
+data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+feature_pathway_prop <- run_pathway_prop(data, geneset = NULL, species = "Homo sapiens",  type = "scrna" ,  ncores = 1 )
+
 }

@@ -2,12 +2,12 @@
 % Please edit documentation in R/run_scfeatures.R
 \name{run_nn_correlation}
 \alias{run_nn_correlation}
-\title{generate Moran's I}
+\title{generate nearest neighbour correlation}
 \usage{
-run_nn_correlation(data, type = "spatial_p", ncores = 8)
+run_nn_correlation(data, type = "spatial_p", ncores = 1)
 }
 \arguments{
-\item{data}{input data}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
@@ -17,5 +17,11 @@ run_nn_correlation(data, type = "spatial_p", ncores = 8)
 a matrix of samples x features
 }
 \description{
-generate Moran's I
+generate nearest neighbour correlation
+}
+\examples{
+
+data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
+feature_nn_correlation <- run_nn_correlation(data, type = "spatial_p", ncores = 1 )
+
 }

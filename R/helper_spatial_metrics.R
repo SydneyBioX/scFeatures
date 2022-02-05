@@ -42,7 +42,7 @@ individual_celltype_interaction_sp <- function(this_sample   ){
 
 
 
-helper_celltype_interaction_sp <- function(data,  ncores = 8){
+helper_celltype_interaction_sp <- function(data,  ncores = 1){
   
   s <- unique(data$sample)[1]
  
@@ -132,7 +132,7 @@ individual_celltype_interaction_st <- function(  thisprob ){
 
 
 
-helper_celltype_interaction_st <- function(data,  ncores = 8){
+helper_celltype_interaction_st <- function(data,  ncores = 1){
   
   s <- unique(data$sample)[1]
   
@@ -242,7 +242,7 @@ individual_L_stat_st  <- function( thissample  , this_num_cell_per_spot ){
 
 
 
-helper_L_stat_st <- function(data, ncores = 8){
+helper_L_stat_st <- function(data, ncores = 1){
  
   num_cell_per_spot  <- get_num_cell_per_celltype(data)
   
@@ -346,7 +346,7 @@ individual_L_stat_sp <- function( this_sample){
 
 
 
-helper_L_stat_sp <- function(data, ncores = 8){
+helper_L_stat_sp <- function(data, ncores = 1){
   
   
   s <- unique(data$sample)[1]
@@ -442,7 +442,7 @@ individual_nncorr_protein <- function(  thissample ){
 
 
 
-helper_nncorr_protein <- function(data, num_top_gene  =  NULL , ncores = 8 ){
+helper_nncorr_protein <- function(data, num_top_gene  =  NULL , ncores = 1 ){
   
   
   if ( is.null( num_top_gene ) ){
@@ -553,7 +553,7 @@ individual_moran_cor <- function(    thissample ){
 
 
 
-helper_moran <- function(data,  num_top_gene =  NULL,   ncores = 8){
+helper_moran <- function(data,  num_top_gene =  NULL, ncores = 1){
   
   
   if ( is.null( num_top_gene ) ){

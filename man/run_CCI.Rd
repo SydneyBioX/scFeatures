@@ -4,10 +4,12 @@
 \alias{run_CCI}
 \title{generate cell cell communication score}
 \usage{
-run_CCI(data, species = "Homo sapiens", type = "scrna", ncores = 8)
+run_CCI(data, species = "Homo sapiens", type = "scrna", ncores = 1)
 }
 \arguments{
-\item{data}{input data}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
+
+\item{species}{whether the species is "Homo sapiens" or "Mus musculus". Default is "Homo sapiens".}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
@@ -18,4 +20,10 @@ a matrix of samples x features
 }
 \description{
 generate cell cell communication score
+}
+\examples{
+
+data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+feature_CCI <- run_CCI(data, species = "Homo sapiens",  type = "scrna" ,  ncores = 1 )
+
 }

@@ -4,7 +4,7 @@
 \alias{run_classification}
 \title{run cross-validated classification}
 \usage{
-run_classification(X, y, model = "randomforest", ncores = 8)
+run_classification(X, y, model = "randomforest", ncores = 1)
 }
 \arguments{
 \item{infile}{Path to the input file}

@@ -4,10 +4,10 @@
 \alias{run_L_function}
 \title{generate L stats}
 \usage{
-run_L_function(data, type = "spatial_p", ncores = 8)
+run_L_function(data, type = "spatial_p", ncores = 1)
 }
 \arguments{
-\item{data}{input data}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
@@ -18,4 +18,10 @@ a matrix of samples x features
 }
 \description{
 generate L stats
+}
+\examples{
+
+data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
+feature_L_function <- run_L_function(data, type = "spatial_p", ncores = 1 )
+
 }

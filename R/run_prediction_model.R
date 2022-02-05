@@ -10,7 +10,7 @@
 #' @import dplyr
 #' 
 #' @export
-run_classification <- function(X, y, model = "randomforest", ncores = 8  ){
+run_classification <- function(X, y, model = "randomforest", ncores = 1  ){
   
   X <- as.matrix(t(X))
   

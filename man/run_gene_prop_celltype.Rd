@@ -4,12 +4,14 @@
 \alias{run_gene_prop_celltype}
 \title{generate cell type specific gene proportion expression}
 \usage{
-run_gene_prop_celltype(data, type = "scrna", num_top_gene = NULL, ncores = 8)
+run_gene_prop_celltype(data, type = "scrna", num_top_gene = NULL, ncores = 1)
 }
 \arguments{
-\item{data}{input data}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
+
+\item{num_top_gene}{determines how many genes to include. By default, picks around 100 most variable genes per cell type.}
 
 \item{ncores}{number of cores}
 }
@@ -18,4 +20,11 @@ a matrix of samples x features
 }
 \description{
 generate cell type specific gene proportion expression
+}
+\examples{
+
+data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+data_remove_mito <- remove_mito(data) #optional step, if mito and ribo genes are not of interest
+feature_gene_prop_celltype <- feature_gene_prop_celltype(data_remove_mito, type = "scnrna", num_top_gene = 100,  ncores = 1) 
+
 }

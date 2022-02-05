@@ -4,10 +4,10 @@
 \alias{run_gene_mean_celltype}
 \title{generate cell type specific gene mean expression}
 \usage{
-run_gene_mean_celltype(data, type = "scrna", num_top_gene = NULL, ncores = 8)
+run_gene_mean_celltype(data, type = "scrna", num_top_gene = NULL, ncores = 1)
 }
 \arguments{
-\item{data}{input data}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
@@ -18,4 +18,11 @@ a matrix of samples x features
 }
 \description{
 generate cell type specific gene mean expression
+}
+\examples{
+
+data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+data_remove_mito <- remove_mito(data) #optional step, if mito and ribo genes are not of interest
+feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1) 
+
 }

@@ -35,7 +35,7 @@ get_geneset <- function(species = "Homo sapiens"){
 
 
 # helper function to run the pathway gsva 
-helper_pathway_gsva <- function(data, geneset, ncores = 8 ){
+helper_pathway_gsva <- function(data, geneset, ncores = 1 ){
   
   # if the dataset has greater than 30000 cells 
   #  then it is actually too large to be computed in one go in gsva
@@ -77,7 +77,7 @@ helper_pathway_gsva <- function(data, geneset, ncores = 8 ){
 
 
 # helper function to run the pathway mean 
-helper_pathway_mean <- function(data, geneset , ncores = 8 ){
+helper_pathway_mean <- function(data, geneset , ncores = 1 ){
   
   geneset_score_all <-  mclapply(geneset, function(x){
     
@@ -163,7 +163,7 @@ individual_geneset_proportion_celltype  <- function(data, this_geneset){
 
 
 
-helper_pathway_prop <- function(data, geneset ,   ncores = 8 ){
+helper_pathway_prop <- function(data, geneset ,   ncores = 1 ){
   
   
   geneset_prop_df <-  mclapply( c(1:length(geneset)), function(i){
@@ -229,7 +229,7 @@ format_pathway <- function(data, topMatrixGSVA, ncores ){
 
 
 
-helper_pathway_mean_st  <- function( data , geneset, ncores = 30 ){
+helper_pathway_mean_st  <- function( data , geneset, ncores = 1 ){
   
   prob <- as.matrix(data@assays$predictions@data)
   prob <- prob[ !rownames(prob ) == "max", ]

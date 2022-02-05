@@ -38,7 +38,7 @@ helper_proportion_raw <- function(data, logit = T ){
 
 # calculates cell type proportion ratio 
 # applicable to scRNA-seq and spatial proteomics 
-helper_proportion_ratio <- function(data, ncores = 8) {
+helper_proportion_ratio <- function(data, ncores = 1 ) {
   
   allcelltype <- unique(data$celltype)
   
@@ -121,7 +121,7 @@ helper_proportion_ratio <- function(data, ncores = 8) {
 
 # calculates cell type proportion raw and logit transformed 
 # applicable to spatial transcriptomics 
-helper_proportion_raw_st <- function(data, logit = T , ncores = 8 ){
+helper_proportion_raw_st <- function(data, logit = T , ncores = 1 ){
   
   num_cell_spot <- get_num_cell_per_celltype(data)
   
@@ -166,7 +166,7 @@ helper_proportion_raw_st <- function(data, logit = T , ncores = 8 ){
 
 # calculates cell type proportion ratio 
 # applicable to spatial transcriptomics 
-helper_proportion_ratio_st <- function(data, ncores = 8) {
+helper_proportion_ratio_st <- function(data, ncores = 1 ) {
   
   num_cell_spot <- get_num_cell_per_celltype(data)
   allcelltype <- rownames(num_cell_spot)

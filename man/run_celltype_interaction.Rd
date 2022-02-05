@@ -4,10 +4,10 @@
 \alias{run_celltype_interaction}
 \title{generate cell type interaction}
 \usage{
-run_celltype_interaction(data, type = "spatial_p", ncores = 8)
+run_celltype_interaction(data, type = "spatial_p", ncores = 1)
 }
 \arguments{
-\item{data}{input data}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
@@ -18,4 +18,10 @@ a matrix of samples x features
 }
 \description{
 generate cell type interaction
+}
+\examples{
+
+data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
+feature_celltype_interaction <- run_celltype_interaction(data, type = "spatial_p", ncores = 1 )
+
 }

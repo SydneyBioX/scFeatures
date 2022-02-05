@@ -48,47 +48,33 @@ This vignette provides a detailed description of scFeatures, including descripti
 
 For a quick starting point (the TLDR version), please see the other vignette "Vignette - summary of scFeatures functions". 
 
+Note that all scFeatures functions contain a `ncores` argument that controls the number of cores. The default is 1 core. 
+
 ```{r}
-# Load the package 
 library(scFeatures)
 ```
 
 
-# Data required for this vignette
-
-Please click on the link to download all the example data required for this vignette.  
-https://www.dropbox.com/sh/z488bq2e59ygh2t/AAAG8ePACI4B5sKLa-pB531ha 
-
-
-
 # scFeatures on single-cell RNA-seq data
 
-For demonstration purpose, we provide the melanoma pre-treatment dataset [1] as used in our manuscript. 
+For demonstration purpose, we provide a subsampled version of the melanoma pre-treatment dataset [1] as used in our manuscript. 
 
-scFeatures takes in data as a Seurat object, with the gene expression stored in the assay `RNA`. The required metadata is the `celltype` and `sample` label. The `condition` label is optional, and is only required if users wish to train a classification model on disease condition using the generated features.    
+scFeatures takes in data as a Seurat object, with the gene expression stored in the assay `RNA`. The required metadata is the `celltype` and `sample` label. The `condition` label is optional, and is only required if users wish to train a classification model on disease condition using the generated features. 
 
-```{r eval=TRUE, include=FALSE, paged.print=TRUE}
-
-setwd("/dskh/nobackup/yuec/scfeatures/scfeatures_package/scFeatures_data")
-
-data_matrix <- readRDS("example_scrnaseq_matrix.rds")
-data_meta <- readRDS("example_scrnaseq_label.rds")
-data <- Seurat::CreateSeuratObject(data_matrix, meta.data = data_meta)
-
-```
-
-
-```{r eval=FALSE, include=TRUE}
+```{r}
 # example of how to construct a Seurat object from a count matrix and the corresponding label file. 
-data_matrix <- readRDS("example_scrnaseq_matrix.rds")
-data_meta <- readRDS("example_scrnaseq_label.rds")
+data_matrix <- readRDS(system.file("extdata", "example_scrnaseq_matrix.rds", 
+                                   package = "scFeatures"))
+data_meta <- readRDS(system.file("extdata", "example_scrnaseq_label.rds", 
+                                 package = "scFeatures"))
 data <- Seurat::CreateSeuratObject(data_matrix, meta.data = data_meta)
 ```
+
 ```{r}
 data <- process_data(data) # some pre-processing, including normalisation 
  
 # confirm the data contain cell types 
-unique(data$celltype)[1:5]
+unique(data$celltype) 
 
 # confirm the data contain samples  
 unique(data$sample)[1:5]
@@ -144,7 +130,8 @@ This feature category aggregate the cells across each cell type and then constru
   * `Gene correlation celltype`: the features are in the form of gene 1 vs gene 2 cell type a , gene 1 vs gene 3 cell type b ... etc, with the numbers representing the correlation of the two given genes in the given cell type.   
 
 
-Note that mitochondria and ribosomal genes may not be as interesting to look at. Therefore, users can choose to remove these genes using the function `remove_mito`. This step is optional.    
+Note that mitochondria and ribosomal genes may not be as interesting to look at. Therefore, users can choose to remove these genes using the function `remove_mito`. This step is optional.  
+
 ```{r eval=FALSE, include=TRUE}
 data_remove_mito <- remove_mito(data)
 
@@ -280,27 +267,14 @@ ggplot(feature_performance$performance , aes( y = value, x = class )) +
 
 # scFeatures on spatial proteomics data
 
-For demonstration purpose, we provide the triple negative breast cancer patients dataset [2] as used in our manuscript.  
+For demonstration purpose, we provide a subsampled version of triple negative breast cancer patients dataset [2] as used in our manuscript.  
 
 For spatial proteomics, the required information are `sample`, `x_cord` and `y_cord` (the x- and y- coordinates of the cell). 
 
 
-
-```{r eval=TRUE, include=FALSE, paged.print=TRUE}
-
-setwd("/dskh/nobackup/yuec/scfeatures/scfeatures_package/scFeatures_data")
-
-data <-  readRDS("example_spatial_proteomics.rds")
-
-# here we don't normalise , because the data has already been normalised 
-data <- process_data(data, normalise = F)
-
-```
-
-
-```{r eval=FALSE, include=TRUE}
-data <-  readRDS("example_spatial_proteomics.rds")
-
+```{r}
+data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", 
+                                   package = "scFeatures"))
 # here we don't normalise , because the data has already been normalised 
 data <- process_data(data, normalise = F)
 
@@ -375,7 +349,7 @@ feature_nn_correlation <- run_nn_correlation( data, type = "spatial_p")
 
 ## Survival analysis using the generated features
 
-Given this dataset contain survival outcome of the patients, we can perform survival analysis using the generated features 
+Given this dataset contain survival outcome of the patients, we can perform survival analysis using the generated features. 
 
 ```{r eval=TRUE, fig.height=5, fig.width=7, include=TRUE}
 library(survival)
@@ -407,7 +381,7 @@ ggsurv
 
 # scFeatures on spatial transcriptomics data
 
-For demonstration purpose, we provide the ALS dataset [3] as used in our manuscript.  
+For demonstration purpose, we provide the subsampled version of ALS dataset [3] as used in our manuscript.  
  
 For spatial transcriptomics, the required information are `sample`, `x_cord` and `y_cord` (the x- and y- coordinates of each spot). 
 
@@ -416,32 +390,11 @@ Additionally, there are two assays needed, the `RNA`, which contains the gene ex
 The `predictions` assay is a matrix in the form of cell types x spot, which stores the cell type probability of each spot. This can be obtained from performing cell type prediction using reference data, for example, using `SCTransform` from Seurat (see https://satijalab.org/seurat/articles/spatial_vignette.html). The purpose of having this cell type probability matrix is due to spatial transcriptomics assay contain multiple cells from multiple cell type populations, and this cell type prediction is necessary for generating cell type specific feature types. 
 
 
-```{r eval=TRUE, include=FALSE, paged.print=TRUE}
-
-setwd("/dskh/nobackup/yuec/scfeatures/scfeatures_package/scFeatures_data")
-
-data <- readRDS("example_spatial_transcriptomics.rds")
-data <- process_data(data)
-# for spatial transcriptomics, we need to estimate the number of cells in each spot
-data <- get_num_cell_per_spot(data)
-
-# how the prediction assay look like 
-# the rows contain the predicted cell type probability of each spot
-data@assays$predictions[, 1] 
-
-# confirm the data include samples  
-unique(data$sample)[1:5]
-
-# conditions in this data
-unique(data$condition)
-
-```
-
-
-
 ```{r eval=FALSE, include=TRUE}
-data <- readRDS("example_spatial_transcriptomics.rds")
-data <- process_data(data)
+
+data <- readRDS(system.file("extdata", "example_spatial_transcriptomics.rds", 
+                                   package = "scFeatures"))
+data <- process_data(data, normalise = F) # data already normalised
 # for spatial transcriptomics, we need to estimate the number of cells in each spot
 data <- get_num_cell_per_spot(data)
 

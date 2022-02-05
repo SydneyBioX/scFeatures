@@ -48,18 +48,11 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 This vignette provide a list of all functions in scFeatures for quick reference. For detailed explanation of scFeatures and case studies, please refer to the other vigentte "Vignette - detailed explanation of scFeatures".  
 
-Load the package.    
-Each function contains a `ncores` argument that controls the number of cores. The default is 8 cores. 
+Note that all scFeatures functions contain a `ncores` argument that controls the number of cores. The default is 1 core. 
 
 ```{r}
 library(scFeatures)
 ```
-
-
-# Data required for this vignette
-
-Please click on the link to download all the example data required for this vignette.  
-https://www.dropbox.com/sh/z488bq2e59ygh2t/AAAG8ePACI4B5sKLa-pB531ha 
 
 
 # scFeatures for single-cell RNA-seq data
@@ -71,7 +64,7 @@ The input data is a Seurat object containing `celltype` and `sample` label.
 #---------------------------------------------------------------------------
 # read in data 
 #---------------------------------------------------------------------------
-data <-  readRDS("example_scrnaseq.rds")
+data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 data <- process_data(data, normalise = T) #  perform normalisation 
  
 
@@ -143,7 +136,7 @@ Note that, as spatial proteomics contain few genes, the feature categories of pa
 #---------------------------------------------------------------------------
 # read in data 
 #---------------------------------------------------------------------------
-data <-  readRDS("example_spatial_proteomics.rds")
+data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
 data <- process_data(data, normalise = F) # here we don't normalise , because the data has already been normalised 
  
 
@@ -194,8 +187,8 @@ The `predictions` assay is a matrix in the form of cell types x spot, which stor
 #---------------------------------------------------------------------------
 # read in data 
 #---------------------------------------------------------------------------
-data <-  readRDS("example_spatial_transcriptomics.rds")
-data <- process_data(data)
+data <-   readRDS(system.file("extdata", "example_spatial_transcriptomics.rds", package = "scFeatures"))
+data <- process_data(data, normalise=F) # here we don't normalise , because the data has already been normalised 
 data <- get_num_cell_per_spot(data) # for spatial transcriptomics, we need to estimate the number of cells in each spot
 
 

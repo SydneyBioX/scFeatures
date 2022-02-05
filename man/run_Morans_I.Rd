@@ -4,10 +4,10 @@
 \alias{run_Morans_I}
 \title{generate Moran's I}
 \usage{
-run_Morans_I(data, type = "spatial_p", ncores = 8)
+run_Morans_I(data, type = "spatial_p", ncores = 1)
 }
 \arguments{
-\item{data}{input data}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
@@ -18,4 +18,10 @@ a matrix of samples x features
 }
 \description{
 generate Moran's I
+}
+\examples{
+
+data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
+feature_Morans_I <- run_Morans_I(data, type = "spatial_p", ncores = 1 )
+
 }

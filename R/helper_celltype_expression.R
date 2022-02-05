@@ -55,7 +55,7 @@ remove_mito <- function(data ){
 
 # find variable genes per sample,  then take the union  
 # for cell type specific methods, find the variable genes per cell type per sample 
-find_var_gene <- function(data,  num_top_gene  = 1500 ,   ncores = 8, celltype = T){
+find_var_gene <- function(data,  num_top_gene  = 1500, ncores = 1, celltype = T){
   
   
   
@@ -120,7 +120,7 @@ find_var_gene <- function(data,  num_top_gene  = 1500 ,   ncores = 8, celltype =
 
 
 # cell type specific gene mean, set to top 100 variable genes per cell type per sample 
-helper_gene_mean_celltype  <- function( data , num_top_gene = NULL  , ncores = 8 ){
+helper_gene_mean_celltype  <- function( data , num_top_gene = NULL  , ncores = 1 ){
   
   if ( is.null( num_top_gene  )){
     num_top_gene = min(nrow(data), 100 ) 
@@ -185,7 +185,7 @@ helper_gene_mean_celltype  <- function( data , num_top_gene = NULL  , ncores = 8
 
 
  # cell type specific gene prop 
-helper_gene_prop_celltype  <- function( data, num_top_gene  = NULL , ncores = 8 ){
+helper_gene_prop_celltype  <- function( data, num_top_gene  = NULL , ncores = 1 ){
   
   
   if ( is.null( num_top_gene ) ){
@@ -255,7 +255,7 @@ helper_gene_prop_celltype  <- function( data, num_top_gene  = NULL , ncores = 8 
 
 # cell type specific gene correlation bulk
 # set to just top 5 genes per cell type per sample, because otherwise creates too many features 
-helper_gene_cor_celltype <- function(data, num_top_gene  = NULL   , ncores = 8 ){
+helper_gene_cor_celltype <- function(data, num_top_gene  = NULL   , ncores = 1 ){
   
   
   if ( is.null( num_top_gene ) ){
@@ -336,7 +336,7 @@ helper_gene_cor_celltype <- function(data, num_top_gene  = NULL   , ncores = 8 )
 
 
 
-helper_gene_mean_celltype_st <- function( data , num_top_gene  = NULL , ncores = 30  ){
+helper_gene_mean_celltype_st <- function( data , num_top_gene  = NULL , ncores = 1  ){
   
   
   if ( is.null( num_top_gene ) ){

@@ -4,10 +4,10 @@
 \alias{run_proportion_logit}
 \title{generate cell type proportion raw and cell type proportion logit transformed}
 \usage{
-run_proportion_logit(data, type = "scrna", ncores = 8)
+run_proportion_logit(data, type = "scrna", ncores = 1)
 }
 \arguments{
-\item{data}{input data}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
@@ -18,4 +18,10 @@ a matrix of samples x features
 }
 \description{
 generate cell type proportion raw and cell type proportion logit transformed
+}
+\examples{
+
+data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+feature_proportion_logit <- run_proportion_logit(data, type = "scnrna", ncores = 1)
+
 }
