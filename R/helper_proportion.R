@@ -100,7 +100,7 @@ helper_proportion_ratio <- function(data, ncores = 1 ) {
   rownames(df) <- df$sample
   df <-   df [, -1 , drop=FALSE]
   
-  df <- df[ unique(data$sample),  ] 
+  df <- df[ unique(data$sample), , drop=FALSE ] 
   
   
   return(df)
