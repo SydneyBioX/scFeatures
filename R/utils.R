@@ -58,6 +58,7 @@ bulk_sample_celltype <- function(data , ncores = 8  ){
         }
         
         temp <- as.matrix(temp)
+        rownames(temp ) <- rownames(data)
         temp
       })
       
@@ -91,6 +92,8 @@ bulk_sample  <- function(data,  ncores = 8 ){
     index <-  which(data$sample == x )
     temp <-  DelayedMatrixStats::rowMeans2(DelayedArray( data@assays$RNA@data[, index]))
     temp <- as.matrix(temp)
+    rownames(temp ) <- rownames(data)
+    temp
   }, mc.cores= ncores)
   
   bulk <- as.data.frame(do.call(cbind,  bulk ))
