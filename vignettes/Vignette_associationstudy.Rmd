@@ -1,0 +1,73 @@
+---
+title: "Vignette - association study of features with conditions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette_detail}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Association study of the features with the conditions 
+
+scFeatures provides a function that automatically run association study of the features with the conditions and produce an html file with the visualisation of the features and the association result.  
+
+For this, we would first need to generate the features using scFeatures and then store the result in a named list format. 
+
+For demonstration purpose, we provide an example of this features list. The code below show a step to step guide of generating the hmtl output from the features list. 
+
+```{r eval=FALSE, include=TRUE}
+# here we use the demo data from the package 
+scfeatures_result <- readRDS( system.file("extdata", "scfeatures_result.rds",   
+                            package = "scFeatures"))
+
+# here we use the current working directory to save the html output
+# modify this to save the html file to other directory
+output_folder <-  getwd()
+
+run_association_study_report(scfeatures_result, output_folder )
+```
+
+Inside the directory defined in the `output_folder`, you will see the html report output with the name `output_report.html`. 
+
+
+# Some additional notes on creating the scfeatures_list
+
+When generating the features using scFeatures, make sure the `sample` information is in the format of `a_cond_b`, where `a` is sample ID and `b` is  the condition, eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running the analysis. 
+
+When creating the list, the name of the list must use the same name as shown below. Otherwise, it is not possible to tell which feature type each list entry is and create the correct visualisation for each feature type. 
+
+Not all feature types need to be provided. If a feature type is missing, the section in the html for the feature type will just be left blank. 
+
+
+```{r eval=FALSE, include=TRUE}
+# example of creating the feature list using the correct naming conventions
+scfeatures_result <- list( 
+   feature_proportion_raw = feature_proportion_raw,
+   feature_proportion_logit =   feature_proportion_logit, 
+   feature_proportion_ratio = feature_proportion_ratio, 
+   feature_gene_mean_celltype = feature_gene_mean_celltype,
+   feature_gene_prop_celltype = feature_gene_prop_celltype, 
+   feature_gene_cor_celltype = feature_gene_cor_celltype, 
+   feature_pathway_gsva = feature_pathway_gsva , 
+   feature_pathway_mean = feature_pathway_mean, 
+   feature_pathway_prop = feature_pathway_prop,
+   feature_CCI = feature_CCI ,
+   feature_gene_mean_aggregated = feature_gene_mean_aggregated , 
+   feature_gene_cor_aggregated = feature_gene_cor_aggregated , 
+   feature_gene_prop_aggregated = feature_gene_prop_aggregated,
+   feature_L_stats  = feature_L_stats , 
+   feature_morans_I = feature_morans_I, 
+   feature_celltype_interaction = feature_celltype_interaction,
+   feature_nn_correlation = feature_nn_correlation
+   ) 
+```
+
+
+
+
