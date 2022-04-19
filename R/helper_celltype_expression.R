@@ -296,7 +296,7 @@ helper_gene_cor_celltype <- function(data, num_top_gene  = NULL   , ncores = 1 )
         cor_data <- reshape2::melt(   cor_data)
         cor_data <-     cor_data[!is.na(  cor_data$value), ]
         temp <- data.frame( cor_data$value)
-        rownames(temp) <- paste0( thiscelltype  , "-with-", 
+        rownames(temp) <- paste0( thiscelltype  , "--", 
                                   cor_data$Var1, "-with-", cor_data$Var2)
         temp
       }else{

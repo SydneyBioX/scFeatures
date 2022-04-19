@@ -50,6 +50,11 @@ This vignette provide a list of all functions in scFeatures for quick reference.
 
 Note that all scFeatures functions contain a `ncores` argument that controls the number of cores. The default is 1 core. 
 
+
+If you wish to run downstream analysis using the generated features (see "Vignette - association study"), please make sure that when you run scFeatures, the `sample` is in the format of `a_cond_b`. Where `a` is sample ID and `b` is  the condition, eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running the analysis. 
+
+
+
 ```{r}
 library(scFeatures)
 ```
@@ -66,7 +71,9 @@ The input data is a Seurat object containing `celltype` and `sample` label.
 #---------------------------------------------------------------------------
 data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 data <- process_data(data, normalise = T) #  perform normalisation 
- 
+
+# format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features 
+data$sample <- paste0( data$sample  , "_cond_", data$condition)
 
 #---------------------------------------------------------------------------
 # cell type proportions
@@ -191,6 +198,8 @@ data <-   readRDS(system.file("extdata", "example_spatial_transcriptomics.rds", 
 data <- process_data(data, normalise=F) # here we don't normalise , because the data has already been normalised 
 data <- get_num_cell_per_spot(data) # for spatial transcriptomics, we need to estimate the number of cells in each spot
 
+# format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features 
+data$sample <- paste0( data$sample  , "_cond_", data$condition)
 
 #---------------------------------------------------------------------------
 # cell type proportions

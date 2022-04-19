@@ -146,12 +146,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>This vignette provides a detailed description of scFeatures, including description for each feature category, the expected output and case studies of using the generated features for classification task and survival analysis.</p>
 <p>For a quick starting point (the TLDR version), please see the other vignette “Vignette - summary of scFeatures functions”.</p>
 <p>Note that all scFeatures functions contain a <code>ncores</code> argument that controls the number of cores. The default is 1 core.</p>
+<p>If you wish to run downstream analysis using the generated features (see “Vignette - association study”), please make sure that when you run scFeatures, the <code>sample</code> is in the format of <code>a_cond_b</code>. Where <code>a</code> is sample ID and <code>b</code> is the condition, eg, <code>patient09_cond_nonresponder</code>. This is so that we can retrieve the sample ID and the corresponding condition when running the analysis.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scFeatures)</span></code></pre></div>
 </div>
 <div id="scfeatures-on-single-cell-rna-seq-data" class="section level1">
 <h1>scFeatures on single-cell RNA-seq data</h1>
 <p>For demonstration purpose, we provide a subsampled version of the melanoma pre-treatment dataset [1] as used in our manuscript.</p>
-<p>scFeatures takes in data as a Seurat object, with the gene expression stored in the assay <code>RNA</code>. The required metadata is the <code>celltype</code> and <code>sample</code> label. The <code>condition</code> label is optional, and is only required if users wish to train a classification model on disease condition using the generated features.</p>
+<p>scFeatures takes in data as a Seurat object, with the gene expression stored in the assay <code>RNA</code>. The required metadata is the <code>celltype</code> and <code>sample</code> label. The <code>condition</code> label is optional, and is only required if users wish to learn the diffierence on disease condition using the generated features.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># example of how to construct a Seurat object from a count matrix and the corresponding label file. </span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data_matrix <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_scrnaseq_matrix.rds&quot;</span>, </span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>))</span>
@@ -170,7 +171,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># disease conditions in this data</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(data<span class="sc">$</span>condition)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Responder&quot;     &quot;Non-responder&quot;</span></span></code></pre></div>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Responder&quot;     &quot;Non-responder&quot;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>sample <span class="ot">&lt;-</span> <span class="fu">paste0</span>( data<span class="sc">$</span>sample  , <span class="st">&quot;_cond_&quot;</span>, data<span class="sc">$</span>condition)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(data<span class="sc">$</span>sample)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Pre_P1_cond_Responder&quot;     &quot;Pre_P2_cond_Non-responder&quot;</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;Pre_P3_cond_Non-responder&quot; &quot;Pre_P4_cond_Non-responder&quot;</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;Pre_P6_cond_Non-responder&quot;</span></span></code></pre></div>
 <div id="feature-generation" class="section level2">
 <h2>Feature generation</h2>
 <p>Here we demonstrate the usage of scFeatures to extract features from scRNA-seq data. Note that, for the <code>type</code> argument, the currently supported options are:<br />
@@ -277,14 +285,14 @@ This feature category constructs features relating to pathway (gene set) express
 <li><code>Gene prop</code>: The features are in the form of gene 1, gene 2 … etc, with the numbers representing the proportion that the gene is expressed across all cells.</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_mean</span>(data)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_cor</span>(data)</span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_aggregated <span class="ot">&lt;-</span> <span class="fu">run_gene_mean</span>(data)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_aggregated  <span class="ot">&lt;-</span> <span class="fu">run_gene_cor</span>(data)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># we can change this number to pick 1000 genes </span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_prop</span>(data, <span class="at">num_top_gene =</span> <span class="dv">1000</span>)</span></code></pre></div>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_aggregated  <span class="ot">&lt;-</span> <span class="fu">run_gene_prop</span>(data, <span class="at">num_top_gene =</span> <span class="dv">1000</span>)</span></code></pre></div>
 </div>
 </div>
-<div id="classification-using-the-generated-features" class="section level2">
-<h2>Classification using the generated features</h2>
+<div id="classification-of-conditions-using-the-generated-features" class="section level2">
+<h2>Classification of conditions using the generated features</h2>
 <p>scFeatures provides a wrapper around the classification function in ClassifyR (<a href="https://www.bioconductor.org/packages/release/bioc/html/ClassifyR.html" class="uri">https://www.bioconductor.org/packages/release/bioc/html/ClassifyR.html</a>) to build disease prediction model from the generated features.</p>
 <p>The output from scFeatures is a matrix of sample x feature, ie, the row corresponds to each sample, the column corresponds to the feature, and can be directly used as the <code>X</code>. The order of the rows is in the order of unique(data$sample).</p>
 <p>Here we use the <code>condition</code> as the <code>y</code> to build classification model on the disease condition.</p>
@@ -292,33 +300,45 @@ This feature category constructs features relating to pathway (gene set) express
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a> </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect the first 5 rows and first 5 columns</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_celltype[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        CD8, T Effector Memory--S100A11 CD8, T Effector Memory--MT2A</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P1                       1.1259300                    1.0629612</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P2                       1.0380717                    1.4303310</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P3                       1.0832851                    0.9177364</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P4                       0.8945557                    1.2505476</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P6                       1.2719531                    0.8180941</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        CD8, T Effector Memory--ATP5F1 CD8, T Effector Memory--GSTK1</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P1                      0.9889163                      1.194972</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P2                      0.5175188                      1.350535</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P3                      0.4361047                      1.052869</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P4                      0.6219454                      1.680046</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P6                      0.3857735                      1.240495</span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        CD8, T Effector Memory--TCP1</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P1                    1.1344457</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P2                    0.9493605</span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P3                    1.2139305</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P4                    0.3802276</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P6                    1.3911336</span></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect the dimension of the matrix</span></span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="co"># this means that there are 12354 features in this feature type</span></span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(feature_gene_mean_celltype)</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]   19 2411</span></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="co"># confirm that the rows in in the order of unique(data$sample)</span></span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(<span class="fu">rownames</span>(feature_gene_mean_celltype) <span class="sc">==</span> <span class="fu">unique</span>(data<span class="sc">$</span>sample))</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                           CD8, T Effector Memory--S100A11</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P1_cond_Responder                           1.1259300</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P2_cond_Non-responder                       1.0380717</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P3_cond_Non-responder                       1.0832851</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P4_cond_Non-responder                       0.8945557</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P6_cond_Non-responder                       1.2719531</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                           CD8, T Effector Memory--MT2A</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P1_cond_Responder                        1.0629612</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P2_cond_Non-responder                    1.4303310</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P3_cond_Non-responder                    0.9177364</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P4_cond_Non-responder                    1.2505476</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P6_cond_Non-responder                    0.8180941</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                           CD8, T Effector Memory--ATP5F1</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P1_cond_Responder                          0.9889163</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P2_cond_Non-responder                      0.5175188</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P3_cond_Non-responder                      0.4361047</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P4_cond_Non-responder                      0.6219454</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P6_cond_Non-responder                      0.3857735</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                           CD8, T Effector Memory--GSTK1</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P1_cond_Responder                          1.194972</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P2_cond_Non-responder                      1.350535</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P3_cond_Non-responder                      1.052869</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P4_cond_Non-responder                      1.680046</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P6_cond_Non-responder                      1.240495</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                           CD8, T Effector Memory--TCP1</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P1_cond_Responder                        1.1344457</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P2_cond_Non-responder                    0.9493605</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P3_cond_Non-responder                    1.2139305</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P4_cond_Non-responder                    0.3802276</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Pre_P6_cond_Non-responder                    1.3911336</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect the dimension of the matrix</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="co"># this means that there are 12354 features in this feature type</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(feature_gene_mean_celltype)</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]   19 2411</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co"># confirm that the rows in in the order of unique(data$sample)</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(<span class="fu">rownames</span>(feature_gene_mean_celltype) <span class="sc">==</span> <span class="fu">unique</span>(data<span class="sc">$</span>sample))</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>The output from the <code>run_classification</code> is a list containing importance and performance score. The importance ranks the feature according to feature importance. A smaller rank indicates greater importance. The performance score uses a range of evaluation metric to compare the prediction with the ground truth.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># X is the feature type generated</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># y is the condition for classification </span></span>
@@ -363,13 +383,14 @@ This feature category constructs features relating to pathway (gene set) express
 <p>For spatial proteomics, the required information are <code>sample</code>, <code>x_cord</code> and <code>y_cord</code> (the x- and y- coordinates of the cell).</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_spatial_proteomics.rds&quot;</span>, </span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>))</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># here we don&#39;t normalise , because the data has already been normalised </span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data, <span class="at">normalise =</span> F)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># For spatial proteomics, we require the x- and y- coordinates  </span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>x_cord[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   14_69  9_7156  34_328  6_2349 21_3144 </span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    43.5  1925.5   204.5   637.5  1039.5</span></span></code></pre></div>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># here we don&#39;t normalise , because the data has already been normalised </span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data, <span class="at">normalise =</span> F)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># For spatial proteomics, we require the x- and y- coordinates  </span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>x_cord[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   14_69  9_7156  34_328  6_2349 21_3144 </span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    43.5  1925.5   204.5   637.5  1039.5</span></span></code></pre></div>
 <div id="feature-generation-1" class="section level2">
 <h2>Feature generation</h2>
 <div id="cell-type-specific-proportions" class="section level3">
@@ -386,12 +407,12 @@ This feature category constructs features relating to pathway (gene set) express
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_celltype <span class="ot">&lt;-</span> <span class="fu">run_gene_prop_celltype</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_celltype <span class="ot">&lt;-</span> <span class="fu">run_gene_cor_celltype</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>)</span></code></pre></div>
 </div>
-<div id="bulk-gene-expressions" class="section level3">
-<h3>Bulk gene expressions</h3>
+<div id="overall-aggregated-gene-expressions-1" class="section level3">
+<h3>Overall aggregated gene expressions</h3>
 <p>By default, this feature category calculates the gene/protein expression based on the top 1500 most variable genes/proteins. However, because in this data there are only 38 proteins, we will use all proteins.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_mean</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_prop</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_cor</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_aggregated <span class="ot">&lt;-</span> <span class="fu">run_gene_mean</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_aggregated  <span class="ot">&lt;-</span> <span class="fu">run_gene_prop</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_aggregated  <span class="ot">&lt;-</span> <span class="fu">run_gene_cor</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>)</span></code></pre></div>
 </div>
 <div id="spatial-metrics" class="section level3">
 <h3>Spatial metrics</h3>
@@ -459,18 +480,22 @@ This feature category is designed for spatial data and contains feature types co
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_spatial_transcriptomics.rds&quot;</span>, </span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>))</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data, <span class="at">normalise =</span> F) <span class="co"># data already normalised</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># for spatial transcriptomics, we need to estimate the number of cells in each spot</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">get_num_cell_per_spot</span>(data)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># how the prediction assay look like </span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># the rows contain the predicted cell type probability of each spot</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>data<span class="sc">@</span>assays<span class="sc">$</span>predictions[, <span class="dv">1</span>] </span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co"># confirm the data include samples  </span></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(data<span class="sc">$</span>sample)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co"># conditions in this data</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(data<span class="sc">$</span>condition)</span></code></pre></div>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># for spatial transcriptomics, we need to estimate the number of cells in each spot</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">get_num_cell_per_spot</span>(data)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># how the prediction assay look like </span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># the rows contain the predicted cell type probability of each spot</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>data<span class="sc">@</span>assays<span class="sc">$</span>predictions[, <span class="dv">1</span>] </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># confirm the data include samples  </span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(data<span class="sc">$</span>sample)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="co"># conditions in this data</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(data<span class="sc">$</span>condition)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="co"># format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features </span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>sample <span class="ot">&lt;-</span> <span class="fu">paste0</span>( data<span class="sc">$</span>sample  , <span class="st">&quot;_cond_&quot;</span>, data<span class="sc">$</span>condition)</span></code></pre></div>
 <div id="feature-generation-2" class="section level2">
 <h2>Feature generation</h2>
 <p>For spatial transcriptomics, each spot contains multiple cells and potentially from multiple cell types. Therefore, the implementation for the feature categories involving cell type specific features (i.e., cell type proportions, cell type specific gene expressions, cell type specific pathway expressions, spatial metrics) are different to their implementations for the single-cell based datasets (i.e., scRNA-seq and spatial proteomics) and described in details below.</p>
@@ -504,7 +529,7 @@ The output format is the same as for scRNA-seq data.</p></li>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>feature_pathway_mean <span class="ot">&lt;-</span> <span class="fu">run_pathway_mean</span>(data, <span class="at">geneset =</span> <span class="cn">NULL</span>, <span class="at">species =</span> <span class="st">&quot;Mus musculus&quot;</span>, </span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span>)</span></code></pre></div>
 </div>
-<div id="overall-aggregated-gene-expressions-1" class="section level3">
+<div id="overall-aggregated-gene-expressions-2" class="section level3">
 <h3>Overall aggregated gene expressions</h3>
 <ul>
 <li><p>Detail:<br />
@@ -512,9 +537,9 @@ This is based on the expression of genes across all cells.</p></li>
 <li><p>Expected output:<br />
 The output format is the same as for scRNA-seq data.</p></li>
 </ul>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_mean</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_prop</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_cor</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_aggregated  <span class="ot">&lt;-</span> <span class="fu">run_gene_mean</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_aggregated  <span class="ot">&lt;-</span> <span class="fu">run_gene_prop</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_aggregated  <span class="ot">&lt;-</span> <span class="fu">run_gene_cor</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span>)</span></code></pre></div>
 </div>
 <div id="spatial-metrics-1" class="section level3">
 <h3>Spatial metrics</h3>

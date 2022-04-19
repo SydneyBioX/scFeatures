@@ -98,7 +98,7 @@ helper_proportion_ratio <- function(data, ncores = 1 ) {
   df <- df %>%   tidyr::pivot_wider(names_from = celltype, values_from = proportion)
   df <- as.data.frame(  df)
   rownames(df) <- df$sample
-  df <-   df [, -1 , drop=FALSE]
+  df <-   df [, -1, drop=FALSE]
   
   df <- df[ unique(data$sample), , drop=FALSE ] 
   

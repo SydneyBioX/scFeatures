@@ -7,8 +7,9 @@ check_data <- function(data, type = "scrna"){
     print("please make sure the data is in a Seurat object")
   }
  
-  if ( !"celltype" %in% names(data@meta.data) ||  !"sample" %in% names(data@meta.data)){
-      print("please make sure the data contains celltype and sample label")
+  if (  !"sample" %in% names(data@meta.data)){
+      print("For scRNA-seq and spatial proteomics, please make sure the data contains celltype and sample label.
+            For spatial proteomics, please make sure the data contains sample information.")
       stop()
   }
   
@@ -36,6 +37,7 @@ check_data <- function(data, type = "scrna"){
 # create pseudo-bulk for each cell type of each sample 
 bulk_sample_celltype <- function(data , ncores = 8  ){
   
+  # x <- unique( data$sample)[1]
   bulk <- mclapply( unique( data$sample),  function(x) {
       
       # for this patient
@@ -92,8 +94,6 @@ bulk_sample  <- function(data,  ncores = 8 ){
     index <-  which(data$sample == x )
     temp <-  DelayedMatrixStats::rowMeans2(DelayedArray( data@assays$RNA@data[, index]))
     temp <- as.matrix(temp)
-    rownames(temp ) <- rownames(data)
-    temp
   }, mc.cores= ncores)
   
   bulk <- as.data.frame(do.call(cbind,  bulk ))
@@ -236,5 +236,41 @@ process_data <- function(data, normalise = T){
   return(data)
 }
 
+
+
+#' automatically generate the association study report in an html format
+#'
+#' @param scfeatures_list a named list storing the feature output from scfeatures
+#' @param output_folder directory for saving the html report file
+#' 
+#' @return the html file will be saved in the directory defined in the output_folder
+#' 
+#' @import rmarkdown
+#' 
+#' @export
+run_association_study_report <- function( scfeatures_result, output_folder ){
+  # check name
+  correct_name <- any( names(scfeatures_result) %in%  c(
+     "feature_proportion_raw"  , "feature_proportion_logit"   , 
+      "feature_proportion_ratio",  "feature_gene_mean_celltype"  , 
+     "feature_gene_prop_celltype" , "feature_gene_cor_celltype",   
+     "feature_pathway_gsva" ,"feature_pathway_mean" ,       
+      "feature_pathway_prop" ,  "feature_CCI"   ,
+     "feature_gene_mean_aggregated", "feature_gene_cor_aggregated"  ,"feature_gene_prop_aggregated"))
+  if (correct_name == FALSE){
+    print("Please check you have named the feature types in correct naming format.")
+  }
+  
+  # need to retrieve the output report structure from the package
+  output_report <- system.file("extdata",   "output_report.Rmd",   
+                               package = "scFeatures")
+  
+  file.copy(from = output_report, to = output_folder, overwrite = FALSE)
+  
+  # generate the html output 
+  rmarkdown::render(input = "output_report.Rmd", 
+                    output_format = "html_document", 
+                    output_file = "output_report.html")
+}
 
 

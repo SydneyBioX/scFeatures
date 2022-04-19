@@ -39,16 +39,18 @@ openblas.set.num.threads(1)
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
-
 ```
 
 # Introduction 
 
-This vignette provides a detailed description of scFeatures, including description for each feature category, the expected output and case studies of using the generated features for classification task and survival analysis.     
+This vignette provides a detailed description of scFeatures, including description for each feature category, the expected output and case studies of using the generated features for classification task and survival analysis.   
 
 For a quick starting point (the TLDR version), please see the other vignette "Vignette - summary of scFeatures functions". 
 
 Note that all scFeatures functions contain a `ncores` argument that controls the number of cores. The default is 1 core. 
+
+If you wish to run downstream analysis using the generated features (see "Vignette - association study"), please make sure that when you run scFeatures, the `sample` is in the format of `a_cond_b`. Where `a` is sample ID and `b` is  the condition, eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running the analysis. 
+
 
 ```{r}
 library(scFeatures)
@@ -59,7 +61,7 @@ library(scFeatures)
 
 For demonstration purpose, we provide a subsampled version of the melanoma pre-treatment dataset [1] as used in our manuscript. 
 
-scFeatures takes in data as a Seurat object, with the gene expression stored in the assay `RNA`. The required metadata is the `celltype` and `sample` label. The `condition` label is optional, and is only required if users wish to train a classification model on disease condition using the generated features. 
+scFeatures takes in data as a Seurat object, with the gene expression stored in the assay `RNA`. The required metadata is the `celltype` and `sample` label. The `condition` label is optional, and is only required if users wish to learn the diffierence on disease condition using the generated features. 
 
 ```{r}
 # example of how to construct a Seurat object from a count matrix and the corresponding label file. 
@@ -81,6 +83,10 @@ unique(data$sample)[1:5]
 
 # disease conditions in this data
 unique(data$condition)
+
+# format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features 
+data$sample <- paste0( data$sample  , "_cond_", data$condition)
+unique(data$sample)[1:5]
 ```
 
 
@@ -204,16 +210,15 @@ The feature types in this category is calculated based on the aggregated express
 
 
 ```{r eval=FALSE, include=TRUE}
-feature_gene_mean_bulk <- run_gene_mean(data)
-feature_gene_cor_bulk <- run_gene_cor(data)
+feature_gene_mean_aggregated <- run_gene_mean(data)
+feature_gene_cor_aggregated  <- run_gene_cor(data)
 # we can change this number to pick 1000 genes 
-feature_gene_prop_bulk <- run_gene_prop(data, num_top_gene = 1000)
+feature_gene_prop_aggregated  <- run_gene_prop(data, num_top_gene = 1000)
 ```
 
 
 
-
-## Classification using the generated features
+## Classification of conditions using the generated features
 
 scFeatures provides a wrapper around the classification function in ClassifyR (https://www.bioconductor.org/packages/release/bioc/html/ClassifyR.html) to build disease prediction model from the generated features. 
 
@@ -275,6 +280,7 @@ For spatial proteomics, the required information are `sample`, `x_cord` and `y_c
 ```{r}
 data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", 
                                    package = "scFeatures"))
+
 # here we don't normalise , because the data has already been normalised 
 data <- process_data(data, normalise = F)
 
@@ -308,14 +314,14 @@ feature_gene_cor_celltype <- run_gene_cor_celltype(data, type = "spatial_p")
 ```
 
 
-### Bulk gene expressions 
+### Overall aggregated gene expressions 
 
 By default, this feature category calculates the gene/protein expression based on the top 1500 most variable genes/proteins. However, because in this data there are only 38 proteins, we will use all proteins.  
 
 ```{r eval=FALSE, include=TRUE}
-feature_gene_mean_bulk <- run_gene_mean(data, type = "spatial_p")
-feature_gene_prop_bulk <- run_gene_prop(data, type = "spatial_p")
-feature_gene_cor_bulk <- run_gene_cor(data, type = "spatial_p")
+feature_gene_mean_aggregated <- run_gene_mean(data, type = "spatial_p")
+feature_gene_prop_aggregated  <- run_gene_prop(data, type = "spatial_p")
+feature_gene_cor_aggregated  <- run_gene_cor(data, type = "spatial_p")
 ```
 
 
@@ -395,6 +401,7 @@ The `predictions` assay is a matrix in the form of cell types x spot, which stor
 data <- readRDS(system.file("extdata", "example_spatial_transcriptomics.rds", 
                                    package = "scFeatures"))
 data <- process_data(data, normalise = F) # data already normalised
+
 # for spatial transcriptomics, we need to estimate the number of cells in each spot
 data <- get_num_cell_per_spot(data)
 
@@ -407,6 +414,9 @@ unique(data$sample)[1:5]
 
 # conditions in this data
 unique(data$condition)
+
+# format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features 
+data$sample <- paste0( data$sample  , "_cond_", data$condition)
 ```
 
  
@@ -466,9 +476,9 @@ This is based on the expression of genes across all cells.
 The output format is the same as for scRNA-seq data.   
 
 ```{r  eval=FALSE, include=TRUE }
-feature_gene_mean_bulk <- run_gene_mean(data, type = "spatial_t")
-feature_gene_prop_bulk <- run_gene_prop(data, type = "spatial_t")
-feature_gene_cor_bulk <- run_gene_cor(data, type = "spatial_t")
+feature_gene_mean_aggregated  <- run_gene_mean(data, type = "spatial_t")
+feature_gene_prop_aggregated  <- run_gene_prop(data, type = "spatial_t")
+feature_gene_cor_aggregated  <- run_gene_cor(data, type = "spatial_t")
 ```
 
 

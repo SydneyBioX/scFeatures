@@ -177,7 +177,7 @@ helper_pathway_prop <- function(data, geneset ,   ncores = 1 ){
   
   
   geneset_prop_df <- do.call(rbind,  geneset_prop_df)
-  geneset_prop_df$celltype <- paste0(geneset_prop_df$celltype , "_",  geneset_prop_df$geneset)
+  geneset_prop_df$celltype <- paste0( geneset_prop_df$geneset , "--", geneset_prop_df$celltype )
   geneset_prop_df <- geneset_prop_df[,  c("sample", "celltype",  "proportion_expressed")]
   geneset_prop_df <-   geneset_prop_df %>%  pivot_wider(names_from = celltype, values_from = proportion_expressed)
   
@@ -196,7 +196,7 @@ helper_pathway_prop <- function(data, geneset ,   ncores = 1 ){
 
 # The output from GSVA and geneset mean is in the form of pathway score x cell 
 # Need to convert to patient x pathway features 
-format_pathway <- function(data, topMatrixGSVA, ncores ){
+format_pathway <- function(data, topMatrixGSVA = geneset_score_all , ncores ){
   
   # first need to aggregate the pathway score of each cell type
   topMatrixGSVA <- CreateSeuratObject(topMatrixGSVA)
