@@ -60,12 +60,6 @@ library(enrichplot)
 ```
 
 
-```{r }
-scfeatures_result <- readRDS( system.file("extdata", "scfeatures_result.rds",  
-                            package = "scFeatures"))
-```
- 
-
 ```{r}
 # helper function to plot barplot distribution
 plot_barplot <- function(data , dodge=F){
