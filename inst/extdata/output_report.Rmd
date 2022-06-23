@@ -17,22 +17,15 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
 
-```{r, include = FALSE}
 
-.libPaths("/albona/nobackup/yuec/scfeatures/scfeatures_package/dependency")
-
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 
 
 ```{r warning=FALSE, message=FALSE}
+
 library(ggplot2)
 library(reshape2)
 library(dplyr)
@@ -42,6 +35,8 @@ library(DT)
 library(tidyr)    
 library(igraph)
 library(grid)
+
+library(plotly)
 
 
 organism = "org.Hs.eg.db"
@@ -55,14 +50,374 @@ library(clusterProfiler)
 library(DOSE)
 library(enrichplot)
  
+library(data.table)
+library(DT)
  
  
 ```
 
+```{r warning=FALSE, message=FALSE}
+
+
+
+find_de_CCI <- function(data){
+  
+   data <- t(data)
+   patient <- unlist( lapply( strsplit( colnames(data), "_cond_"), `[`, 1) ) 
+    
+    remove <- which(patient == "NA")
+    if (length(remove) > 0 ){
+       patient <-  patient[-c(remove)]
+       data <- data[ ,  -c(remove)]
+    }
+    condition  <- unlist( lapply( strsplit( colnames(data), "_cond_"), `[`, 2))
+    condition <- data.frame(condition = condition )
+    
+ 
+    design <- model.matrix(~condition, data = condition)
+    fit <- lmFit(data, design)
+    fit <- eBayes(fit)
+     
+    tT <- topTable(fit, n = Inf) 
+    
+    tT <- tT[ tT$P.Value < 0.1, ]
+    
+    celltype <- unlist(lapply ( strsplit( rownames(tT), "--"), `[`, 1))
+    
+    celltype <-  sort(table(celltype), decreasing = T) 
+    celltype <- celltype[1:min(length(celltype), 3)]
+    celltype <- data.frame(data.frame(celltype))
+    
+    number_celltype <- nrow( tT )
+ 
+    
+    return( result = list(number_celltype,  celltype))
+}
+   
+    
+
+
+find_de_pathway_specific <- function(data){
+  
+    celltype <- unlist( lapply(strsplit(colnames(data) , "--") , `[`, 2) )
+    df <- NULL
+    for (thiscelltype in unique(celltype)){
+      
+      index <- which(celltype == thiscelltype)
+      thisdata <- data[, index ]
+      thisresult <- find_de_not_celltype_specific( thisdata )
+     
+      df <- rbind(df, data.frame( thiscelltype  , thisresult[[1]][1],  thisresult[[1]][1] / ncol(thisdata) ) )
+    }
+    colnames(df) <- c("celltype" , "num_sig_features" , "prop_sig_features")
+    df <- df[order(df$prop_sig_features, decreasing = T), ]
+    df <- df[ 1: min(nrow(df), 3), ]
+    
+    return(df )
+}
+
+find_de_celltype_specific <- function(data){
+  
+    celltype <- unlist( lapply(strsplit(colnames(data) , "--") , `[`, 1) )
+    df <- NULL
+    for (thiscelltype in unique(celltype)){
+      
+      index <- which(celltype == thiscelltype)
+      thisdata <- data[, index ]
+      thisresult <- find_de_not_celltype_specific( thisdata )
+     
+      df <- rbind(df, data.frame( thiscelltype  , thisresult[[1]][1],  thisresult[[1]][1] / ncol(thisdata) ) )
+    }
+    colnames(df) <- c("celltype" , "num_sig_features" , "prop_sig_features")
+    df <- df[order(df$prop_sig_features, decreasing = T), ]
+    df <- df[ 1: min(nrow(df), 3), ]
+    
+    return(df )
+}
+
+
+
+
+
+
+
+
+find_de_not_celltype_specific <- function(data){
+  
+   data <- t(data)
+   patient <- unlist( lapply( strsplit( colnames(data), "_cond_"), `[`, 1) ) 
+    
+    remove <- which(patient == "NA")
+    if (length(remove) > 0 ){
+       patient <-  patient[-c(remove)]
+       data <- data[ ,  -c(remove)]
+    }
+    condition  <- unlist( lapply( strsplit( colnames(data), "_cond_"), `[`, 2))
+    condition <- data.frame(condition = condition )
+    
+ 
+    design <- model.matrix(~condition, data = condition)
+    fit <- lmFit(data, design)
+    fit <- eBayes(fit)
+     
+    tT <- topTable(fit, n = Inf) 
+    
+    tT <- tT[ tT$P.Value < 0.1, ]
+    
+    number_celltype <- nrow( tT )
+    top_celltype <- rownames(tT)[1:min(number_celltype, 3)]
+    
+    return( result = list(number_celltype, top_celltype))
+}
+   
+    
+
+
+find_de_celltype_interaction <- function(data){
+  
+   data <- t(data)
+   patient <- unlist( lapply( strsplit( colnames(data), "_cond_"), `[`, 1) ) 
+    
+    remove <- which(patient == "NA")
+    if (length(remove) > 0 ){
+       patient <-  patient[-c(remove)]
+       data <- data[ ,  -c(remove)]
+    }
+    condition  <- unlist( lapply( strsplit( colnames(data), "_cond_"), `[`, 2))
+    condition <- data.frame(condition = condition )
+    
+ 
+    design <- model.matrix(~condition, data = condition)
+    fit <- lmFit(data, design)
+    fit <- eBayes(fit)
+     
+    tT <- topTable(fit, n = Inf) 
+    
+    tT <- tT[ tT$P.Value < 0.1, ]
+    
+    celltype <- rownames(tT)
+   
+    celltype <-  sort(table(celltype), decreasing = T) 
+    celltype <- celltype[1:min(length(celltype), 3)]
+    celltype <- data.frame(data.frame(celltype))
+    
+    number_celltype <- nrow( tT )
+ 
+    
+    return( result = list(number_celltype,  celltype))
+}
+  
+
+```
+
+
+
+This file provides an overview of the types of figures that one can potentially generate from each feature category to gain insight into the features associating with disease conditions (Section 1).   
+Section 2 then runs an association study using the given features and sample conditions and plots the key features from each feature category using a representative figure.    
+
+The purpose is not to provide a comprehensive analysis in a single HTML but to help point directions for future investigation. 
+
+
+
+
+# Overview of the association study result
+
+Here we provide a brief overview of the association study result, including the number of features in each feature type, and the number of features that are significantly associated ( P-value < 0.1) with the conditions of the interest. 
+
+
+
 
 ```{r}
-# helper function to plot barplot distribution
-plot_barplot <- function(data , dodge=F){
+scfeatures_result <- readRDS("/dskh/nobackup/yuec/scfeatures/scfeatures_package/scFeatures/inst/extdata/scfeatures_result.rds")
+```
+
+
+
+```{r}
+
+num_features <- lapply(scfeatures_result, dim)
+num_features <- t( data.frame(  lapply(num_features, `[` , 2) )) 
+colnames(num_features) <- "Number of features"
+ 
+ 
+
+```
+
+
+
+```{r warning=FALSE, message=FALSE}
+# get number of DE's in proportion_raw
+
+df <- NULL
+
+data <- scfeatures_result$feature_proportion_raw
+de_proportion_raw <- find_de_not_celltype_specific(data)
+
+de_proportion_raw <- data.frame("feature_proportion_raw" , de_proportion_raw[[1]][1],
+                              paste0( unlist( de_proportion_raw[[2]]),  collapse=",  " ) )
+
+df <- rbindlist(list(df ,de_proportion_raw ), use.names=FALSE )
+
+
+data <- scfeatures_result$feature_proportion_logit
+de_proportion_logit <- find_de_not_celltype_specific(data)
+de_proportion_logit  <- data.frame("feature_proportion_logit" , de_proportion_logit [[1]][1],
+                              paste0( unlist( de_proportion_logit [[2]]),   collapse=",  "  ) )
+df <- rbindlist(list(df , de_proportion_logit ), use.names=FALSE )
+
+
+
+
+data <- scfeatures_result$feature_proportion_ratio
+de_proportion_ratio <- find_de_CCI(data)
+de_proportion_ratio   <- data.frame("feature_proportion_ratio" , de_proportion_ratio[[1]][1],
+                              paste0( unlist( de_proportion_ratio[[2]]$celltype ),   collapse="\n"  ) )
+df <- rbindlist(list(df , de_proportion_ratio ), use.names=FALSE )
+
+ 
+
+data <- scfeatures_result$feature_gene_mean_celltype
+de_gene_mean_celltype <- find_de_celltype_specific(data)
+de_gene_mean_celltype    <- data.frame("feature_gene_mean_celltype " ,
+                                 sum( de_gene_mean_celltype$num_sig_features),
+                   paste0( unlist( de_gene_mean_celltype$celltype ),   collapse=",  "  ) )
+df <- rbindlist(list(df , de_gene_mean_celltype ), use.names=FALSE )
+
+
+data <- scfeatures_result$feature_gene_prop_celltype
+de_gene_prop_celltype <- find_de_celltype_specific(data)
+de_gene_prop_celltype    <- data.frame("feature_gene_prop_celltype " ,
+                                 sum( de_gene_prop_celltype$num_sig_features),
+                   paste0( unlist( de_gene_prop_celltype$celltype ),  collapse=",  "  ) )
+df <- rbindlist(list(df , de_gene_prop_celltype ), use.names=FALSE )
+
+
+data <- scfeatures_result$feature_gene_cor_celltype
+de_gene_cor_celltype <- find_de_celltype_specific(data)
+de_gene_cor_celltype    <- data.frame("feature_gene_cor_celltype" ,
+                                 sum( de_gene_cor_celltype$num_sig_features),
+                   paste0( unlist( de_gene_cor_celltype$celltype ),  collapse=",  "  ) )
+df <- rbindlist(list(df , de_gene_cor_celltype), use.names=FALSE )
+
+
+
+
+
+data <- scfeatures_result$feature_pathway_gsva
+de_pathway_gsva <-  find_de_pathway_specific(data)
+de_pathway_gsva  <- data.frame("feature_pathway_gsva" ,
+                                 sum( de_pathway_gsva$num_sig_features),
+                   paste0( unlist( de_pathway_gsva$celltype ),  collapse=",  "  ) )
+df <- rbindlist(list(df , de_pathway_gsva  ), use.names=FALSE )
+
+
+
+data <- scfeatures_result$feature_pathway_mean
+de_pathway_mean <-  find_de_pathway_specific(data)
+de_pathway_mean  <- data.frame("feature_pathway_mean" ,
+                                 sum( de_pathway_mean$num_sig_features),
+                   paste0( unlist( de_pathway_mean$celltype ),   collapse=",  " ) )
+df <- rbindlist(list(df , de_pathway_mean  ), use.names=FALSE )
+
+
+
+data <- scfeatures_result$feature_pathway_prop
+de_pathway_prop <-  find_de_pathway_specific(data)
+de_pathway_prop  <- data.frame("feature_pathway_prop" ,
+                                 sum(de_pathway_prop$num_sig_features),
+                   paste0( unlist( de_pathway_prop$celltype ), collapse=",  "  ) )
+df <- rbindlist(list(df , de_pathway_prop ), use.names=FALSE )
+
+
+data <- scfeatures_result$feature_CCI
+de_CCI <- find_de_CCI(data)
+de_CCI   <- data.frame("feature_CCI" ,
+                     de_CCI[[1]][1] ,
+                    paste0( unlist( de_CCI[[2]]$celltype  ),  collapse=",  " ) )
+df <- rbindlist(list(df , de_CCI  ), use.names=FALSE )
+
+
+data <- scfeatures_result$feature_gene_mean_aggregated
+de_gene_mean_aggregated <-  find_de_not_celltype_specific(data)
+de_gene_mean_aggregated    <- data.frame("feature_gene_mean_aggregated" ,
+                     de_gene_mean_aggregated[[1]][1] ,
+                      "not applicable" )
+df <- rbindlist(list(df , de_gene_mean_aggregated  ), use.names=FALSE )
+
+
+data <- scfeatures_result$feature_gene_cor_aggregated
+de_gene_cor_aggregated <-  find_de_not_celltype_specific(data)
+de_gene_cor_aggregated    <- data.frame("feature_gene_cor_aggregated" ,
+                    de_gene_cor_aggregated[[1]][1] ,
+                      "not applicable" )
+df <- rbindlist(list(df ,de_gene_cor_aggregated), use.names=FALSE )
+
+
+data <- scfeatures_result$feature_gene_prop_aggregated
+de_gene_prop_aggregated <-  find_de_not_celltype_specific(data)
+de_gene_prop_aggregated    <- data.frame("feature_gene_prop_aggregated" ,
+                    de_gene_prop_aggregated[[1]][1] ,
+                      "not applicable" )
+df <- rbindlist(list(df , de_gene_prop_aggregated ), use.names=FALSE )
+
+
+
+
+data <- scfeatures_result$feature_L_stats
+de_L_stats <-  find_de_celltype_interaction(data)
+de_L_stats  <- data.frame("feature_L_stats" ,
+                   de_L_stats[[1]][1] ,   
+              paste0( unlist( de_L_stats [[2]]$celltype  ),   collapse=",  "  )  )
+df <- rbindlist(list(df , de_L_stats ), use.names=FALSE )
+
+
+
+
+data <- scfeatures_result$feature_morans_I
+de_morans_I <-  find_de_not_celltype_specific(data)
+de_morans_I    <- data.frame("feature_morans_I" ,
+                  de_morans_I[[1]][1] ,   "not applicable" )
+df <- rbindlist(list(df , de_morans_I), use.names=FALSE )
+
+
+
+data <- scfeatures_result$feature_celltype_interaction
+de_celltype_interaction <-  find_de_celltype_interaction(data)
+de_celltype_interaction    <- data.frame("feature_celltype_interaction" ,
+             de_celltype_interaction [[1]][1] ,
+              paste0( unlist( de_celltype_interaction [[2]]$celltype  ),  collapse=",  "  ) )
+df <- rbindlist(list(df , de_celltype_interaction), use.names=FALSE )
+
+
+data <- scfeatures_result$feature_nn_correlation
+de_nn_correlation <-  find_de_not_celltype_specific(data)
+de_nn_correlation  <- data.frame("feature_nn_correlation" ,
+              de_nn_correlation[[1]][1] ,  "not applicable")
+df <- rbindlist(list(df ,de_nn_correlation ), use.names=FALSE )
+
+    
+num_features <- data.frame(num_features)
+
+num_features$feature_type <- rownames(num_features)  
+colnames(df) <- c("feature_type", "number of significant features", "top three important cell types")
+
+df <- merge(df, num_features, by.x = "feature_type" , by.y = "feature_type")
+
+df <- df[, c(1, 4, 2, 3)]
+colnames(df)  <-  c("feature type", "total number of features",  "number of significant features", "top three important cell types")
+datatable(df)
+
+
+
+```
+
+
+
+ 
+
+
+```{r}
+plot_barplot <- function(data , dodge=F  ){
   
 
   data$patient <- unlist( lapply( strsplit( rownames(data ), "_cond_"), `[`, 1))
@@ -71,18 +426,30 @@ plot_barplot <- function(data , dodge=F){
   data <- as.data.frame( melt(data, id=c("patient", "condition")) )
  
   if(dodge){
-    print( ggplot(data , aes( x = patient , y = value , fill = variable) ) +   
-    geom_bar(stat="identity"  ) + facet_wrap(~variable+condition, scale="free") + 
-    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) ) 
+   p <- ggplot(data , aes( x = patient , y = value , fill = variable) ) +   
+    geom_bar(stat="identity"  ) + facet_wrap(~variable+condition, scale="free") + theme_minimal() + 
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) 
+    
   } else{
-    print( ggplot(data , aes( x = patient , y = value , fill = variable) ) +   
+  p <-   ggplot(data , aes( x = patient , y = value , fill = variable) ) +   
     geom_bar(stat="identity"   ) + facet_wrap(~condition, scale="free") + 
-    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) )
+      theme_minimal() + 
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) 
   }
+  
+ 
+ return (p)
+  
+ 
  
 }
 
-plot_boxplot <- function(data){
+```
+
+
+
+```{r}
+plot_boxplot <- function(data, num_feature = 3   ){
   
    data <- t(data)
    patient <- unlist( lapply( strsplit( colnames(data), "_cond_"), `[`, 1) ) 
@@ -108,6 +475,7 @@ plot_boxplot <- function(data){
     print(paste0( "up regulated in ", unique(condition$condition)[1]))
     top_gene <- tT[ tT$logFC > 0 , ]
     top_gene <- rownames(top_gene )
+    top_gene  <- top_gene[1:min(num_feature, length(top_gene) ) ]
  
    if (length(top_gene ) == 0){
           
@@ -116,207 +484,92 @@ plot_boxplot <- function(data){
       data_toplot$cond <-  unlist( lapply( strsplit(as.character(data_toplot$Var2), "_cond_"), `[`, 2))
       data_toplot$Var1 <- factor(data_toplot$Var1, levels =top_gene )
       
-      print ( ggplot( data_toplot, aes( y = value, x = Var1 , colour = cond)) + geom_boxplot() +   geom_point(aes(fill = cond), size = 2, shape = 21, position = position_jitterdodge()) + theme_minimal()  )  
-    }
-    print(paste0( "down regulated in ", unique(condition$condition)[1]))
-    top_gene <- tT[ tT$logFC < 0 , ]
-    top_gene <- rownames(top_gene ) 
- 
-    
-    if (length(top_gene ) == 0){
-          
-    }else{
-      
-      data_toplot <- data[data$Var1 %in%  top_gene, ]
-      data_toplot$cond <-  unlist( lapply( strsplit(as.character(data_toplot$Var2), "_cond_"), `[`, 2))
-      data_toplot$Var1 <- factor(data_toplot$Var1, levels =top_gene )
-    
-       print ( ggplot( data_toplot, aes( y = value, x = Var1 , colour = cond)) + geom_boxplot() +   geom_point(aes(fill = cond), size = 2, shape = 21, position = position_jitterdodge()) + theme_minimal()  )  
-      
-    }
- 
+      p <- ggplot( data_toplot, aes( y = value, x = Var1 , colour = cond, text = Var2)) + geom_boxplot() +   geom_point(aes(fill = cond), size = 1, shape = 21, position = position_jitterdodge()) +  theme_minimal() + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))   
+     
+   }
   
+   return (p ) 
   
 }
 
 ```
- 
- 
-```{r eval=TRUE, include=FALSE}
- 
-cond <- rownames( scfeatures_result[[1]]) 
-cond <- unlist(lapply(strsplit(cond, "_cond_"), `[` , 2))
-cond1 <- unique(cond)[1]
-cond2 <- unique(cond)[2]
- 
-```
- 
 
-
-# Overview
-
-This html runs association study of the features generated by scFeatures with phenotypic outcomes such as disease conditions and output a series of plots to visualise the association study result. 
-
-
-
-# Cell type proportions
-
-## Proportion raw
-
-The barplot shows cell type composition of the data, split by condition. 
-
-```{r fig.height=4, fig.width=8}
-if("feature_proportion_raw" %in% names(scfeatures_result) ){
-    data <- scfeatures_result$feature_proportion_raw
-    plot_barplot(data)
-}
-```
-
-The two boxplots show the up-regulated cell type in `r cond1` compared to the `r cond2` and the down-regulated cell type, respectively. Each dot on the boxplot represent the cell type proportion of an individual for that particular cell type. 
-
-```{r  fig.height=4, fig.width=8 }
-if("feature_proportion_raw" %in% names(scfeatures_result) ){
-    data <- scfeatures_result$feature_proportion_raw
-    plot_boxplot(data)
-}
-```
-
-
-## Proportion logit
-
-The barplot shows cell type composition with logit transformation, split by condition. 
-
-The two boxplots show the up-regulated cell type in `r cond1` compared to the `r cond2` and the down-regulated cell type, respectively. Each dot on the boxplot represent the cell type proportion (after logit transformation) of an individual for that particular cell type. 
-
-
-```{r fig.height=6, fig.width=10}
-if("feature_proportion_logit" %in% names(scfeatures_result) ){
-    data <- scfeatures_result$feature_proportion_logit
-    plot_barplot(data, dodge = T)
-}
-```
-
-
-```{r  fig.height=4, fig.width=8 }
-if("feature_proportion_logit" %in% names(scfeatures_result) ){
-    data <- scfeatures_result$feature_proportion_logit
-    plot_boxplot(data)
-}
-```
-
-
-## Pairwise ratio of proportion
-
-The barplot shows pairwise ratio of cell type proportion (ie, proportion of cell type 1 / proportion of cell type 2), split by condition. 
-
-The two boxplots show the up-regulated ratio of proportion in `r cond1` compared to the `r cond2` and the down-regulated ratio of proportion, respectively. Each dot on the boxplot represent the proportion ratio of an individual for that particular cell type. 
-
-
-```{r fig.height=6, fig.width=12}
-if("feature_proportion_ratio" %in% names(scfeatures_result) ){
-  data <- scfeatures_result$feature_proportion_ratio
-  plot_barplot(data, dodge = T)
-}
-```
-
-
-```{r  fig.height=4, fig.width=8 }
-if("feature_proportion_ratio" %in% names(scfeatures_result) ){
-    data <- scfeatures_result$feature_proportion_ratio
-    plot_boxplot(data)
-}
-```
-
-
-# Cell type specific gene expressions 
 
 
 ```{r}
 
-# helper function to plot heatmap 
-
-plot_heatmap <- function(data, num_features = 50, pathway = F ){
+plot_pca <- function(data, filename ){
   
-    
-    patient <- unlist( lapply( strsplit( colnames(data), "_cond_"), `[`, 1) ) 
-    
-    remove <- which(patient == "NA")
-    if (length(remove) > 0 ){
-       patient <-  patient[-c(remove)]
-       data <- data[ , -c(remove)]
-    }
-        
-    condition  <- unlist( lapply( strsplit( colnames(data), "_cond_"), `[`, 2))
-    condition <- data.frame(condition = condition )
-    
-    if (pathway){
-      celltype <- unlist( lapply( strsplit(rownames(data), "--"), `[`, 2) )
-    }else{
-       celltype <- unlist( lapply( strsplit(rownames(data), "--"), `[`, 1) )
-    }
+  gse_pca <- prcomp( data)
+  condition <- unlist( lapply( strsplit(rownames(data), "_cond_" ) , `[`, 2))
+  
+  df_toplot <- data.frame(condition , 
+                          pc1 = gse_pca$x[,1], pc2 = gse_pca$x[,2]  )
+  df_toplot$patient <- rownames(df_toplot)
+  p <- ggplot(df_toplot, aes(x = pc1, y = pc2, color = condition , text = patient  )) + 
+    geom_point(size = 4) + 
+    theme_minimal() 
+ 
+  return (p )
    
-    gene_output <- list()
-    # thiscelltype  <- unique(celltype)[1]
-    for ( thiscelltype in unique(celltype)){
+}
 
-        label <- thiscelltype 
-        print(paste0( "==========", label,  "=========="))
-        thiscelltype <- data[ which(celltype == thiscelltype), ]
-    
-        design <- model.matrix(~condition, data = condition)
-        fit <- lmFit(thiscelltype, design)
-        fit <- eBayes(fit)
-     
-        suppressMessages ( tT <- topTable(fit, n = Inf)  )
-        gene_output[[label]] <- tT
-        
-       # print(DT::datatable(round(tT, 2)))
-          
-        print(paste0( "up regulated in ", unique(condition$condition)[1]))
-        top_gene <- tT[ tT$logFC > 0 , ]
-        top_gene <- rownames(top_gene )[1:min( num_features, nrow(top_gene)) ]
-        rownames(  condition) <- colnames(thiscelltype)
-        
-        if (length(top_gene) == 0){
-          
-        }else if (length(top_gene) == 1){
-           pheatmap( thiscelltype[top_gene, , drop=FALSE]  ,   
-                  annotation = condition,
-                 main = label , cluster_rows = F )
-        }else{
-            pheatmap( thiscelltype[top_gene,  , drop=FALSE]  , 
-                   annotation = condition,
-                 main = label , fontsize_row = 5 , fontsize_col = 5,
-                 scale = "row")
-        }
-      
-        
-        
-        print(paste0( "down regulated in ", unique(condition$condition)[1]))
-        top_gene <- tT[ tT$logFC < 0 , ]
-        top_gene <- rownames(top_gene )[1:min( num_features, nrow(top_gene)) ]
-        rownames(  condition) <- colnames(thiscelltype)
-        
-        if (length(top_gene ) == 0){
-          
-        }else if (length(top_gene) == 1){
-             pheatmap( thiscelltype[top_gene, , drop=FALSE]  ,   
-                  annotation = condition,
-                 main = label , cluster_rows = F )
-        }else{
-            pheatmap( thiscelltype[top_gene, ]  ,  annotation = condition,
-                 main = label , fontsize_row = 5 , fontsize_col = 5,
-                 scale = "row")
-        }
-      
-     
-    } 
-
-    return(gene_output)
-} 
+```
 
 
-plot_heatmap_bulk <- function(data , num_features = 50 ){
+
+# Cell type proportions {.tabset .tabset-fade .tabset-pills}
+
+```{r  echo=TRUE,  out.width = '60%'}
+knitr::include_graphics( system.file("extdata/figure", "celltypeproportion_example_figures.png",   package = "scFeatures")  )
+``` 
+
+   
+
+1. Barplot shows the composition of cells types   
+2. Boxplot shows the top cell types that differs between conditions    
+3. PCA plot shows the separation of conditions based on the cell type proportion features 
+
+
+## Composition barplot
+
+```{r}
+ 
+data <- scfeatures_result$feature_proportion_raw
+
+p <-  plot_barplot(data  ) 
+
+ggplotly(p)
+ 
+```
+
+
+
+## Boxplot of top features
+
+```{r}
+data <- scfeatures_result$feature_proportion_raw
+p <- plot_boxplot(data ) 
+ ggplotly(p) %>% layout(boxmode = "group") 
+
+```
+
+
+## PCA plot 
+
+```{r}
+ 
+data <- scfeatures_result$feature_proportion_raw
+p <- plot_pca(data )  
+ggplotly(p) 
+
+```
+
+
+
+```{r}
+
+plot_heatmap_bulk <- function(data , num_features = 20  ){
    
    
      
@@ -334,7 +587,7 @@ plot_heatmap_bulk <- function(data , num_features = 50 ){
     fit <- lmFit(data, design)
     fit <- eBayes(fit)
      
-   suppressMessages ( tT <- topTable(fit, n = Inf) )
+    suppressMessages ( tT <- topTable(fit, n = Inf) )
     gene_output <- tT
         
     # print ( DT::datatable(round(tT, 2)) )
@@ -349,86 +602,21 @@ plot_heatmap_bulk <- function(data , num_features = 50 ){
     }else if (length(top_gene) == 1){
              pheatmap( thiscelltype[top_gene, , drop=FALSE]  ,   
                   annotation = condition,
-                 main = label , cluster_rows = F )
+                 main = label , cluster_rows = F  , color=colorRampPalette(c("navy", "white", "red"))(50) )
    }else{
-          pheatmap( data[top_gene, ]  ,  annotation = condition,
+
+        p <-  pheatmap( data[top_gene, ]  ,  annotation = condition,
               fontsize_row = 5 , fontsize_col = 5,
-                scale = "row")
+                scale = "row" , color=colorRampPalette(c("navy", "white", "red"))(50) )
    }
     
-        
-        
-    print(paste0( "down regulated in ", unique(condition$condition)[1]))
-    top_gene <- tT[ tT$logFC < 0 , ]
-    top_gene <- rownames(top_gene )[1:min( num_features, nrow(top_gene)) ]
-    rownames(  condition) <- colnames(data)
-    
-    if (length(top_gene ) == 0){
-          
-    }else if (length(top_gene) == 1){
-             pheatmap( thiscelltype[top_gene, , drop=FALSE]  ,   
-                  annotation = condition,
-                 main = label , cluster_rows = F )
-   }else{
-     
-    pheatmap( data[top_gene, ]  ,  annotation = condition,
-               fontsize_row = 5 , fontsize_col = 5,
-                 scale = "row")
-   }
- 
-
-    return(gene_output)
+    return(list( gene_output = gene_output, p = p ) ) 
   
 }
-```
 
 
 
-
-```{r}
-# helper function to plot pathway enrichment of top genes 
-
-plot_go <- function(gene_output){
- 
- #  thiscelltype <- names(gene_output)[1]
-  for (thiscelltype in names(gene_output)){
-      gene <- gene_output[[thiscelltype]]
-      print(paste0( "==========", thiscelltype,  "=========="))
-    
-      try({
-        print("up regulated")
-        
-        up <- rownames(gene[gene$logFC > 0, ])[1:200]
-        up <- unlist(lapply( strsplit(up , "--"), `[`, 2))
-       
-        gse <- enrichGO(gene = up , 
-                   ont ="BP" ,  keyType = "SYMBOL" , 
-                   minGSSize = 3,   maxGSSize = 800, 
-                   pvalueCutoff =0.05,  pAdjustMethod =  "fdr",
-                   OrgDb = organism  )
-        
-        print ( dotplot(gse, showCategory=10  , font.size = 8) ) 
-      }) 
-      
-      try({
-        print("down regulated")
-        down <- rownames(gene[gene$logFC < 0, ])[1:200]
-        down <- unlist(lapply( strsplit(down , "--"), `[`, 2))
-       
-        gse <- enrichGO(gene = down , 
-                   ont ="BP" ,  keyType = "SYMBOL" , 
-                   minGSSize = 3,   maxGSSize = 800, 
-                   pvalueCutoff =0.05,  pAdjustMethod =  "fdr",
-                   OrgDb = organism  )
-        
-        print ( dotplot(gse, showCategory=10  ,  font.size = 8) ) 
-      }) 
-  
-  }
-
-}
-
-plot_go_bulk  <- function(gene_output){
+plot_go_bulk  <- function(gene_output ){
  
  
       try({
@@ -441,145 +629,184 @@ plot_go_bulk  <- function(gene_output){
                    minGSSize = 3,   maxGSSize = 800, 
                    pvalueCutoff =0.05,  pAdjustMethod =  "fdr",
                    OrgDb = organism  )
+       
+         dotplot <- dotplot(gse, showCategory=10,  font.size = 8 ) 
+       
+         
+         gse <- enrichplot::pairwise_termsim(gse)
+         
         
-        print ( dotplot(gse, showCategory=10,  font.size = 8 ) ) 
+        emapplot <-  emapplot(gse, showCategory = 10,  
+                         cex_label_category=0.7, cex_line = 0.7 ,   cex_category = 0.7) 
+    
+    
+       
+       treeplot <-  treeplot(gse,  fontsize = 3 , cex_category = 0.2, label_format = 5,
+                        offset = 5)
+  
+        
       }) 
       
-      try({
-        print("down regulated")
-        down <- rownames(gene_output[gene_output$logFC < 0, ])[1:200]
-        
-        gse <- enrichGO(gene = down , 
-                   ont ="BP" ,  keyType = "SYMBOL" , 
-                   minGSSize = 3,   maxGSSize = 800, 
-                   pvalueCutoff =0.05,  pAdjustMethod =  "fdr",
-                   OrgDb = organism  )
-        
-        print ( dotplot(gse, showCategory=10, font.size = 8 ) ) 
-      }) 
-  
+     return (list(  dotplot =   dotplot ,  emapplot =  emapplot ,   treeplot  =   treeplot  )) 
+
+}
+
+
+
+```
+
+
+
+
+# Cell type specific gene expressions {.tabset .tabset-fade .tabset-pills}
+
+```{r echo=TRUE, out.width = '60%'}
+knitr::include_graphics( system.file("extdata/figure",  "celltypegene_example_figures.png" ,   package = "scFeatures")  )
+``` 
+   
+
+1. Heatmaps shows the top cell type specific gene expression features that differs between conditions   
+2. MA plot shows the expression and log2 fold change of the cell type specific gene expression features   
+3. Volcano plot shows the log2 fold change and P-values of the cell type specific gene expression features     
+4. PCA plot shows the separation of conditions based on the cell type specific gene expression features   
+5. Dot plot shows the pathway enrichment of the top cell type specific gene expression features that differs between conditions   
+6. Enrichment map of the top cell type specific gene expression features that differs between conditions   
+7. Functional grouping of the top cell type specific gene expression features that differs between conditions  
+
+
+## Heatmap
+
+```{r}
+
+data <- scfeatures_result$feature_gene_mean_celltype
+data <- t(data)
+    
+
+celltype <- rownames(data)
+celltype <- unlist( lapply( strsplit(celltype, "--" ), `[`, 1) )
+
+topcelltype <- strsplit( de_gene_mean_celltype[, 3] , ", ")[[1]][1]
+
+data <- data[ which(celltype == topcelltype ) , ]
+
+result <- plot_heatmap_bulk(data , num_features = 20 )
+
+gene_output <- result$gene_output
+
+```
+
+## MA plot
+
+```{r}
+
+gene_output$gene <- rownames(gene_output)
+ 
+g <- ggplot(gene_output, aes(x = AveExpr, y = logFC , text  = gene))+
+    geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
+    scale_colour_gradient(low="blue",high="red")+
+    ylab("log2 fold change") + xlab("Average expression")+ theme_minimal()
+ 
+ggplotly(g)
  
 
-}
+```
+
+## Volcano plot
+
+```{r}
+
+
+ 
+p <- ggplot( gene_output , aes(logFC,-log10(P.Value) , text = gene ) )+
+    geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
+    scale_colour_gradient(low="blue",high="red")+
+    xlab("log2 fold change") + ylab("-log10 p-value") + theme_minimal()
+  
+
+ggplotly(p)
+
+ 
 
 
 ```
 
-
-
-## gene mean celltype 
-
-The heatmaps show the up-regulated gene in `r cond1` compared to the `r cond2` and the down-regulated gene, respectively, for each cell type. Value represents average gene expression. The top 50 genes are shown for readability. 
-
-The enrichment plots show enrichment in biological pathways of the top 200 up-regulated or down-regulated genes in each cell type. Top 10 pathways are shown. 
+## PCA plot
 
 ```{r}
-if("feature_gene_mean_celltype" %in% names(scfeatures_result) ){
-    data <- scfeatures_result$feature_gene_mean_celltype
-    data <- t(data)
+
+ p <- plot_pca(t( data) )
+
+ggplotly(p)
+```
+
+## Dot plot
+
+```{r}
+rownames( gene_output  ) <- unlist( lapply ( strsplit( rownames( gene_output  ) , "--"), `[` , 2) )
+result <- plot_go_bulk(gene_output )
+
+print(result$dotplot)
+```
+
+## Enrichment map
+
+```{r}
+print(result$emapplot) 
+
+```
+
+## Functional grouping
+
+```{r}
+print(result$treeplot) 
+
+```
+
+
+# Cell type specific pathway expressions {.tabset .tabset-fade .tabset-pills}
+
+```{r echo=TRUE,  out.width = '60%'}
+knitr::include_graphics(  system.file("extdata/figure",  "pathway_example_figures.png" ,   package = "scFeatures")    )
+``` 
+1. Heatmaps shows the top cell type specific pathway expression features that differs between conditions    
+2. Boxplot shows the top cell type specific pathway expression features that differs between conditions     
+3. PCA plot shows the separation of conditions based on the cell type specific pathway expression features     
+
+
+## Heatmap 
+
+```{r}
+data <- scfeatures_result$feature_pathway_gsva
+data <- t(data)
     
-    gene_output <- plot_heatmap(data)
-}
-```
-
-```{r fig.height=4, fig.width=6}
-if("feature_gene_mean_celltype" %in% names(scfeatures_result) ){
-    plot_go(gene_output)
-}
-```
-
-
-
-## gene proportion celltype
-
-
-The heatmaps show the up-regulated gene in `r cond1` compared to the `r cond2` and the down-regulated gene, respectively, for each cell type. Value represents average proportion of expression (ie, across all cells, the percentage of cells that express a particular gene). The top 50 genes are shown for readability. 
-
-The enrichment plots show enrichment in biological pathways of the top 200 up-regulated or down-regulated genes in each cell type. Top 10 pathways are shown. 
-
-
-
-```{r}
-if("feature_gene_prop_celltype" %in% names(scfeatures_result) ){
-    data <- scfeatures_result$feature_gene_prop_celltype
-    data <- t(data)
+gene_output <- plot_heatmap_bulk(data )
     
-    gene_output <- plot_heatmap(data)
-}
-```
 
-```{r fig.height=4, fig.width=6}
-if("feature_gene_prop_celltype" %in% names(scfeatures_result) ){
-    plot_go(gene_output)
-}
 ```
 
 
-## gene correlation celltype
-
-The heatmaps show the up-regulated gene in `r cond1` compared to the `r cond2` and the down-regulated gene, respectively, for each cell type. Value represents correlation in expression. The top 50 genes are shown for readability. 
-
-The enrichment plots show enrichment in biological pathways of the top 200 up-regulated or down-regulated genes in each cell type. Top 10 pathways are shown. 
-
+## Boxplot
 
 ```{r}
-if("feature_gene_cor_celltype" %in% names(scfeatures_result) ){
-    data <- scfeatures_result$feature_gene_cor_celltype
-    data <- t(data)
     
-    gene_output <- plot_heatmap(data)
-}
+p <- plot_boxplot(t(data) )
+
+ggplotly(p)  %>% layout(boxmode = "group") 
+
 ```
 
 
-# Cell type specific pathway expression
-
-## pathway gsva
-
-The heatmaps show the up-regulated pathway in `r cond1` compared to the `r cond2` and the down-regulated gene, respectively, for each cell type. Value represents pathway scores calculated using GSVA.  
+## PCA plot
 
 ```{r}
-if("feature_pathway_gsva" %in% names(scfeatures_result) ){    
-    data <- scfeatures_result$feature_pathway_gsva
-    data <- t(data)
-    
-    gene_output <- plot_heatmap(data, pathway = T)
-}
+p <- plot_pca(t( data) )
+ggplotly(p)
 ```
-
-## pathway mean  
-
-The heatmaps show the up-regulated pathway in `r cond1` compared to the `r cond2` and the down-regulated gene, respectively, for each cell type. Value represents expression values of the genes in each pathway. 
-
-```{r}
-if("feature_pathway_mean" %in% names(scfeatures_result) ){   
-    data <- scfeatures_result$feature_pathway_mean
-    data <- t(data)
-    
-    gene_output <- plot_heatmap(data, pathway = T)
-}
-```
-
-## pathway proportion
-
-The heatmaps show the up-regulated pathway in `r cond1` compared to the `r cond2` and the down-regulated gene, respectively, for each cell type. Value represents proportion expression of genes in each pathway. 
-
-```{r}
-if("feature_pathway_prop" %in% names(scfeatures_result) ){   
-    data <- scfeatures_result$feature_pathway_prop
-    data <- t(data)
-    
-    gene_output <- plot_heatmap(data, pathway = T)
-}
-```
-
-
-# Cell type specific cell-cell communications
 
 
 ```{r}
 
-plot_CCI <- function(data){
+plot_CCI <- function(data ){
   
 
     patient <- unlist( lapply( strsplit( colnames(data), "_cond_"), `[`, 1) ) 
@@ -615,6 +842,9 @@ plot_CCI <- function(data){
     rownames(df) <- df$ligand
     df <- df[, -1]
     
+    
+     
+     
    setHook("grid.newpage", function() pushViewport(viewport(x=1,y=1,width=0.9, height=0.9, name="vp", just=c("right","top"))), action="prepend")
      pheatmap(  df , fontsize_row = 10 , fontsize_col = 10,  cluster_cols = F,
                  cluster_rows = F ,
@@ -623,183 +853,235 @@ plot_CCI <- function(data){
   grid::grid.text("sender (ligand)", y=-0.07, gp=gpar(fontsize=16))
   grid::grid.text("target (receptor)", x=-0.07, rot=90, gp=gpar(fontsize=16)) 
    
-    
-   
+ 
+ 
+  return(df)
+       
+}    
+
+plot_CCI_difference <- function(df){
+  
    #  https://stackoverflow.com/questions/49171958/igraph-edge-width-and-color-positive-and-negative-correlation
     df_net <- round( as.matrix(df) , 2)
     g <- graph_from_adjacency_matrix(df_net, mode = "directed", weighted = T)
     E(g)$color <- ifelse(E(g)$weight > 0,'coral1','cornflowerblue')  
     E(g)$label.color<- "black"
  
-    plot(g,  
+    
+     
+     
+   plot(g,  
          edge.curved=0.3 , edge.arrow.size=0.4, vertex.label.dist=4 ,
          edge.width=as.integer(cut(abs(E(g)$weight), breaks = 5)) ,
         edge.label = E(g)$weight,
          
          vertex.color="azure",
          vertex.label.color="black"  ,
-         vertex.label.family="Helvetica", edge.label.family="Helvetica"
+         vertex.label.family="Helvetica", edge.label.family="Helvetica")
           
-     )
-    
-}    
+}
+
  
 ```
 
 
 
-Heatmap shows the up-regulated cell cell interaction pair in `r cond1` compared to the `r cond2` and the down-regulated gene, respectively, for each cell type. Value represents cell cell interaction score.  
+# Cell type specific cell-cell communications {.tabset .tabset-fade .tabset-pills}
+
+
+```{r echo=TRUE,  out.width = '60%'}
+knitr::include_graphics(  system.file("extdata/figure",  
+                   "CCI_example_figures.png"  ,   package = "scFeatures")    )
+
+``` 
+1. Heatmap shows the top cell cell interactions features that differs between conditions    
+2. Heatmap shows the difference in the number of interactions between conditions  
+3. PCA plot shows the separation of conditions based on the cell type specific pathway expression features   
+4. Network plot shows the difference in the number of interactions between conditions
+5. Boxplot shows the top cell cell interaction features that differs between conditions       
+
+
+
+## Heatmap of top cell cell interactions
 
 ```{r}
-if("feature_CCI" %in% names(scfeatures_result) ){  
-    data <- scfeatures_result$feature_CCI
-    data <- t(data)
+ data <- scfeatures_result$feature_CCI
+ data <- t(data)
+ 
+data <- data[, -c( which( colnames(data) == "NA"))]
+ 
+result <- plot_heatmap_bulk(data,  num_feature = 20 )
     
-    gene_output <- plot_heatmap_bulk(data )
-}
+gene_output <- result$gene_output
 ```
 
-
-Heatmap and and network plot indicates the difference in the number of cell-cell interaction pairs between `r cond1` and `r cond2`. Red indicates a positivie difference (ie, greater in `r cond1`) and blue indicates a negative difference (ie, greater in `r cond2`). 
-
-```{r  fig.height=4, fig.width=4}
-if("feature_CCI" %in% names(scfeatures_result) ){  
-    plot_CCI(data)
-}
-```
-
-
-# Overall aggregated gene expressions
-
-## gene mean aggregated
-
-The heatmaps show the up-regulated gene in `r cond1` compared to the `r cond2` and the down-regulated gene, respectively. Value represents average gene expression. The top 50 genes are shown for readability. 
-
-The enrichment plots show enrichment in biological pathways of the top 200 up-regulated or down-regulated genes in each cell type. Top 10 pathways are shown. 
+## Heatmap of difference in number of interactions
 
 ```{r}
-if("feature_gene_mean_aggregated" %in% names(scfeatures_result) ){  
-    data <- scfeatures_result$feature_gene_mean_aggregated
-    data <- t(data)
-    
-    gene_output <- plot_heatmap_bulk(data)
-}
+df <- plot_CCI(data )
 ```
 
 
-```{r fig.height=4, fig.width=6}
-if("feature_gene_mean_aggregated" %in% names(scfeatures_result) ){ 
-    plot_go_bulk(gene_output)
-}
-```
-
-
-
-## gene proportion aggregated
-
-The heatmaps show the up-regulated gene in `r cond1` compared to the `r cond2` and the down-regulated gene, respectively. Value represents average proportion of expression (ie, across all cells, the percentage of cells that express a particular gene). The top 50 genes are shown for readability. 
-
-The enrichment plots show enrichment in biological pathways of the top 200 up-regulated or down-regulated genes in each cell type. Top 10 pathways are shown. 
-
+## PCA plot
 
 ```{r}
-if("feature_gene_prop_aggregated" %in% names(scfeatures_result) ){ 
-    data <- scfeatures_result$feature_gene_prop_aggregated
-    data <- t(data)
-    
-    gene_output <- plot_heatmap_bulk(data)
-}
-```
+p <- plot_pca(t(data) )
 
-```{r fig.height=4, fig.width=6}
-if("feature_gene_prop_aggregated" %in% names(scfeatures_result) ){ 
-    plot_go_bulk(gene_output)
-}
+ggplotly(p)
 ```
 
 
-
-## gene correlation aggregated
-
-The heatmaps show the up-regulated gene in `r cond1` compared to the `r cond2` and the down-regulated gene, respectively. Value represents correlation in expression. The top 50 genes are shown for readability. 
-
-The enrichment plots show enrichment in biological pathways of the top 200 up-regulated or down-regulated genes in each cell type. Top 10 pathways are shown. 
+## Network plot
 
 ```{r}
-if("feature_gene_cor_aggregated" %in% names(scfeatures_result) ){ 
-    data <- scfeatures_result$feature_gene_cor_aggregated
-    data <- t(data)
-    
-    gene_output <- plot_heatmap_bulk(data)
-}
+plot_CCI_difference(df)
 ```
 
-# Spatial metrics
 
-## L function
-
-The heatmaps show the up-regulated cell type pairs in `r cond1` compared to the `r cond2` and the down-regulated cell type pairs, respectively. Value represents L score. The top 50 cell type pairs are shown for readability. 
-
+## Boxplot 
 
 ```{r}
-if("feature_L_stats" %in% names(scfeatures_result) ){ 
-    data <- scfeatures_result$feature_L_stats
-    data <- t(data)
-    
-    gene_output <- plot_heatmap_bulk(data)
-}
+p <- plot_boxplot(t(data))  
+
+ggplotly(p)  %>% layout(boxmode = "group") 
+
 ```
 
 
-## cell type interaction
+# Overall aggregated gene expressions {.tabset .tabset-fade .tabset-pills}
 
-The heatmaps show the up-regulated cell type pairs in `r cond1` compared to the `r cond2` and the down-regulated cell type pairs, respectively. Value represents interaction score.
+```{r echo=TRUE, out.width = '60%'}
+knitr::include_graphics(  system.file("extdata/figure",  
+         "aggregatedgene_example_figures.png" ,   package = "scFeatures")    )
+``` 
 
+
+1. Heatmaps shows the top aggregated gene expression features that differs between conditions   
+2. MA plot shows the expression and log2 fold change of the aggregated gene expression features   
+3. Volcano plot shows the log2 fold change and P-values of the aggregated gene expression features     
+4. PCA plot shows the separation of conditions based on the aggregated gene expression features   
+5. Dot plot shows the pathway enrichment of the top aggregated gene expression features that differs between conditions   
+6. Enrichment map of the top aggregatedgene expression features that differs between conditions   
+7. Functional grouping of the top aggregated gene expression features that differs between conditions   
+
+
+
+
+## Heatmap
 
 ```{r}
-if("feature_celltype_interaction" %in% names(scfeatures_result) ){ 
-    data <- scfeatures_result$feature_celltype_interaction
-    data <- t(data)
+
+data <- as.matrix ( scfeatures_result$feature_gene_mean_aggregated)
+data <- t(data)
     
-    gene_output <- plot_heatmap_bulk(data)
-}
+result <- plot_heatmap_bulk(data ,  num_features = 20)
+
+gene_output <- result$gene_output
+
+
 ```
 
-
-## Moran's I
-
-The heatmaps show the up-regulated genes in `r cond1` compared to the `r cond2` and the down-regulated genes, respectively. Value represents Moran's I value.
-
-
+## MA plot
 
 ```{r}
-if("feature_morans_I" %in% names(scfeatures_result) ){ 
-    data <- scfeatures_result$feature_morans_I
-    data <- t(data)
-    
-    gene_output <- plot_heatmap_bulk(data)
-}
+
+gene_output$gene <- rownames(gene_output)
+ 
+g <-  ggplot(gene_output, aes(x = AveExpr, y = logFC, text = gene))+
+    geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
+    scale_colour_gradient(low="blue",high="red")+
+    ylab("log2 fold change") + xlab("Average expression")+ theme_minimal()
+ 
+ggplotly(g)
+
 ```
 
-
-
-## nearest neighbour correlation 
-
-The heatmaps show the up-regulated genes in `r cond1` compared to the `r cond2` and the down-regulated gene, respectively. Value represents nearest neighbour correlation score. 
-
+## Volcano plot
 
 ```{r}
-if("feature_nn_correlation" %in% names(scfeatures_result) ){ 
-    data <- scfeatures_result$feature_nn_correlation
-    data <- t(data)
-    
-    gene_output <- plot_heatmap_bulk(data)
-}
+p <-  ggplot( gene_output , aes(logFC,-log10(P.Value) , text = gene) )+
+    geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
+    scale_colour_gradient(low="blue",high="red")+
+    xlab("log2 fold change") + ylab("-log10 p-value") + theme_minimal()
+ 
+ggplotly(p)
+
+```
+
+## PCA plot
+
+```{r}
+
+plot_pca( t(data)  )  
+
+```
+
+## Dot plot
+
+```{r}
+result <- plot_go_bulk( gene_output  ) 
+
+print(result$dotplot)
+```
+
+## Enrichment map
+
+```{r}
+print(result$emapplot)
+```
+
+## Functional grouping
+
+```{r}
+print(result$treeplot)
 ```
 
 
 
 
 
+# Spatial metrics {.tabset .tabset-fade .tabset-pills}
 
 
+
+```{r echo=TRUE, out.width = '60%'}
+knitr::include_graphics(  system.file("extdata/figure",  
+       "spatial_example_figures.png",   package = "scFeatures")    )
+``` 
+
+1. Heatmaps shows the top spatial features that differs between conditions    
+2. Boxplot shows the top spatial features that differs between conditions     
+3. PCA plot shows the separation of conditions based on the spatial features    
+
+  
+## Heatmap
+
+```{r}
+data <- scfeatures_result$feature_morans_I
+data <- t(data)
+    
+gene_output <- plot_heatmap_bulk(data,    num_features = 20 ) 
+
+ 
+```
+
+## Boxplot
+
+```{r}
+ p <- plot_boxplot( t(data)  )  
+ggplotly(p) %>% layout(boxmode = "group") 
+
+```
+
+
+## PCA plot 
+  
+```{r}
+p <- plot_pca( t(data)  )  
+ggplotly(p)
+
+```
+  
+  
+  
+  
