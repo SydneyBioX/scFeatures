@@ -6,6 +6,7 @@
 \usage{
 run_pathway_gsva(
   data,
+  method = "ssgsea",
   geneset = NULL,
   species = "Homo sapiens",
   type = "scrna",
@@ -15,6 +16,8 @@ run_pathway_gsva(
 }
 \arguments{
 \item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
+
+\item{method}{type of pathway analysis method, currently support \code{ssgsea} and \code{aucell}}
 
 \item{geneset}{By default (when the \code{geneset} argument is not specified),  we use the 50 hallmark gene set from msigdb.
 The users can also provide their geneset of interest in a list format, with each list entry containing a vector of the names of genes in a gene set.

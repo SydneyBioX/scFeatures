@@ -124,11 +124,14 @@ feature_proportion_ratio <- run_proportion_ratio(data)
 
 
 * Detail:   
-This feature category aggregate the cells across each cell type and then construct various features. For all feature types, we restrict to the top variable genes to reduce the dimensions of the feature. The argument `num_top_gene` determines how many genes to include. By default, the algorithm picks around 100 most variable genes per cell type.   
+This feature category aggregate the cells across each cell type and then construct various features. By default, (if the `features` argument is not provided),  we restrict to the top variable genes to reduce the dimensions of the feature. The argument `num_top_gene` determines how many genes to include. 
 
   * `Gene mean celltype`: the cell type specific gene expression. 
   * `Gene proportion celltype`: for a particular gene, the percentage of cells in a cell type that it is expressed.
   * `Gene correlation celltype`: correlation of expressions of two given genes in a cell type. 
+
+Alternatively, users can provide their own gene of interest to the `features` argument.  
+
   
 * Expected output: 
   * `Gene mean celltype`: the features are in the form of gene 1 celltype a, gene 2 celltype b ... etc,  with the number representing average gene expression of the given  gene across the cells of the the given celltype. 
@@ -142,9 +145,14 @@ Note that mitochondria and ribosomal genes may not be as interesting to look at.
 data_remove_mito <- remove_mito(data)
 
 feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito) 
-feature_gene_prop_celltype <- run_gene_prop_celltype(data_remove_mito)
-# we can change this number to pick ~50 genes per cell type
-feature_gene_cor_celltype <- run_gene_cor_celltype(data_remove_mito, num_top_gene = 50)
+
+# we can provide our own sets of genes 
+genes_of_interest <- data.frame( marker = c("S100A11" , "GZMB" ,  "DUSP1" ) , 
+                                celltype = c( "CD8, T Effector Memory" , "CD8, T Effector Memory"  ,  "Naive T Cells") ) 
+feature_gene_prop_celltype <- run_gene_prop_celltype(data_remove_mito, features = genes_of_interest)
+
+# we can change the number to pick ~10 top variables genes per cell type
+feature_gene_cor_celltype <- run_gene_cor_celltype(data_remove_mito, num_top_gene = 10)
 ```
 
 
@@ -201,7 +209,7 @@ feature_CCI <- run_CCI(data, species = "Homo sapiens")
 ### Overall aggregated gene expressions 
 
 * Detail: 
-The feature types in this category is calculated based on the aggregated expressions across all cells. The argument `num_top_gene` determines how many genes to include. By default, the algorithm picks 1500 most variable genes.
+The feature types in this category is calculated based on the aggregated expressions across all cells. The argument `num_top_gene` determines how many genes to include. By default (if the `features` argument is not provided), the algorithm picks the top variable genes.
 
 * Expected output:   
   * `Gene mean`:  The features are in the form of gene 1, gene 2 ... etc, with the numbers representing averaged gene expression across all cells.  
@@ -211,9 +219,11 @@ The feature types in this category is calculated based on the aggregated express
 
 ```{r eval=FALSE, include=TRUE}
 feature_gene_mean_aggregated <- run_gene_mean(data)
-feature_gene_cor_aggregated  <- run_gene_cor(data)
-# we can change this number to pick 1000 genes 
-feature_gene_prop_aggregated  <- run_gene_prop(data, num_top_gene = 1000)
+
+genes_of_interest <- c("TIGIT", "PDCD1")
+feature_gene_cor_aggregated  <- run_gene_cor(data, features = genes_of_interest)
+# we can change this number to pick 100 top variable genes 
+feature_gene_prop_aggregated  <- run_gene_prop(data, num_top_gene = 100)
 ```
 
 

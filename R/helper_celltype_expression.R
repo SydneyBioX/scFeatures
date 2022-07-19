@@ -55,22 +55,40 @@ remove_mito <- function(data ){
 
 # find variable genes per sample,  then take the union  
 # for cell type specific methods, find the variable genes per cell type per sample 
-find_var_gene <- function(data,  num_top_gene  = 1500, ncores = 1, celltype = T){
+
+find_var_gene <- function(data,  num_top_gene  = 1500 ,   ncores = 8 , celltype = T ){
   
   
   
   if (celltype == T){
     
-    gene  <- parallel::mclapply ( unique( data$celltype), function( thiscelltype ){
+    # here calculates the HVG across all cells across all cell types
+    
+    hvg_across_all_cells <-  mclapply(unique(data$sample) , function(thissample){
+      this <- data[, data$sample == thissample]
+      gene_var <- DelayedMatrixStats::rowVars(DelayedArray( this@assays$RNA@data))
+      top_gene <- order(gene_var , decreasing = T)[1:num_top_gene  ]
+      thisgene <- rownames(data)[top_gene]
+    }, mc.cores =  ncores )
+    
+    hvg_across_all_cells <- unique( unlist(hvg_across_all_cells) )
+    
+    
+    
+    
+    # below calculates the HVG within each cell type 
+    # thiscelltype <- unique( data$celltype)[1]
+    gene  <-  mclapply ( unique( data$celltype) , function( thiscelltype ){
       
       this_data <- data[, data$celltype == thiscelltype ]
       
       thisgene <- c()
       
+      #  thissample <-  unique( this_data$sample)
       for (thissample in unique( this_data$sample) ){
         this <-   this_data[, this_data$sample == thissample]
         if (ncol(this) > 1 ){
-          gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray( this@assays$RNA@data))
+          gene_var <- DelayedMatrixStats::rowVars(DelayedArray( this@assays$RNA@data))
           top_gene <- order(gene_var , decreasing = T)[1:num_top_gene  ]
           temp  <- rownames(data)[top_gene]
           thisgene <- c(thisgene, temp )
@@ -78,7 +96,11 @@ find_var_gene <- function(data,  num_top_gene  = 1500, ncores = 1, celltype = T)
       }
       
       thisgene <- unique(thisgene )
-      thisgene
+      
+      # add the HVG  across all cells to this HVG within each cell type
+      thisgene <- unique( c(thisgene,  hvg_across_all_cells ) )
+      
+      thisgene 
       
     }, mc.cores = ncores )
     
@@ -99,9 +121,9 @@ find_var_gene <- function(data,  num_top_gene  = 1500, ncores = 1, celltype = T)
     
   }else{
     
-    gene <-  parallel::mclapply(unique(data$sample) , function(thissample){
+    gene <-  mclapply(unique(data$sample) , function(thissample){
       this <- data[, data$sample == thissample]
-      gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray( this@assays$RNA@data))
+      gene_var <- DelayedMatrixStats::rowVars(DelayedArray( this@assays$RNA@data))
       top_gene <- order(gene_var , decreasing = T)[1:num_top_gene  ]
       thisgene <- rownames(data)[top_gene]
     }, mc.cores =  ncores )
@@ -119,16 +141,22 @@ find_var_gene <- function(data,  num_top_gene  = 1500, ncores = 1, celltype = T)
 
 
 
+
 # cell type specific gene mean, set to top 100 variable genes per cell type per sample 
-helper_gene_mean_celltype  <- function( data , num_top_gene = NULL  , ncores = 1 ){
+helper_gene_mean_celltype  <- function( data , genes  = NULL , num_top_gene = NULL  , ncores = 1 ){
   
   if ( is.null( num_top_gene  )){
     num_top_gene = min(nrow(data), 100 ) 
   }
   
-  all_marker <- find_var_gene(data,  num_top_gene  = num_top_gene , 
-                              ncores = ncores , celltype = T)
   
+  if ( is.null( genes ) ){
+  
+    all_marker <- find_var_gene(data,  num_top_gene  = num_top_gene , 
+                              ncores = ncores , celltype = T)
+  }else{
+    all_marker <- genes 
+  }
   
   # j <- unique(data$celltype)[15]
   final_matrix <-   parallel::mclapply (  unique(all_marker$celltype) , function( j ){
@@ -185,17 +213,20 @@ helper_gene_mean_celltype  <- function( data , num_top_gene = NULL  , ncores = 1
 
 
  # cell type specific gene prop 
-helper_gene_prop_celltype  <- function( data, num_top_gene  = NULL , ncores = 1 ){
+helper_gene_prop_celltype  <- function( data, genes = NULL ,  num_top_gene  = NULL , ncores = 1 ){
   
   
   if ( is.null( num_top_gene ) ){
     num_top_gene = min(nrow(data), 100 ) 
   }
   
-  
-  all_marker <- find_var_gene(data,  num_top_gene  = num_top_gene  , 
+  if ( is.null( genes ) ){
+    
+    all_marker <- find_var_gene(data,  num_top_gene  = num_top_gene  , 
                               ncores =  ncores,  celltype = T)
-  
+  }else{
+    all_marker <- genes 
+  }
   
   # j <- unique(data$celltype)[3]
   final_matrix <-   mclapply (  unique(all_marker$celltype) , function( j ){
@@ -255,16 +286,19 @@ helper_gene_prop_celltype  <- function( data, num_top_gene  = NULL , ncores = 1 
 
 # cell type specific gene correlation bulk
 # set to just top 5 genes per cell type per sample, because otherwise creates too many features 
-helper_gene_cor_celltype <- function(data, num_top_gene  = NULL   , ncores = 1 ){
+helper_gene_cor_celltype <- function(data, genes  = NULL, num_top_gene  = NULL   , ncores = 1 ){
   
   
   if ( is.null( num_top_gene ) ){
     num_top_gene = min(nrow(data), 5 ) 
   }
  
-  all_marker <- find_var_gene(data,  num_top_gene  = num_top_gene , 
-                              ncores = ncores , celltype = T)
-  
+  if ( is.null( genes  ) ){
+    all_marker <- find_var_gene(data,  num_top_gene  = num_top_gene  , 
+                                ncores =  ncores,  celltype = T)
+  }else{
+    all_marker <- genes
+  }
   
   # for each cell type, get the top 100 most variable correlation pair 
   

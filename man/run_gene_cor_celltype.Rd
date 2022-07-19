@@ -4,12 +4,27 @@
 \alias{run_gene_cor_celltype}
 \title{generate cell type specific gene correlation}
 \usage{
-run_gene_cor_celltype(data, type = "scrna", num_top_gene = NULL, ncores = 1)
+run_gene_cor_celltype(
+  data,
+  type = "scrna",
+  genes = NULL,
+  num_top_gene = NULL,
+  ncores = 1
+)
 }
 \arguments{
 \item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
+
+\item{genes}{default to NULL, in which case the top variable genes will be used
+If provided by user, need to be in the format of a dataframe with two columns 'marker' and 'celltype'.
+The marker column contains the genes of interest, eg: S100A11 , CCL4 ,
+the celltype column contains the celltype that the gene expression is to be computed from, eg: CD8, B cells}
+
+\item{num_top_gene}{when the genes is not provided by the user, the top variable genes will be used
+The number of genes is set by this number.
+default to NULL, in which case top 5 genes from each cell type will be selected}
 
 \item{ncores}{number of cores}
 }

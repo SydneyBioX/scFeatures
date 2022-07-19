@@ -35,37 +35,56 @@ get_geneset <- function(species = "Homo sapiens"){
 
 
 # helper function to run the pathway gsva 
-helper_pathway_gsva <- function(data, geneset, ncores = 1 ){
+helper_pathway_gsva <- function(data,  method = "ssgsea"  , geneset, ncores = 1 ){
   
-  # if the dataset has greater than 30000 cells 
-  #  then it is actually too large to be computed in one go in gsva
-  #  split into multiple set 
-  if (ncol(data) > 30000){
+  if (method == "ssgsea"){
     
-    index <- seq(1, ncol(data), by = 30000)
-    index <- c( index, ncol(data))
-    topMatrixGSVA <- NULL
-    
-    for (i in c(2:length(index))){
-      start = index[i-1]
-      finish = index[i ] - 1
+      # if the dataset has greater than 30000 cells 
+      #  then it is actually too large to be computed in one go in gsva
+      #  split into multiple set 
+      if (ncol(data) > 30000){
+        
+        index <- seq(1, ncol(data), by = 30000)
+        index <- c( index, ncol(data))
+        topMatrixGSVA <- NULL
+        
+        for (i in c(2:length(index))){
+          start = index[i-1]
+          finish = index[i ] - 1
+          
+          print(paste0("calculating ", start, " to ", finish , " cells" ))
+          thesecell  <- as.matrix( data@assays$RNA@data[, start: finish])
+          temp_topMatrixGSVA <- GSVA::gsva(thesecell  ,  geneset,  method="ssgsea", 
+                                     min.sz=10, max.sz=999999, abs.ranking=F, verbose=T,
+                                     parallel.sz=ncores)
+          topMatrixGSVA  <- cbind( topMatrixGSVA , temp_topMatrixGSVA )
+        }
+        
+      }else{ # if less than 30000, can directly be used as input into the GSVA function 
+        topMatrixGSVA <- GSVA::gsva( as.matrix( data@assays$RNA@data) ,  geneset,  method="ssgsea", 
+                              min.sz=10, max.sz=999999, abs.ranking=F, verbose=T,
+                              parallel.sz=ncores)
+      }
       
-      print(paste0("calculating ", start, " to ", finish , " cells" ))
-      thesecell  <- as.matrix( data@assays$RNA@data[, start: finish])
-      temp_topMatrixGSVA <- GSVA::gsva(thesecell  ,  geneset,  method="ssgsea", 
-                                 min.sz=10, max.sz=999999, abs.ranking=F, verbose=T,
-                                 parallel.sz=ncores)
-      topMatrixGSVA  <- cbind( topMatrixGSVA , temp_topMatrixGSVA )
-    }
-    
-  }else{ # if less than 30000, can directly be used as input into the GSVA function 
-    topMatrixGSVA <- GSVA::gsva( as.matrix( data@assays$RNA@data) ,  geneset,  method="ssgsea", 
-                          min.sz=10, max.sz=999999, abs.ranking=F, verbose=T,
-                          parallel.sz=ncores)
+       
+      X <- format_pathway(data, topMatrixGSVA, ncores )
+      
   }
   
-   
-  X <- format_pathway(data, topMatrixGSVA, ncores )
+  if (method == "aucell"){
+    
+    cells_rankings <- AUCell_buildRankings(data@assays$RNA@data, nCores = ncores, plotStats = F)
+    
+    
+    # geneSets <- GSEABase::GeneSet(genes, setName="geneSet1") # alternative
+    cells_AUC <- AUCell_calcAUC(geneSets =  geneset,  rankings = cells_rankings, 
+                                aucMaxRank=nrow(cells_rankings)*0.05,     nCores = ncores)
+    
+    cells_AUC <- getAUC(cells_AUC)
+    
+    X <- format_pathway(data, cells_AUC, ncores)
+    
+  }
   
   
   return (  X )

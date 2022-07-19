@@ -127,6 +127,13 @@ run_proportion_ratio <- function( data, type = "scrna" , ncores = 1 ){
 #'
 #' @param data input data, a Seurat object containing `celltype` and `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
+#' @param genes default to NULL, in which case the top variable genes will be used  
+#' If provided by user, need to be in the format of a dataframe with two columns 'marker' and 'celltype'.
+#' The marker column contains the genes of interest, eg: S100A11 , CCL4 , 
+#' the celltype column contains the celltype that the gene expression is to be computed from, eg: CD8, B cells
+#' @param num_top_gene when the genes is not provided by the user, the top variable genes will be used  
+#' The number of genes is set by this number. 
+#' default to NULL, in which case top 100 genes from each cell type will be selected
 #' @param ncores number of cores 
 #' 
 #' @return a matrix of samples x features 
@@ -143,12 +150,12 @@ run_proportion_ratio <- function( data, type = "scrna" , ncores = 1 ){
 #' @import DelayedArray
 #' 
 #' @export
-run_gene_mean_celltype  <- function( data, type = "scrna" , num_top_gene = NULL , ncores = 1 ){
+run_gene_mean_celltype  <- function( data, type = "scrna" , genes = NULL,  num_top_gene = NULL , ncores = 1 ){
  
   check_data(data, type)
   
   if ( type %in% c( "scrna" , "spatial_p") )  {
-    X <- helper_gene_mean_celltype(data ,  num_top_gene , ncores)
+    X <- helper_gene_mean_celltype(data ,  genes  , num_top_gene , ncores)
   }
   
   if ( type == "spatial_t" ) {
@@ -167,7 +174,13 @@ run_gene_mean_celltype  <- function( data, type = "scrna" , num_top_gene = NULL 
 #'
 #' @param data input data, a Seurat object containing `celltype` and `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param num_top_gene determines how many genes to include. By default, picks around 100 most variable genes per cell type.   
+#' @param genes default to NULL, in which case the top variable genes will be used  
+#' If provided by user, need to be in the format of a dataframe with two columns 'marker' and 'celltype'.
+#' The marker column contains the genes of interest, eg: S100A11 , CCL4 , 
+#' the celltype column contains the celltype that the gene expression is to be computed from, eg: CD8, B cells
+#' @param num_top_gene when the genes is not provided by the user, the top variable genes will be used  
+#' The number of genes is set by this number. 
+#' default to NULL, in which case top 100 genes from each cell type will be selected
 #' @param ncores number of cores 
 #' 
 #' @return a matrix of samples x features 
@@ -184,12 +197,12 @@ run_gene_mean_celltype  <- function( data, type = "scrna" , num_top_gene = NULL 
 #' @import DelayedArray
 #' 
 #' @export
-run_gene_prop_celltype  <- function( data, type = "scrna" , num_top_gene = NULL, ncores = 1 ){
+run_gene_prop_celltype  <- function( data, type = "scrna" , genes = NULL, num_top_gene = NULL, ncores = 1 ){
   
   check_data(data, type)
   
   if ( type %in% c( "scrna" , "spatial_p") )  {
-    X <- helper_gene_prop_celltype(data , num_top_gene , ncores)
+    X <- helper_gene_prop_celltype(data , genes , num_top_gene , ncores)
   }
   
   
@@ -211,7 +224,14 @@ run_gene_prop_celltype  <- function( data, type = "scrna" , num_top_gene = NULL,
 #'
 #' @param data input data, a Seurat object containing `celltype` and `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param ncores number of cores 
+#' @param genes default to NULL, in which case the top variable genes will be used  
+#' If provided by user, need to be in the format of a dataframe with two columns 'marker' and 'celltype'.
+#' The marker column contains the genes of interest, eg: S100A11 , CCL4 , 
+#' the celltype column contains the celltype that the gene expression is to be computed from, eg: CD8, B cells
+#' @param num_top_gene when the genes is not provided by the user, the top variable genes will be used  
+#' The number of genes is set by this number. 
+#' default to NULL, in which case top 5 genes from each cell type will be selected
+#' @param ncores number of cores  
 #' 
 #' @return a matrix of samples x features 
 #'
@@ -227,12 +247,12 @@ run_gene_prop_celltype  <- function( data, type = "scrna" , num_top_gene = NULL,
 #' @import DelayedArray
 #' 
 #' @export
-run_gene_cor_celltype  <- function( data, type = "scrna" , num_top_gene = NULL, ncores = 1 ){
+run_gene_cor_celltype  <- function( data, type = "scrna" , genes = NULL,  num_top_gene = NULL, ncores = 1 ){
   
   check_data(data, type)
   
   if ( type %in% c( "scrna" , "spatial_p") )  {
-    X <- helper_gene_cor_celltype(data ,  num_top_gene , ncores)
+    X <- helper_gene_cor_celltype(data ,  genes , num_top_gene , ncores)
   }
   
   if ( type == "spatial_t" ) {
@@ -252,6 +272,7 @@ run_gene_cor_celltype  <- function( data, type = "scrna" , num_top_gene = NULL, 
 #' generate pathway score using gene set enrichement analysis 
 #'
 #' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param method type of pathway analysis method, currently support `ssgsea` and `aucell` 
 #' @param geneset By default (when the `geneset` argument is not specified),  we use the 50 hallmark gene set from msigdb. 
 #' The users can also provide their geneset of interest in a list format, with each list entry containing a vector of the names of genes in a gene set.
 #' eg, geneset <- list("pathway_a" = c("CAPNS1", "TLCD1"), "pathway_b" = c("PEX6","DPRXP4" )) 
@@ -270,6 +291,7 @@ run_gene_cor_celltype  <- function( data, type = "scrna" , num_top_gene = NULL, 
 #' @import msigdbr
 #' @import ensembldb
 #' @import GSVA
+#' @import AUCell
 #' @import EnsDb.Hsapiens.v79
 #' @import EnsDb.Mmusculus.v79
 #' @import ensembldb
@@ -279,7 +301,7 @@ run_gene_cor_celltype  <- function( data, type = "scrna" , num_top_gene = NULL, 
 #' @import parallel
 #' 
 #' @export
-run_pathway_gsva <- function( data, geneset = NULL , 
+run_pathway_gsva <- function( data, method = "ssgsea", geneset = NULL , 
                               species = "Homo sapiens" ,
                               type = "scrna" ,  subsample = T , ncores = 1  ){
   
@@ -295,7 +317,7 @@ run_pathway_gsva <- function( data, geneset = NULL ,
   
   if ( type == "scrna" )  {
     # if the user does not provide geneset, need to get the geneset from msigdb
-    X <- helper_pathway_gsva(data, geneset = geneset , ncores = ncores )
+    X <- helper_pathway_gsva(data, method = method,  geneset = geneset , ncores = ncores )
   }
   
   if ( type ==  "spatial_p") {
@@ -494,7 +516,12 @@ run_CCI <- function( data,  species = "Homo sapiens" , type = "scrna" , ncores =
 #'
 #' @param data input data, a Seurat object containing `celltype` and `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param num_top_gene determines how many genes to include. By default, picks 1500 most variable genes.
+#' @param genes default to NULL, in which case the top variable genes will be used  
+#' If provided by user, need to be in the format of a list containing the genes of interest, 
+#' eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )
+#' @param num_top_gene when the genes is not provided by the user, the top variable genes will be used   
+#' The number of genes is set by this number. 
+#' default to NULL, in which case top 1500 variable genes will be selected
 #' @param ncores number of cores 
 #' 
 #' @return a matrix of samples x features 
@@ -509,12 +536,12 @@ run_CCI <- function( data,  species = "Homo sapiens" , type = "scrna" , ncores =
 #' @import parallel
 #' 
 #' @export
-run_gene_mean  <- function( data, type = "scrna" , num_top_gene= NULL, ncores = 1 ){
+run_gene_mean  <- function( data, type = "scrna" , genes  = NULL,  num_top_gene= NULL, ncores = 1 ){
  
   check_data(data, type)
   
   if ( type %in% c( "scrna" , "spatial_p" ,  "spatial_t") )  {
-    X <- helper_gene_mean(data,  num_top_gene , ncores )
+    X <- helper_gene_mean(data,  genes , num_top_gene , ncores )
   }
  
   return (X)
@@ -529,7 +556,12 @@ run_gene_mean  <- function( data, type = "scrna" , num_top_gene= NULL, ncores = 
 #'
 #' @param data input data, a Seurat object containing `celltype` and `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param num_top_gene determines how many genes to include. By default, picks 1500 most variable genes.
+#' @param genes default to NULL, in which case the top variable genes will be used  
+#' If provided by user, need to be in the format of a list containing the genes of interest, 
+#' eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )
+#' @param num_top_gene when the genes is not provided by the user, the top variable genes will be used  
+#' The number of genes is set by this number. 
+#' default to NULL, in which case top 1500 variable genes will be selected
 #' @param ncores number of cores 
 #' 
 #' @return a matrix of samples x features 
@@ -545,12 +577,12 @@ run_gene_mean  <- function( data, type = "scrna" , num_top_gene= NULL, ncores = 
 #' @import DelayedArray
 #' 
 #' @export
-run_gene_prop <- function( data, type = "scrna" , num_top_gene  = NULL, ncores = 1 ){
+run_gene_prop <- function( data, type = "scrna" , genes = NULL, num_top_gene  = NULL, ncores = 1 ){
   
   check_data(data, type)
   
   if ( type %in% c( "scrna" , "spatial_p" , "spatial_t") )  {
-    X <- helper_gene_prop(data ,  num_top_gene , ncores)
+    X <- helper_gene_prop(data ,  genes , num_top_gene , ncores)
   }
 
   return (X)
@@ -565,7 +597,12 @@ run_gene_prop <- function( data, type = "scrna" , num_top_gene  = NULL, ncores =
 #'
 #' @param data input data, a Seurat object containing `celltype` and `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param num_top_gene determines how many genes to include. By default, picks 1500 most variable genes.
+#' @param genes default to NULL, in which case the top variable genes will be used  
+#' If provided by user, need to be in the format of a list containing the feature of interest, 
+#' eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )
+#' @param num_top_gene when the genes is not provided by the user, the top variable genes will be used  
+#' The number of genes is set by this number. 
+#' default to NULL, in which case top 50 variable genes will be selected
 #' @param ncores number of cores 
 #' 
 #' @return a matrix of samples x features 
@@ -581,12 +618,12 @@ run_gene_prop <- function( data, type = "scrna" , num_top_gene  = NULL, ncores =
 #' @import DelayedArray
 #' 
 #' @export
-run_gene_cor  <- function( data, type = "scrna" , num_top_gene = NULL, ncores = 1 ){
+run_gene_cor  <- function( data, type = "scrna" , genes = NULL , num_top_gene = NULL, ncores = 1 ){
   
   check_data(data, type)
   
   if ( type %in% c( "scrna" , "spatial_p"  , "spatial_t" ) )  {
-    X <- helper_gene_cor(data  , num_top_gene , ncores)
+    X <- helper_gene_cor(data  , genes , num_top_gene , ncores)
   }
  
   return (X)

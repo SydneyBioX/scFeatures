@@ -48,9 +48,6 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 This vignette provide a list of all functions in scFeatures for quick reference. For detailed explanation of scFeatures and case studies, please refer to the other vigentte "Vignette - detailed explanation of scFeatures".  
 
-Note that all scFeatures functions contain a `ncores` argument that controls the number of cores. The default is 1 core. 
-
-
 If you wish to run downstream analysis using the generated features (see "Vignette - association study"), please make sure that when you run scFeatures, the `sample` is in the format of `a_cond_b`. Where `a` is sample ID and `b` is  the condition, eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running the analysis. 
 
 
@@ -58,6 +55,48 @@ If you wish to run downstream analysis using the generated features (see "Vignet
 ```{r}
 library(scFeatures)
 ```
+
+
+# Quick run of scFeatures
+
+scFeatures can be run using one line of code `scfeatures_result <- scFeatures(data)`, which generates a list of dataframes containing all feature types in the form of samples x features.    
+
+For input data format, refer to sections below.  
+
+```{r eval=FALSE, include=TRUE}
+data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+data <- process_data(data, normalise = T) #  perform normalisation 
+
+scfeatures_result <- scFeatures(data)
+```
+
+ 
+The above function uses all default settings and generate all feature types. We provide an example below on customising each of the parameters.   
+
+```{r eval=FALSE, include=TRUE}
+data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
+data <- process_data(data, normalise = F) # here we don't normalise , because the data has already been normalised 
+ 
+scfeatures_result <- scFeatures(data, 
+             # input selective feature types to generate.      
+             feature_types = c("proportion_raw", "pathway_gsva", "L_stats", "gene_mean_celltype",
+                               "gene_prop_aggregated") , 
+             # by default assumes `scrna`, this is now set to `spatial_p`.   
+             type = "spatial_p" ,
+             # by default assumes `Homo sapiens`, this is now set to `Mus musculus`.       
+             species  = "Mus musculus"  ,   
+             # by default uses the 50 hallmark genes,  now set to user specified pathways.   
+             geneset = list("pathway_a" = c("SMA" ,  "Vimentin"  ),  "pathway_b" = c("B7H3" ,"FoxP3"   )) ,
+             # by default uses top variable genes to generate the celltype specific gene expression feature category,now set to user defined genes. 
+             celltype_genes = data.frame(celltype = c("Macrophages"  , "Mono/Neu" ) , marker = c("CD3" , "p53")) ,
+             # by default uses top variable genes to generate the overall aggregated gene expression feature category, now set to user defined genes.    
+             aggregated_genes =  c("CD3" , "p53") , 
+             # by default uses single core 
+             ncores = 8  )
+
+```
+
+Below we list the function for generating each individual feature types for reference. 
 
 
 # scFeatures for single-cell RNA-seq data
@@ -87,10 +126,16 @@ feature_proportion_ratio <- run_proportion_ratio(data)
 # cell type specific gene expressions
 #---------------------------------------------------------------------------
 data_remove_mito <- remove_mito(data) # optional step, run if mitochondria amd ribosomal genes are not of interest 
+
+# by default, use the top variable genes
+# users can change the number of top variable genes by changing `num_top_gene` 
+# alternatively, users can also input their genes of interest in a dataframe format
+genes_of_interest <- data.frame( marker = c("S100A11" , "GZMB" ,  "DUSP1" ) , 
+                                celltype = c( "CD8, T Effector Memory" , "CD8, T Effector Memory"  ,  "Naive T Cells") ) 
+
 feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito)  
-feature_gene_prop_celltype  <- run_gene_prop_celltype(data_remove_mito)
-feature_gene_cor_celltype <- run_gene_cor_celltype(data_remove_mito,
-                                                   num_top_gene = 50)
+feature_gene_prop_celltype  <- run_gene_prop_celltype(data_remove_mito, genes = genes_of_interest)
+feature_gene_cor_celltype <- run_gene_cor_celltype(data_remove_mito,  num_top_gene = 50)
 # by default, pick around 100 most variable genes per cell type, can change this number through the num_top_gene argument 
 
 
@@ -114,9 +159,14 @@ feature_CCI <- run_CCI(data , species = "Homo sapiens" )
 #---------------------------------------------------------------------------
 # Bulk expressions 
 #---------------------------------------------------------------------------
+
+# by default, use the top variable genes
+# users can change the number of top variable genes by changing `num_top_gene` 
+# alternatively, users can also input their genes of interest in a list format
 feature_gene_mean_bulk <- run_gene_mean(data )
-feature_gene_cor_bulk <- run_gene_cor(data)
-feature_gene_prop_bulk <- run_gene_prop(data, num_top_gene = 1000)
+feature_gene_cor_bulk <- run_gene_cor(data ,  num_top_gene = 5 )
+genes_of_interest <- c("TIGIT", "PDCD1")
+feature_gene_prop_bulk <- run_gene_prop(data, genes = genes_of_interest )
 # by default, pick 1500 most variable genes, can change this number through the num_top_gene argument 
 
 

@@ -4,14 +4,26 @@
 \alias{run_gene_mean}
 \title{generate overall aggregated mean expression}
 \usage{
-run_gene_mean(data, type = "scrna", num_top_gene = NULL, ncores = 1)
+run_gene_mean(
+  data,
+  type = "scrna",
+  genes = NULL,
+  num_top_gene = NULL,
+  ncores = 1
+)
 }
 \arguments{
 \item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
-\item{num_top_gene}{determines how many genes to include. By default, picks 1500 most variable genes.}
+\item{genes}{default to NULL, in which case the top variable genes will be used
+If provided by user, need to be in the format of a list containing the genes of interest,
+eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )}
+
+\item{num_top_gene}{when the genes is not provided by the user, the top variable genes will be used
+The number of genes is set by this number.
+default to NULL, in which case top 1500 variable genes will be selected}
 
 \item{ncores}{number of cores}
 }
