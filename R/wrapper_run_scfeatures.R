@@ -180,7 +180,7 @@ makeSeurat <- function(data, sample, celltype, assay, spatialCoords){
       df$x_cord <- SummarizedExperiment::colData(df)[spatialCoords[1]] 
       df$y_cord <- SummarizedExperiment::colData(df)[spatialCoords[2]] 
       }
-    data <- Seurat::as.Seurat(cells, data = assay)
+    data <- Seurat::as.Seurat(df, data = assay)
     data@assays$RNA <- data@assays$originalexp
     return(data)
     }
@@ -191,7 +191,7 @@ makeSeurat <- function(data, sample, celltype, assay, spatialCoords){
   df$sample <- SummarizedExperiment::colData(df)[sample]
   df$x_cord <- SpatialExperiment::spatialCoords(df)[,1] 
   df$y_cord <- SpatialExperiment::spatialCoords(df)[,2] 
-  data <- Seurat::as.Seurat(cells, data = assay)
+  data <- Seurat::as.Seurat(df, data = assay)
   data@assays$RNA <- data@assays$originalexp
   return(data)
   }
