@@ -22,7 +22,11 @@
 #' If no value is provided, the top variable genes will be used 
 #' @param geneset the geneset of interest for celltype specific pathway feature category
 #' If no value is provided, the 50 hallmark pathways will be used 
-#' 
+#' @param sample the sample identifier if using a SingleCellExperiment
+#' @param celltype the celltype identifier if using a SingleCellExperiment
+#' @param assay the assay identifier if using a SingleCellExperiment
+#' @param spatialCoords the spatialCoords identifiers if using a SingleCellExperiment
+#'
 #' @return a list of dataframes containing the generated feature matrix in the form of sample x features 
 #'
 #' @examples
@@ -31,10 +35,12 @@
 #' scfeatures_result <- scFeatures(data, type = "scrna" )
 #' 
 #' @import parallel
-#' 
 #' @export
 scFeatures <- function( data , feature_types = NULL , type =  "scrna", ncores  = 1 ,
-                        species  = "Homo sapiens", celltype_genes = NULL, aggregated_genes = NULL , geneset = NULL    ){
+                        species  = "Homo sapiens", celltype_genes = NULL, aggregated_genes = NULL , geneset = NULL,
+                      sample = "sample", celltype = "celltype", celltype = "logcounts", spatialCoords = c("x_cord", "y_cord")){
+  
+  data <- makeSeurat(data, sample, celltype, assay, spatialCoords)
   
   return_list <- list()
   
@@ -159,3 +165,36 @@ scFeatures <- function( data , feature_types = NULL , type =  "scrna", ncores  =
   
   return (return_list)
 }
+
+
+
+#' @importFrom SummarizedExperiment colData
+#' @importFrom SpatialExperiment spatialCoords
+makeSeurat <- function(data, sample, celltype, assay, spatialCoords){
+
+  if(is(data, "SingleCellExperiment")){
+    df <- data
+    df$celltype <- SummarizedExperiment::colData(df)[celltype]
+    df$sample <- SummarizedExperiment::colData(df)[sample]
+    df$x_cord <- SummarizedExperiment::colData(df)[spatialCoords[1]] 
+    df$y_cord <- SummarizedExperiment::colData(df)[spatialCoords[2]] 
+    data <- Seurat::as.Seurat(cells, data = assay)
+    data@assays$RNA <- data@assays$originalexp
+    return(data)
+    }
+  
+  if(is(data, "SpatialExperiment")){
+  df <- data
+  df$celltype <- SummarizedExperiment::colData(df)[celltype]
+  df$sample <- SummarizedExperiment::colData(df)[sample]
+  df$x_cord <- SpatialExperiment::spatialCoords(df)[,1] 
+  df$y_cord <- SpatialExperiment::spatialCoords(df)[,2] 
+  data <- Seurat::as.Seurat(cells, data = assay)
+  data@assays$RNA <- data@assays$originalexp
+  return(data)
+  }
+    
+  data
+}
+    
+
