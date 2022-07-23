@@ -174,11 +174,11 @@ makeSeurat <- function(data, sample, celltype, assay, spatialCoords){
 
   if(is(data, "SingleCellExperiment")){
     df <- data
-    df$celltype <- SummarizedExperiment::colData(df)[celltype]
-    df$sample <- SummarizedExperiment::colData(df)[sample]
+    df$celltype <- SummarizedExperiment::colData(df)[,celltype]
+    df$sample <- SummarizedExperiment::colData(df)[,sample]
     if(!is.null(spatialCoords)){
-      df$x_cord <- SummarizedExperiment::colData(df)[spatialCoords[1]] 
-      df$y_cord <- SummarizedExperiment::colData(df)[spatialCoords[2]] 
+      df$x_cord <- SummarizedExperiment::colData(df)[,spatialCoords[1]] 
+      df$y_cord <- SummarizedExperiment::colData(df)[,spatialCoords[2]] 
       }
     data <- Seurat::as.Seurat(df, data = assay)
     data@assays$RNA <- data@assays$originalexp
@@ -187,8 +187,8 @@ makeSeurat <- function(data, sample, celltype, assay, spatialCoords){
   
   if(is(data, "SpatialExperiment")){
   df <- data
-  df$celltype <- SummarizedExperiment::colData(df)[celltype]
-  df$sample <- SummarizedExperiment::colData(df)[sample]
+  df$celltype <- SummarizedExperiment::colData(df)[,celltype]
+  df$sample <- SummarizedExperiment::colData(df)[,sample]
   df$x_cord <- SpatialExperiment::spatialCoords(df)[,1] 
   df$y_cord <- SpatialExperiment::spatialCoords(df)[,2] 
   data <- Seurat::as.Seurat(df, data = assay)
