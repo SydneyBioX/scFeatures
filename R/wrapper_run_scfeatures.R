@@ -38,7 +38,7 @@
 #' @export
 scFeatures <- function( data , feature_types = NULL , type =  "scrna", ncores  = 1 ,
                         species  = "Homo sapiens", celltype_genes = NULL, aggregated_genes = NULL , geneset = NULL,
-                      sample = "sample", celltype = "celltype", assay = "logcounts", spatialCoords = c("x_cord", "y_cord")){
+                      sample = "sample", celltype = "celltype", assay = "logcounts", spatialCoords = NULL){
   
   data <- makeSeurat(data, sample, celltype, assay, spatialCoords)
   
@@ -176,8 +176,10 @@ makeSeurat <- function(data, sample, celltype, assay, spatialCoords){
     df <- data
     df$celltype <- SummarizedExperiment::colData(df)[celltype]
     df$sample <- SummarizedExperiment::colData(df)[sample]
-    df$x_cord <- SummarizedExperiment::colData(df)[spatialCoords[1]] 
-    df$y_cord <- SummarizedExperiment::colData(df)[spatialCoords[2]] 
+    if(!is.null(spatialCoords)){
+      df$x_cord <- SummarizedExperiment::colData(df)[spatialCoords[1]] 
+      df$y_cord <- SummarizedExperiment::colData(df)[spatialCoords[2]] 
+      }
     data <- Seurat::as.Seurat(cells, data = assay)
     data@assays$RNA <- data@assays$originalexp
     return(data)
