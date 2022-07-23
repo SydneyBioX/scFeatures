@@ -38,7 +38,8 @@ Imports:
     NMF,
     CellChat,
     circlize,
-    ComplexHeatmap
+    ComplexHeatmap,
+    SummarizedExperiment
 Remotes: 
     jokergoo/circlize,
     jokergoo/ComplexHeatmap,
