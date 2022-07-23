@@ -39,7 +39,8 @@ Imports:
     CellChat,
     circlize,
     ComplexHeatmap,
-    SummarizedExperiment
+    SummarizedExperiment,
+    SpatialExperiment
 Remotes: 
     jokergoo/circlize,
     jokergoo/ComplexHeatmap,
