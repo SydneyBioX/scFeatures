@@ -56,24 +56,24 @@ Not all feature types need to be provided. If a feature type is missing, the sec
 ```{r eval=FALSE, include=TRUE}
 # example of creating the feature list using the correct naming conventions
 scfeatures_result <- list( 
-   feature_proportion_raw = feature_proportion_raw,
-   feature_proportion_logit =   feature_proportion_logit, 
-   feature_proportion_ratio = feature_proportion_ratio, 
-   feature_gene_mean_celltype = feature_gene_mean_celltype,
-   feature_gene_prop_celltype = feature_gene_prop_celltype, 
-   feature_gene_cor_celltype = feature_gene_cor_celltype, 
-   feature_pathway_gsva = feature_pathway_gsva , 
-   feature_pathway_mean = feature_pathway_mean, 
-   feature_pathway_prop = feature_pathway_prop,
-   feature_CCI = feature_CCI ,
-   feature_gene_mean_aggregated = feature_gene_mean_aggregated , 
-   feature_gene_cor_aggregated = feature_gene_cor_aggregated , 
-   feature_gene_prop_aggregated = feature_gene_prop_aggregated,
-   feature_L_stats  = feature_L_stats , 
-   feature_morans_I = feature_morans_I, 
-   feature_celltype_interaction = feature_celltype_interaction,
-   feature_nn_correlation = feature_nn_correlation
-   ) 
+   proportion_raw = proportion_raw,
+   proportion_logit =   proportion_logit, 
+   proportion_ratio = proportion_ratio, 
+   gene_mean_celltype = gene_mean_celltype,
+   gene_prop_celltype = gene_prop_celltype, 
+   gene_cor_celltype = gene_cor_celltype, 
+   pathway_gsva = pathway_gsva , 
+   pathway_mean = pathway_mean, 
+   pathway_prop = pathway_prop,
+   CCI = CCI ,
+   gene_mean_aggregated = gene_mean_aggregated , 
+   gene_cor_aggregated = gene_cor_aggregated , 
+   gene_prop_aggregated = gene_prop_aggregated,
+   L_stats  = L_stats , 
+   morans_I = morans_I, 
+   celltype_interaction = celltype_interaction,
+   nn_correlation = nn_correlation
+) 
 ```
 
 

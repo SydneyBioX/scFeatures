@@ -18,7 +18,7 @@ helper_gene_mean <- function( data, genes  = NULL, num_top_gene = NULL ,  ncores
   data <- data [gene, ]
   
   X <- bulk_sample(data,  ncores  )
-  X <- X@assays$RNA@data
+  X <- as.matrix(X@assays$RNA@data)
   
   X <- t(X)
   
@@ -36,6 +36,8 @@ helper_gene_mean <- function( data, genes  = NULL, num_top_gene = NULL ,  ncores
 # for each variable genes,  calcalate the proportion that it is expressed in each patient 
 helper_gene_prop <- function( data , genes  = NULL, num_top_gene = NULL ,  ncores = 1  ){
   
+  BPparam <- generateBPParam(ncores)
+  
   if ( is.null( num_top_gene ) ){
     num_top_gene = min(nrow(data), 1500 ) 
   }
@@ -52,26 +54,21 @@ helper_gene_prop <- function( data , genes  = NULL, num_top_gene = NULL ,  ncore
   data <- data [gene, ]
   
   # thispatient  <- unique( data$sample )[1]
-  gene_prop  <-  mclapply( unique( data$sample ), function(thispatient )  {
+  gene_prop  <-  BiocParallel::bplapply(  unique( data$sample ), function(thispatient )  {
     
     this_patient_data <- data[, data$sample == thispatient] 
     this_patient_data <-     this_patient_data@assays$RNA@data
     this_patient_data  <- +( this_patient_data > 1)
     this_patient_prop <- DelayedMatrixStats::rowMeans2(DelayedArray::DelayedArray(    this_patient_data))
     
-  }, mc.cores = ncores)
+  }, BPPARAM =  BPparam) 
   
   gene_prop  <- do.call(cbind, gene_prop)
   
   colnames( gene_prop) <- unique( data$sample ) 
   
   rownames(gene_prop ) <- rownames(data)
-  
-  
-  # gene_prop <- CreateSeuratObject(    gene_prop)
-  # gene_prop$sample <- unique(data$sample)
-  # gene_prop$condition <- data[ , match( gene_prop$sample, data$sample)]$condition 
-  
+ 
   gene_prop <- t(gene_prop)
   
   return (  gene_prop )
@@ -87,6 +84,8 @@ helper_gene_prop <- function( data , genes  = NULL, num_top_gene = NULL ,  ncore
 
 # gene correlation bulk 
 helper_gene_cor <- function( data, genes = NULL,  num_top_gene = NULL ,  ncores = 1 ) {
+  
+  BPparam <- generateBPParam(ncores)
   
   if ( is.null( num_top_gene ) ){
     num_top_gene = min(nrow(data), 50 ) 
@@ -106,14 +105,13 @@ helper_gene_cor <- function( data, genes = NULL,  num_top_gene = NULL ,  ncores 
   
   #  x <- unique(data$sample) [5]
   
-  cor_data <-  mclapply( unique(data$sample) ,  function(x){
+  cor_data <-  BiocParallel::bplapply( unique(data$sample) ,  function(x){
     
     thisdata <- data[, data$sample == x]
     
     cor_data <- proxyC::simil( thisdata@assays$RNA@data,  method = "correlation")  
     cor_data <- as.matrix(   cor_data)
-    # cor_data <-  cor(  t(  as.matrix( thisdata@assays$RNA@data) ) )
-    
+   
     cor_data[ is.na(cor_data)] <- 0 
     diag(cor_data ) <- NA
     cor_data [lower.tri(cor_data )] <- NA
@@ -123,17 +121,12 @@ helper_gene_cor <- function( data, genes = NULL,  num_top_gene = NULL ,  ncores 
     rownames(temp) <- paste0(cor_data$Var1, "-with-", cor_data$Var2)
     temp
     
-  }, mc.cores = ncores ) 
+  }, BPPARAM =  BPparam)
   
   cor_data <- do.call(cbind, cor_data)
   colnames(cor_data) <- unique(data$sample)
   
-  # 
-  # a <- CreateSeuratObject(    cor_data)
-  # a$sample <- unique(data$sample)
-  # a$condition <- data[ , match( a$sample, data$sample)]$condition 
-  # 
-  
+ 
   cor_data <- t(cor_data)
   
   return(   cor_data )

@@ -32,13 +32,42 @@ check_data <- function(data, type = "scrna"){
 
 
 
+
+
+
+generateBPParam <- function(cores = 1){
+  
+  set.seed(1)
+  seed <- .Random.seed[1]
+  
+  if(cores == 1){
+    BPparam <- BiocParallel::SerialParam(RNGseed = seed)
+  } else { # Parallel processing is desired.
+    # Also set the BPparam RNGseed if the user ran set.seed(someNumber) themselves.
+    if(Sys.info()["sysname"] == "Windows") {# Only SnowParam suits Windows.
+      BPparam <- BiocParallel::SnowParam(min(cores, BiocParallel::snowWorkers("SOCK")), RNGseed = seed)
+    } else if (Sys.info()["sysname"] %in% c("MacOS", "Linux")) {
+      BPparam <- BiocParallel::MulticoreParam(min(cores, BiocParallel::multicoreWorkers()), RNGseed = seed) # Multicore is faster than SNOW, but it doesn't work on Windows.
+    } else { # Something weird.
+      BPparam <- BiocParallel::bpparam() # BiocParallel will figure it out.
+    }
+  }
+  
+  return(  BPparam  )
+  
+}
+  
+  
+  
  
 
 # create pseudo-bulk for each cell type of each sample 
-bulk_sample_celltype <- function(data , ncores = 8  ){
+bulk_sample_celltype <- function(data , ncores = 1  ){
+  
+  BPparam <- generateBPParam(ncores)
   
   # x <- unique( data$sample)[1]
-  bulk <- mclapply( unique( data$sample),  function(x) {
+  bulk <- BiocParallel::bplapply( unique( data$sample),  function(x) {
       
       # for this patient
       this_sample <- data[ , data$sample == x]
@@ -69,7 +98,7 @@ bulk_sample_celltype <- function(data , ncores = 8  ){
       colnames( this_sample_bulk) <- paste0(x , "--" , unique(data$celltype) )
       this_sample_bulk
   
-  }, mc.cores = ncores)
+  }, BPPARAM =  BPparam) 
   
   bulk <- as.data.frame(do.call(cbind,  bulk))
   bulk <- CreateSeuratObject( bulk )
@@ -88,13 +117,15 @@ bulk_sample_celltype <- function(data , ncores = 8  ){
 
 
 # create pseudo-bulk for each sample 
-bulk_sample  <- function(data,  ncores = 8 ){
+bulk_sample  <- function(data,  ncores = 1 ){
   
-  bulk <- mclapply( unique(data$sample), function(x ) {
+  BPparam <- generateBPParam(ncores)
+  
+  bulk <-  BiocParallel::bplapply(   unique(data$sample), function(x ) {
     index <-  which(data$sample == x )
     temp <-  DelayedMatrixStats::rowMeans2(DelayedArray( data@assays$RNA@data[, index]))
     temp <- as.matrix(temp)
-  }, mc.cores= ncores)
+  }, BPPARAM =  BPparam) 
   
   bulk <- as.data.frame(do.call(cbind,  bulk ))
   rownames(bulk) <- rownames(data)
@@ -115,9 +146,6 @@ bulk_sample  <- function(data,  ncores = 8 ){
 #' 
 #' @return data with the relative number of cells per spot stored in the meta.data
 #' 
-#' @import gtools
-#' @import tidyr
-#' @import parallel
 #' 
 #' @export
 get_num_cell_per_spot <- function(data){
@@ -153,7 +181,7 @@ get_num_cell_per_celltype <- function(data){
   prob <-  prob[ !rownames(prob) %in% zero_celltype , ]
   
   MultVec <-  data$number_cells
-  num_cell_per_spot  <- mapply(FUN = "*", as.data.frame(      prob ), MultVec)
+  num_cell_per_spot  <- mapply(FUN = "*", as.data.frame( prob ), MultVec)
   
   
   num_cell_per_spot <- round(num_cell_per_spot, 0)
@@ -251,12 +279,12 @@ process_data <- function(data, normalise = T){
 run_association_study_report <- function( scfeatures_result, output_folder ){
   # check name
   correct_name <- any( names(scfeatures_result) %in%  c(
-     "feature_proportion_raw"  , "feature_proportion_logit"   , 
-      "feature_proportion_ratio",  "feature_gene_mean_celltype"  , 
-     "feature_gene_prop_celltype" , "feature_gene_cor_celltype",   
-     "feature_pathway_gsva" ,"feature_pathway_mean" ,       
-      "feature_pathway_prop" ,  "feature_CCI"   ,
-     "feature_gene_mean_aggregated", "feature_gene_cor_aggregated"  ,"feature_gene_prop_aggregated"))
+     "proportion_raw"  , "proportion_logit"   , 
+      "proportion_ratio",  "gene_mean_celltype"  , 
+     "gene_prop_celltype" , "gene_cor_celltype",   
+     "pathway_gsva" ,"pathway_mean" ,       
+      "pathway_prop" ,  "CCI"   ,
+     "gene_mean_aggregated", "gene_cor_aggregated"  ,"gene_prop_aggregated"))
   if (correct_name == FALSE){
     print("Please check you have named the feature types in correct naming format.")
   }

@@ -356,7 +356,6 @@ analysis.</p>
 <code>scfeatures_result &lt;- scFeatures(data)</code>, which generates a
 list of dataframes containing all feature types in the form of samples x
 features.</p>
-<p>For input data format, refer to sections below.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_scrnaseq.rds&quot;</span>, <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data, <span class="at">normalise =</span> T) <span class="co">#  perform normalisation </span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -376,7 +375,7 @@ parameters.</p>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>             <span class="co"># by default assumes `Homo sapiens`, this is now set to `Mus musculus`.       </span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">species  =</span> <span class="st">&quot;Mus musculus&quot;</span>  ,   </span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>             <span class="co"># by default uses the 50 hallmark genes,  now set to user specified pathways.   </span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">geneset =</span> <span class="fu">list</span>(<span class="st">&quot;pathway_a&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;SMA&quot;</span> ,  <span class="st">&quot;Vimentin&quot;</span>  ),  <span class="st">&quot;pathway_b&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;B7H3&quot;</span> ,<span class="st">&quot;FoxP3&quot;</span>   )) ,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">geneset =</span> <span class="fu">list</span>(<span class="st">&quot;pathway_a&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;SMA&quot;</span> ,  <span class="st">&quot;Vimentin&quot;</span>  ),  <span class="st">&quot;pathway_b&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;B7H3&quot;</span> ,<span class="st">&quot;FoxP3&quot;</span>   )) ,<span class="sc">/</span></span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>             <span class="co"># by default uses top variable genes to generate the celltype specific gene expression feature category,now set to user defined genes. </span></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">celltype_genes =</span> <span class="fu">data.frame</span>(<span class="at">celltype =</span> <span class="fu">c</span>(<span class="st">&quot;Macrophages&quot;</span>  , <span class="st">&quot;Mono/Neu&quot;</span> ) , <span class="at">marker =</span> <span class="fu">c</span>(<span class="st">&quot;CD3&quot;</span> , <span class="st">&quot;p53&quot;</span>)) ,</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>             <span class="co"># by default uses top variable genes to generate the overall aggregated gene expression feature category, now set to user defined genes.    </span></span>
@@ -384,193 +383,221 @@ parameters.</p>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>             <span class="co"># by default uses single core </span></span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">ncores =</span> <span class="dv">8</span>  )</span></code></pre></div>
 <p>Below we list the function for generating each individual feature
-types for reference.</p>
+types for scRNA-seq, spatial proteomic and spatial transcriptomic data
+and the input data format.</p>
+</div>
+<div id="converting-singlecellexperiment-and-spatialexperiment-object-to-seurat-object" class="section level1">
+<h1>Converting SingleCellExperiment and SpatialExperiment object to
+Seurat object</h1>
+<p>scFeatures takes a Seurat data as input. We provide a function
+<code>makeSeurat()</code> for the conversion.</p>
+<p>The SingleCellExperiment or SpatialExperiment object needs to contain
+a column named “sample” and a column named “celltype”.<br />
+Alternatively, user can provide the name of the column containing sample
+and celltype into the <code>sample</code> and <code>celltype</code>
+argument.</p>
+<p>When passing as SingleCellExperiment or SpatialExperiment, by default
+we use the assay stored in “logcount”.<br />
+Alternatively, user can provide the assay to use in the
+<code>assay</code> argument.</p>
+<p>If users want to construct features from the spatial metrics
+category, by default we need columns called “x_cord” and “y_cord”.<br />
+Alternatively, user can provide the names of the columns containing the
+coordinates in the <code>spatialCoords</code> argument.</p>
+<p>For spot-based spatial transcriptomics, we also requires a matrix
+containing cell type prediction probability of each spot, in the format
+of celltype x spot, where each entry represents the prediction
+probability of each cell type for each spot.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># example not run</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>converted_data <span class="ot">&lt;-</span> <span class="fu">makeSeurat</span>(my_data,  <span class="at">assay =</span> <span class="st">&quot;norm&quot;</span>,  <span class="at">sample =</span> <span class="st">&quot;imageID&quot;</span>, </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">celltype =</span> <span class="st">&quot;cellType&quot;</span>, <span class="at">spatialCoords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>), </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">spotProbability =</span> predicted_matrix)</span></code></pre></div>
 </div>
 <div id="scfeatures-for-single-cell-rna-seq-data" class="section level1">
 <h1>scFeatures for single-cell RNA-seq data</h1>
-<p>The input data is a Seurat object containing <code>celltype</code>
-and <code>sample</code> label.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># read in data </span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_scrnaseq.rds&quot;</span>, <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data, <span class="at">normalise =</span> T) <span class="co">#  perform normalisation </span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features </span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>sample <span class="ot">&lt;-</span> <span class="fu">paste0</span>( data<span class="sc">$</span>sample  , <span class="st">&quot;_cond_&quot;</span>, data<span class="sc">$</span>condition)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type proportions</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>feature_proportion_raw <span class="ot">&lt;-</span> <span class="fu">run_proportion_raw</span>(data)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>feature_proportion_logit <span class="ot">&lt;-</span> <span class="fu">run_proportion_logit</span>(data)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>feature_proportion_ratio <span class="ot">&lt;-</span> <span class="fu">run_proportion_ratio</span>(data)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type specific gene expressions</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>data_remove_mito <span class="ot">&lt;-</span> <span class="fu">remove_mito</span>(data) <span class="co"># optional step, run if mitochondria amd ribosomal genes are not of interest </span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, use the top variable genes</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># users can change the number of top variable genes by changing `num_top_gene` </span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co"># alternatively, users can also input their genes of interest in a dataframe format</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>genes_of_interest <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="at">marker =</span> <span class="fu">c</span>(<span class="st">&quot;S100A11&quot;</span> , <span class="st">&quot;GZMB&quot;</span> ,  <span class="st">&quot;DUSP1&quot;</span> ) , </span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>                                <span class="at">celltype =</span> <span class="fu">c</span>( <span class="st">&quot;CD8, T Effector Memory&quot;</span> , <span class="st">&quot;CD8, T Effector Memory&quot;</span>  ,  <span class="st">&quot;Naive T Cells&quot;</span>) ) </span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_celltype <span class="ot">&lt;-</span> <span class="fu">run_gene_mean_celltype</span>(data_remove_mito)  </span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_celltype  <span class="ot">&lt;-</span> <span class="fu">run_gene_prop_celltype</span>(data_remove_mito, <span class="at">genes =</span> genes_of_interest)</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_celltype <span class="ot">&lt;-</span> <span class="fu">run_gene_cor_celltype</span>(data_remove_mito,  <span class="at">num_top_gene =</span> <span class="dv">50</span>)</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, pick around 100 most variable genes per cell type, can change this number through the num_top_gene argument </span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type specific pathway expressions </span></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>feature_pathway_gsva <span class="ot">&lt;-</span> <span class="fu">run_pathway_gsva</span>(data, <span class="at">species =</span> <span class="st">&quot;Homo sapiens&quot;</span>) </span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>feature_pathway_mean <span class="ot">&lt;-</span> <span class="fu">run_pathway_mean</span>(data , <span class="at">species =</span> <span class="st">&quot;Homo sapiens&quot;</span>)</span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, use the 50 hallmark pathways, users can also input their gene set of interest in a list format </span></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>geneset <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;pathway_a&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;CAPNS1&quot;</span>, <span class="st">&quot;TLCD1&quot;</span>), </span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;pathway_b&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;PEX6&quot;</span>,<span class="st">&quot;DPRXP4&quot;</span> ))  </span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>feature_pathway_prop <span class="ot">&lt;-</span> <span class="fu">run_pathway_prop</span>(data, <span class="at">geneset=</span>geneset, <span class="at">species =</span> <span class="st">&quot;Homo sapiens&quot;</span>)</span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type specific cell-cell interactions</span></span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>feature_CCI <span class="ot">&lt;-</span> <span class="fu">run_CCI</span>(data , <span class="at">species =</span> <span class="st">&quot;Homo sapiens&quot;</span> )</span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Bulk expressions </span></span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, use the top variable genes</span></span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co"># users can change the number of top variable genes by changing `num_top_gene` </span></span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="co"># alternatively, users can also input their genes of interest in a list format</span></span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_mean</span>(data )</span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_cor</span>(data ,  <span class="at">num_top_gene =</span> <span class="dv">5</span> )</span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>genes_of_interest <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;TIGIT&quot;</span>, <span class="st">&quot;PDCD1&quot;</span>)</span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_prop</span>(data, <span class="at">genes =</span> genes_of_interest )</span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, pick 1500 most variable genes, can change this number through the num_top_gene argument </span></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="co"># run classification model on the generated features </span></span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> feature_gene_mean_celltype</span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> data<span class="sc">@</span>meta.data[<span class="sc">!</span><span class="fu">duplicated</span>(data<span class="sc">$</span>sample),  ]</span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> y[ <span class="fu">match</span>(<span class="fu">rownames</span>(X), y<span class="sc">$</span>sample), ]<span class="sc">$</span>condition</span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>feature_performance <span class="ot">&lt;-</span> <span class="fu">run_classification</span>( X, y, <span class="at">model =</span> <span class="st">&quot;randomforest&quot;</span>, </span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">ncores =</span> <span class="dv">8</span>  )</span></code></pre></div>
+<p>scFeatures accept a Seurat object containing the <code>sample</code>
+and <code>celltype</code> columns.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># read in data </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_scrnaseq.rds&quot;</span>, <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data, <span class="at">normalise =</span> T) <span class="co">#  perform normalisation </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features </span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>sample <span class="ot">&lt;-</span> <span class="fu">paste0</span>( data<span class="sc">$</span>sample  , <span class="st">&quot;_cond_&quot;</span>, data<span class="sc">$</span>condition)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type proportions</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>feature_proportion_raw <span class="ot">&lt;-</span> <span class="fu">run_proportion_raw</span>(data)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>feature_proportion_logit <span class="ot">&lt;-</span> <span class="fu">run_proportion_logit</span>(data)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>feature_proportion_ratio <span class="ot">&lt;-</span> <span class="fu">run_proportion_ratio</span>(data)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type specific gene expressions</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>data_remove_mito <span class="ot">&lt;-</span> <span class="fu">remove_mito</span>(data) <span class="co"># optional step, run if mitochondria amd ribosomal genes are not of interest </span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, use the top variable genes</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># users can change the number of top variable genes by changing `num_top_gene` </span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># alternatively, users can also input their genes of interest in a dataframe format</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>genes_of_interest <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="at">marker =</span> <span class="fu">c</span>(<span class="st">&quot;S100A11&quot;</span> , <span class="st">&quot;GZMB&quot;</span> ,  <span class="st">&quot;DUSP1&quot;</span> ) , </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>                                <span class="at">celltype =</span> <span class="fu">c</span>( <span class="st">&quot;CD8, T Effector Memory&quot;</span> , <span class="st">&quot;CD8, T Effector Memory&quot;</span>  ,  <span class="st">&quot;Naive T Cells&quot;</span>) ) </span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_celltype <span class="ot">&lt;-</span> <span class="fu">run_gene_mean_celltype</span>(data_remove_mito)  </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_celltype  <span class="ot">&lt;-</span> <span class="fu">run_gene_prop_celltype</span>(data_remove_mito, <span class="at">genes =</span> genes_of_interest)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_celltype <span class="ot">&lt;-</span> <span class="fu">run_gene_cor_celltype</span>(data_remove_mito,  <span class="at">num_top_gene =</span> <span class="dv">50</span>)</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, pick around 100 most variable genes per cell type, can change this number through the num_top_gene argument </span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type specific pathway expressions </span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>feature_pathway_gsva <span class="ot">&lt;-</span> <span class="fu">run_pathway_gsva</span>(data, <span class="at">species =</span> <span class="st">&quot;Homo sapiens&quot;</span>) </span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>feature_pathway_mean <span class="ot">&lt;-</span> <span class="fu">run_pathway_mean</span>(data , <span class="at">species =</span> <span class="st">&quot;Homo sapiens&quot;</span>)</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, use the 50 hallmark pathways, users can also input their gene set of interest in a list format </span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>geneset <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;pathway_a&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;CAPNS1&quot;</span>, <span class="st">&quot;TLCD1&quot;</span>), </span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;pathway_b&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;PEX6&quot;</span>,<span class="st">&quot;DPRXP4&quot;</span> ))  </span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>feature_pathway_prop <span class="ot">&lt;-</span> <span class="fu">run_pathway_prop</span>(data, <span class="at">geneset=</span>geneset, <span class="at">species =</span> <span class="st">&quot;Homo sapiens&quot;</span>)</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type specific cell-cell interactions</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>feature_CCI <span class="ot">&lt;-</span> <span class="fu">run_CCI</span>(data , <span class="at">species =</span> <span class="st">&quot;Homo sapiens&quot;</span> )</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Bulk expressions </span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, use the top variable genes</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a><span class="co"># users can change the number of top variable genes by changing `num_top_gene` </span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="co"># alternatively, users can also input their genes of interest in a list format</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_mean</span>(data )</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_cor</span>(data ,  <span class="at">num_top_gene =</span> <span class="dv">5</span> )</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>genes_of_interest <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;TIGIT&quot;</span>, <span class="st">&quot;PDCD1&quot;</span>)</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_prop</span>(data, <span class="at">genes =</span> genes_of_interest )</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, pick 1500 most variable genes, can change this number through the num_top_gene argument </span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a><span class="co"># run classification model on the generated features </span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> feature_gene_mean_celltype</span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> data<span class="sc">@</span>meta.data[<span class="sc">!</span><span class="fu">duplicated</span>(data<span class="sc">$</span>sample),  ]</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> y[ <span class="fu">match</span>(<span class="fu">rownames</span>(X), y<span class="sc">$</span>sample), ]<span class="sc">$</span>condition</span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>feature_performance <span class="ot">&lt;-</span> <span class="fu">run_classification</span>( X, y, <span class="at">model =</span> <span class="st">&quot;randomforest&quot;</span>, </span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">ncores =</span> <span class="dv">8</span>  )</span></code></pre></div>
 </div>
 <div id="scfeatures-for-spatial-proteomics" class="section level1">
 <h1>scFeatures for spatial proteomics</h1>
 <p>The input data is a Seurat object containing <code>celltype</code>,
 <code>sample</code>, <code>x_coord</code> and <code>y_coord</code>
-label.</p>
+columns.</p>
 <p>Note that, as spatial proteomics contain few genes, the feature
 categories of pathway expressions and cell-cell interactions are not
 applicable.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># read in data </span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_spatial_proteomics.rds&quot;</span>, <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>))</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data, <span class="at">normalise =</span> F) <span class="co"># here we don&#39;t normalise , because the data has already been normalised </span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type proportions</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>feature_proportion_raw <span class="ot">&lt;-</span> <span class="fu">run_proportion_raw</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>  )</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>feature_proportion_logit <span class="ot">&lt;-</span> <span class="fu">run_proportion_logit</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>feature_proportion_ratio <span class="ot">&lt;-</span> <span class="fu">run_proportion_ratio</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type specific gene expressions</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_celltype <span class="ot">&lt;-</span> <span class="fu">run_gene_mean_celltype</span>(data,  <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>  )</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_celltype  <span class="ot">&lt;-</span> <span class="fu">run_gene_prop_celltype</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span> )</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_celltype <span class="ot">&lt;-</span> <span class="fu">run_gene_cor_celltype</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span> )</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Bulk expressions </span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_mean</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span> )</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_prop</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span> )</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_cor</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span> )</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Spatial metrics</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>feature_L_stats <span class="ot">&lt;-</span> <span class="fu">run_L_function</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>   )</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>feature_morans_I <span class="ot">&lt;-</span> <span class="fu">run_Morans_I</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>  )</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>feature_celltype_interaction <span class="ot">&lt;-</span> <span class="fu">run_celltype_interaction</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span> )</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>feature_nn_correlation <span class="ot">&lt;-</span> <span class="fu">run_nn_correlation</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>  )</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># read in data </span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_spatial_proteomics.rds&quot;</span>, <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data, <span class="at">normalise =</span> F) <span class="co"># here we don&#39;t normalise , because the data has already been normalised </span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type proportions</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>feature_proportion_raw <span class="ot">&lt;-</span> <span class="fu">run_proportion_raw</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>  )</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>feature_proportion_logit <span class="ot">&lt;-</span> <span class="fu">run_proportion_logit</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>feature_proportion_ratio <span class="ot">&lt;-</span> <span class="fu">run_proportion_ratio</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type specific gene expressions</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_celltype <span class="ot">&lt;-</span> <span class="fu">run_gene_mean_celltype</span>(data,  <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>  )</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_celltype  <span class="ot">&lt;-</span> <span class="fu">run_gene_prop_celltype</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span> )</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_celltype <span class="ot">&lt;-</span> <span class="fu">run_gene_cor_celltype</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span> )</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Bulk expressions </span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_mean</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span> )</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_prop</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span> )</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_cor</span>(data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span> )</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Spatial metrics</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>feature_L_stats <span class="ot">&lt;-</span> <span class="fu">run_L_function</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>   )</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>feature_morans_I <span class="ot">&lt;-</span> <span class="fu">run_Morans_I</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>  )</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>feature_celltype_interaction <span class="ot">&lt;-</span> <span class="fu">run_celltype_interaction</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span> )</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>feature_nn_correlation <span class="ot">&lt;-</span> <span class="fu">run_nn_correlation</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_p&quot;</span>  )</span></code></pre></div>
 </div>
 <div id="scfeature-for-spatial-transcriptomics" class="section level1">
 <h1>scFeature for spatial transcriptomics</h1>
 <p>The input data is a Seurat object containing <code>sample</code>,
-<code>x_cord</code> and <code>y_cord</code>.</p>
-<p>Additionally, there are two assays needed, the <code>RNA</code>,
-which contains the gene expression of each spot and the
-<code>predictions</code>.</p>
+<code>x_cord</code> and <code>y_cord</code> columns.<br />
+Additionally, apart from the <code>RNA</code> assay, which contains the
+gene expression of each spot, a <code>predictions</code> assay is also
+needed.</p>
 <p>The <code>predictions</code> assay is a matrix in the form of cell
 types x spot, which stores the cell type probability of each spot. This
 can be obtained from performing cell type prediction using reference
 data.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># read in data </span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span>   <span class="fu">readRDS</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_spatial_transcriptomics.rds&quot;</span>, <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>))</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data, <span class="at">normalise=</span>F) <span class="co"># here we don&#39;t normalise , because the data has already been normalised </span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">get_num_cell_per_spot</span>(data) <span class="co"># for spatial transcriptomics, we need to estimate the number of cells in each spot</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features </span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>sample <span class="ot">&lt;-</span> <span class="fu">paste0</span>( data<span class="sc">$</span>sample  , <span class="st">&quot;_cond_&quot;</span>, data<span class="sc">$</span>condition)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type proportions</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>feature_proportion_raw <span class="ot">&lt;-</span> <span class="fu">run_proportion_raw</span>(data, <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span>  )</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>feature_proportion_logit <span class="ot">&lt;-</span> <span class="fu">run_proportion_logit</span>(data , <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span> )</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>feature_proportion_ratio <span class="ot">&lt;-</span> <span class="fu">run_proportion_ratio</span>(data, <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span> )</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type specific gene expressions</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>data_remove_mito <span class="ot">&lt;-</span> <span class="fu">remove_mito</span>(data)</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_celltype <span class="ot">&lt;-</span> <span class="fu">run_gene_mean_celltype</span>( data_remove_mito, <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span> )</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type specific pathway expressions </span></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>feature_pathway_mean <span class="ot">&lt;-</span> <span class="fu">run_pathway_mean</span>(data, <span class="at">geneset =</span> <span class="cn">NULL</span>,</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">species =</span> <span class="st">&quot;Mus musculus&quot;</span>,</span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span>  )</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Here the data is from mouse samples, therefore we need to set the species accordingly.</span></span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Bulk expressions </span></span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_mean</span>(data, <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span> )</span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_prop</span>(data, <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span> )</span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_cor</span>(data, <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span> )</span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Spatial metrics</span></span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>feature_L_stats <span class="ot">&lt;-</span> <span class="fu">run_L_function</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span> )</span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>feature_morans_I <span class="ot">&lt;-</span> <span class="fu">run_Morans_I</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span> )</span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>feature_celltype_interaction <span class="ot">&lt;-</span> <span class="fu">run_celltype_interaction</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span>  )</span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>feature_nn_correlation <span class="ot">&lt;-</span> <span class="fu">run_nn_correlation</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span> )</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># read in data </span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span>   <span class="fu">readRDS</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_spatial_transcriptomics.rds&quot;</span>, <span class="at">package =</span> <span class="st">&quot;scFeatures&quot;</span>))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">process_data</span>(data, <span class="at">normalise=</span>F) <span class="co"># here we don&#39;t normalise , because the data has already been normalised </span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">get_num_cell_per_spot</span>(data) <span class="co"># for spatial transcriptomics, we need to estimate the number of cells in each spot</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features </span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>sample <span class="ot">&lt;-</span> <span class="fu">paste0</span>( data<span class="sc">$</span>sample  , <span class="st">&quot;_cond_&quot;</span>, data<span class="sc">$</span>condition)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type proportions</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>feature_proportion_raw <span class="ot">&lt;-</span> <span class="fu">run_proportion_raw</span>(data, <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span>  )</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>feature_proportion_logit <span class="ot">&lt;-</span> <span class="fu">run_proportion_logit</span>(data , <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span> )</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>feature_proportion_ratio <span class="ot">&lt;-</span> <span class="fu">run_proportion_ratio</span>(data, <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span> )</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type specific gene expressions</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>data_remove_mito <span class="ot">&lt;-</span> <span class="fu">remove_mito</span>(data)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_celltype <span class="ot">&lt;-</span> <span class="fu">run_gene_mean_celltype</span>( data_remove_mito, <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span> )</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co"># cell type specific pathway expressions </span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>feature_pathway_mean <span class="ot">&lt;-</span> <span class="fu">run_pathway_mean</span>(data, <span class="at">geneset =</span> <span class="cn">NULL</span>,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">species =</span> <span class="st">&quot;Mus musculus&quot;</span>,</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span>  )</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Here the data is from mouse samples, therefore we need to set the species accordingly.</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Bulk expressions </span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>feature_gene_mean_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_mean</span>(data, <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span> )</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>feature_gene_prop_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_prop</span>(data, <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span> )</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>feature_gene_cor_bulk <span class="ot">&lt;-</span> <span class="fu">run_gene_cor</span>(data, <span class="at">type =</span>  <span class="st">&quot;spatial_t&quot;</span> )</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Spatial metrics</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="co">#---------------------------------------------------------------------------</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>feature_L_stats <span class="ot">&lt;-</span> <span class="fu">run_L_function</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span> )</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>feature_morans_I <span class="ot">&lt;-</span> <span class="fu">run_Morans_I</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span> )</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>feature_celltype_interaction <span class="ot">&lt;-</span> <span class="fu">run_celltype_interaction</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span>  )</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>feature_nn_correlation <span class="ot">&lt;-</span> <span class="fu">run_nn_correlation</span>( data, <span class="at">type =</span> <span class="st">&quot;spatial_t&quot;</span> )</span></code></pre></div>
 </div>
 
 

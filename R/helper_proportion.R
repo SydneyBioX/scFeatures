@@ -22,7 +22,7 @@ helper_proportion_raw <- function(data, logit = T ){
   colnames(df) <- c("sample", "celltype", "proportion")
   
  
-  df <- df %>%   tidyr::pivot_wider(names_from = celltype, values_from = proportion)
+  df <- df %>%  tidyr::pivot_wider(names_from = celltype, values_from = proportion)
   df <- as.data.frame(  df)
   rownames(df) <- df$sample
   df <-   df [, -1]
@@ -40,10 +40,12 @@ helper_proportion_raw <- function(data, logit = T ){
 # applicable to scRNA-seq and spatial proteomics 
 helper_proportion_ratio <- function(data, ncores = 1 ) {
   
+  BPparam <- generateBPParam(ncores)
+ 
   allcelltype <- unique(data$celltype)
   
   #  x = "Pre_P1"
-  df <-  mclapply(unique(data$sample), function(x) {
+  df <-  BiocParallel::bplapply( unique(data$sample), function(x) {
     
     # loop through each sample 
     this_sample  <- data@meta.data[ data$sample == x, ]
@@ -83,7 +85,7 @@ helper_proportion_ratio <- function(data, ncores = 1 ) {
     }
     temp_df
     
-  }, mc.cores = ncores)
+  }, BPPARAM =  BPparam) 
   
   df <- as.data.frame(do.call(rbind, df))
   
@@ -123,15 +125,17 @@ helper_proportion_ratio <- function(data, ncores = 1 ) {
 # applicable to spatial transcriptomics 
 helper_proportion_raw_st <- function(data, logit = T , ncores = 1 ){
   
+  BPparam <- generateBPParam(ncores)
+  
   num_cell_spot <- get_num_cell_per_celltype(data)
   
-  prop_table <- mclapply(unique(data$sample), function(s) {
+  prop_table <- BiocParallel::bplapply(unique(data$sample), function(s) {
     index <- which( data$sample == s)
     celltype  <-   num_cell_spot[, index]
     celltype <- rowSums(celltype) / sum(celltype)
     data.frame(sample = s, celltype =     names(celltype), proportion = celltype)
     
-  }, mc.cores = ncores) 
+  }, BPPARAM =  BPparam) 
   
   prop_table <- do.call(rbind,   prop_table)
   
@@ -168,11 +172,13 @@ helper_proportion_raw_st <- function(data, logit = T , ncores = 1 ){
 # applicable to spatial transcriptomics 
 helper_proportion_ratio_st <- function(data, ncores = 1 ) {
   
+  BPparam <- generateBPParam(ncores)
+  
   num_cell_spot <- get_num_cell_per_celltype(data)
   allcelltype <- rownames(num_cell_spot)
   
   x <- unique(data$sample )[1]
-  df <-  mclapply(unique(data$sample ), function(x) {
+  df <-  BiocParallel::bplapply( unique(data$sample ), function(x) {
     
     # loop through each sample 
     
@@ -215,7 +221,7 @@ helper_proportion_ratio_st <- function(data, ncores = 1 ) {
     }
     temp_df
     
-  }, mc.cores = ncores )
+  }, BPPARAM =  BPparam) 
   
   tab <- as.data.frame(do.call(rbind, df))
   

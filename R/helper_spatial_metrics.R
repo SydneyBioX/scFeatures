@@ -44,14 +44,16 @@ individual_celltype_interaction_sp <- function(this_sample   ){
 
 helper_celltype_interaction_sp <- function(data,  ncores = 1){
   
+  BPparam <- generateBPParam(ncores)
+  
   s <- unique(data$sample)[1]
  
-  nn_list_cellTypes <- parallel::mclapply(unique(data$sample) , function(s) {
+  nn_list_cellTypes <- BiocParallel::bplapply( unique(data$sample) , function(s) {
  
     this_sample <- data[ , data$sample == s]
     nn_list_cellTypes <- individual_celltype_interaction_sp(  this_sample )
     
-  }, mc.cores = ncores) 
+  }, BPPARAM =  BPparam)
   
   
   temp <- NULL
@@ -108,8 +110,7 @@ helper_celltype_interaction_sp <- function(data,  ncores = 1){
 
 individual_celltype_interaction_st <- function(  thisprob ){
   
-  
-  
+ 
   x <- 1
   temp <- lapply( 1:ncol( thisprob) , function(x) {
     
@@ -134,6 +135,8 @@ individual_celltype_interaction_st <- function(  thisprob ){
 
 helper_celltype_interaction_st <- function(data,  ncores = 1){
   
+  BPparam <- generateBPParam(ncores)
+  
   s <- unique(data$sample)[1]
   
   prob <- data@assays$predictions
@@ -143,12 +146,12 @@ helper_celltype_interaction_st <- function(data,  ncores = 1){
   prob <-  prob[ !rownames(prob) %in% zero_celltype , ]
   
   
-  nn_list_cellTypes <- mclapply(unique(data$sample) , function(s) {
+  nn_list_cellTypes <- BiocParallel::bplapply( unique(data$sample) , function(s) {
     index <- which(data$sample == s)
     thisprob <- prob[, index]
     nn_list_cellTypes <- individual_celltype_interaction_st(    thisprob  )
     
-  }, mc.cores = ncores) 
+  }, BPPARAM =  BPparam)
 
   
   nn_list_cellTypes <- do.call(cbind,   nn_list_cellTypes)
@@ -168,10 +171,7 @@ helper_celltype_interaction_st <- function(data,  ncores = 1){
 
 
 
-
-
-
-
+ 
 
 
 individual_L_stat_st  <- function( thissample  , this_num_cell_per_spot ){
@@ -244,12 +244,14 @@ individual_L_stat_st  <- function( thissample  , this_num_cell_per_spot ){
 
 helper_L_stat_st <- function(data, ncores = 1){
  
+  BPparam <- generateBPParam(ncores)
+  
   num_cell_per_spot  <- get_num_cell_per_celltype(data)
   
   s <- unique(data$sample)[1]
   
   
-  L_stats  <- mclapply(unique(data$sample), function(s) {
+  L_stats  <- BiocParallel::bplapply( unique(data$sample), function(s) {
     
     index <- which( data$sample == s)
     
@@ -259,7 +261,7 @@ helper_L_stat_st <- function(data, ncores = 1){
     L_patient <- individual_L_stat_st(thissample  , this_num_cell_per_spot )
     
     
-  }, mc.cores = ncores) 
+  }, BPPARAM =  BPparam)
   
   
   temp <- NULL
@@ -310,8 +312,7 @@ helper_L_stat_st <- function(data, ncores = 1){
 
 individual_L_stat_sp <- function( this_sample){
  
-  
-  
+ 
   cell_points <- spatstat.geom::ppp(x = this_sample$x_cord , 
                      y =  this_sample$y_cord , 
                      check = FALSE,
@@ -349,10 +350,12 @@ individual_L_stat_sp <- function( this_sample){
 helper_L_stat_sp <- function(data, ncores = 1){
   
   
+  BPparam <- generateBPParam(ncores)
+  
   s <- unique(data$sample)[1]
   
   
-  L_stats_result  <- mclapply(unique(data$sample), function(s) {
+  L_stats_result  <- BiocParallel::bplapply( unique(data$sample), function(s) {
     
     index <- which( data$sample == s)
     
@@ -361,7 +364,7 @@ helper_L_stat_sp <- function(data, ncores = 1){
     L_patient <- individual_L_stat_sp(thissample   )
     
     
-  }, mc.cores = ncores) 
+  } , BPPARAM =  BPparam)
   
   
   temp <- NULL
@@ -444,6 +447,7 @@ individual_nncorr_protein <- function(  thissample ){
 
 helper_nncorr_protein <- function(data, num_top_gene  =  NULL , ncores = 1 ){
   
+  BPparam <- generateBPParam(ncores)
   
   if ( is.null( num_top_gene ) ){
     num_top_gene = min(nrow(data), 1500 ) 
@@ -457,11 +461,11 @@ helper_nncorr_protein <- function(data, num_top_gene  =  NULL , ncores = 1 ){
   
   s <- unique(data$sample)[1]
   
-  nncorr_protein  <- mclapply(unique(data$sample) , function(s) {
+  nncorr_protein  <- BiocParallel::bplapply( unique(data$sample) , function(s) {
     thissample <- data[ , data$sample == s]
     L_patient <- individual_nncorr_protein(  thissample  )
     
-  }, mc.cores = ncores ) 
+  } , BPPARAM =  BPparam)
   
   
   temp <- NULL
@@ -526,7 +530,7 @@ individual_moran_cor <- function(    thissample ){
                                      max ( as.numeric( thissample$y_cord )  )) , 
                          marks = t(as.matrix( exprsMat)))
   
-  d <- pairdist(cell_points_cts, squared = FALSE)
+  d <- spatstat.geom::pairdist(cell_points_cts, squared = FALSE)
   diag(d) <- Inf
   
   
@@ -555,6 +559,7 @@ individual_moran_cor <- function(    thissample ){
 
 helper_moran <- function(data,  num_top_gene =  NULL, ncores = 1){
   
+  BPparam <- generateBPParam(ncores)
   
   if ( is.null( num_top_gene ) ){
     num_top_gene = min(nrow(data), 1500 ) 
@@ -568,11 +573,11 @@ helper_moran <- function(data,  num_top_gene =  NULL, ncores = 1){
   
   s <- unique(data$sample)[1]
   
-  moran_cor  <- mclapply(unique(data$sample) , function(s) {
+  moran_cor  <- BiocParallel::bplapply( unique(data$sample) , function(s) {
     thissample <- data[ , data$sample == s]
     moran_cor  <- individual_moran_cor (   thissample)
     
-  }, mc.cores =  ncores) 
+  } , BPPARAM =  BPparam)
    
   temp <- NULL
   
@@ -596,12 +601,9 @@ helper_moran <- function(data,  num_top_gene =  NULL, ncores = 1){
       a <- data.frame( rep(0, nrow(temp)))
       a$rowname <- temp$rowname
       temp <- suppressWarnings( merge( temp , a ,   by="rowname", all = T ) ) 
-      
     }
     
     colnames(temp ) <- make.names(colnames(temp), unique=T)
-    # colnames(temp) <- c("rowname", 1: ( ncol(temp) -1) ) 
-    
   }
   
   

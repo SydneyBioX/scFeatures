@@ -15,9 +15,10 @@
 #' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 #' feature_proportion_raw <- run_proportion_raw(data, type = "scnrna", ncores = 1)
 #' 
-#' @import gtools
-#' @import tidyr
-#' @import parallel
+#' @importFrom gtools logit
+#' @importFrom tidyr pivot_wider
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_proportion_raw <- function( data, type = "scrna" , ncores = 1 ){
@@ -33,6 +34,7 @@ run_proportion_raw <- function( data, type = "scrna" , ncores = 1 ){
        X <- helper_proportion_raw_st( data, logit = F , ncores )
   }
  
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -53,9 +55,10 @@ run_proportion_raw <- function( data, type = "scrna" , ncores = 1 ){
 #' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 #' feature_proportion_logit <- run_proportion_logit(data, type = "scnrna", ncores = 1)
 #' 
-#' @import gtools
-#' @import tidyr
-#' @import parallel
+#' @importFrom gtools logit
+#' @importFrom tidyr pivot_wider
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_proportion_logit <- function( data, type = "scrna" ,  ncores = 1 ){
@@ -72,7 +75,7 @@ run_proportion_logit <- function( data, type = "scrna" ,  ncores = 1 ){
   }
   
   
-  
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -92,10 +95,10 @@ run_proportion_logit <- function( data, type = "scrna" ,  ncores = 1 ){
 #' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 #' feature_proportion_ratio <- run_proportion_ratio(data, type = "scnrna", ncores = 1)
 #' 
-#' @import gtools
-#' @import tidyr
-#' @import parallel
-#' 
+#' @importFrom tidyr pivot_wider
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom dplyr %>% 
+#'
 #' @export
 run_proportion_ratio <- function( data, type = "scrna" , ncores = 1 ){
  
@@ -110,6 +113,7 @@ run_proportion_ratio <- function( data, type = "scrna" , ncores = 1 ){
     X <- helper_proportion_ratio_st(  data , ncores )
   }
   
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -144,10 +148,11 @@ run_proportion_ratio <- function( data, type = "scrna" , ncores = 1 ){
 #' data_remove_mito <- remove_mito(data) #optional step, if mito and ribo genes are not of interest
 #' feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1) 
 #' 
-#' @import proxyC
-#' @import DelayedMatrixStats
-#' @import parallel
-#' @import DelayedArray
+#' @importFrom proxyC simil
+#' @importFrom DelayedMatrixStats rowVars rowMeans2
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom DelayedArray DelayedArray
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_gene_mean_celltype  <- function( data, type = "scrna" , genes = NULL,  num_top_gene = NULL , ncores = 1 ){
@@ -162,6 +167,7 @@ run_gene_mean_celltype  <- function( data, type = "scrna" , genes = NULL,  num_t
     X <- helper_gene_mean_celltype_st(data)
   }
 
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -191,10 +197,11 @@ run_gene_mean_celltype  <- function( data, type = "scrna" , genes = NULL,  num_t
 #' data_remove_mito <- remove_mito(data) #optional step, if mito and ribo genes are not of interest
 #' feature_gene_prop_celltype <- feature_gene_prop_celltype(data_remove_mito, type = "scnrna", num_top_gene = 100,  ncores = 1) 
 #' 
-#' @import proxyC
-#' @import DelayedMatrixStats
-#' @import parallel
-#' @import DelayedArray
+#' @importFrom proxyC simil
+#' @importFrom DelayedMatrixStats rowVars rowMeans2
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom DelayedArray DelayedArray
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_gene_prop_celltype  <- function( data, type = "scrna" , genes = NULL, num_top_gene = NULL, ncores = 1 ){
@@ -211,7 +218,7 @@ run_gene_prop_celltype  <- function( data, type = "scrna" , genes = NULL, num_to
     return(NULL)
   }
   
-  
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -241,10 +248,11 @@ run_gene_prop_celltype  <- function( data, type = "scrna" , genes = NULL, num_to
 #' data_remove_mito <- remove_mito(data) #optional step, if mito and ribo genes are not of interest
 #' feature_gene_cor_celltype <- feature_gene_cor_celltype(data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1) 
 #' 
-#' @import proxyC
-#' @import DelayedMatrixStats
-#' @import parallel
-#' @import DelayedArray
+#' @importFrom proxyC simil
+#' @importFrom DelayedMatrixStats rowVars rowMeans2
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom DelayedArray DelayedArray
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_gene_cor_celltype  <- function( data, type = "scrna" , genes = NULL,  num_top_gene = NULL, ncores = 1 ){
@@ -260,6 +268,7 @@ run_gene_cor_celltype  <- function( data, type = "scrna" , genes = NULL,  num_to
     return(NULL)
   }
   
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -288,17 +297,17 @@ run_gene_cor_celltype  <- function( data, type = "scrna" , genes = NULL,  num_to
 #' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 #' feature_pathway_gsva <- run_pathway_gsva(data, geneset = NULL, species = "Homo sapiens",  type = "scrna" , subsample = F,  ncores = 1 )
 #' 
-#' @import msigdbr
-#' @import ensembldb
-#' @import GSVA
-#' @import AUCell
+#' @importFrom msigdbr msigdbr
+#' @importFrom ensembldb select
+#' @importFrom GSVA gsva
+#' @importFrom AUCell AUCell_buildRankings AUCell_calcAUC getAUC
 #' @import EnsDb.Hsapiens.v79
 #' @import EnsDb.Mmusculus.v79
-#' @import ensembldb
-#' @import dplyr
-#' @import reshape2
-#' @import DelayedArray
-#' @import parallel
+#' @importFrom dplyr select %>%
+#' @importFrom reshape2 melt
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom DelayedArray DelayedArray
+#' @importFrom DelayedMatrixStats colMeans2
 #' 
 #' @export
 run_pathway_gsva <- function( data, method = "ssgsea", geneset = NULL , 
@@ -330,6 +339,7 @@ run_pathway_gsva <- function( data, method = "ssgsea", geneset = NULL ,
     return(NULL)
   }
   
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -356,16 +366,17 @@ run_pathway_gsva <- function( data, method = "ssgsea", geneset = NULL ,
 #' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 #' feature_pathway_mean <- run_pathway_mean(data, geneset = NULL, species = "Homo sapiens",  type = "scrna" ,  ncores = 1 )
 #' 
-#' @import msigdbr
-#' @import ensembldb
-#' @import GSVA
+#' @importFrom msigdbr msigdbr
+#' @importFrom ensembldb select
+#' @importFrom GSVA gsva
+#' @importFrom AUCell AUCell_buildRankings AUCell_calcAUC getAUC
 #' @import EnsDb.Hsapiens.v79
 #' @import EnsDb.Mmusculus.v79
-#' @import ensembldb
-#' @import dplyr
-#' @import reshape2
-#' @import DelayedArray
-#' @import parallel
+#' @importFrom dplyr select %>%
+#' @importFrom reshape2 melt
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom DelayedArray DelayedArray
+#' @importFrom DelayedMatrixStats colMeans2
 #' 
 #' @export
 run_pathway_mean <- function( data, geneset = NULL , 
@@ -390,6 +401,7 @@ run_pathway_mean <- function( data, geneset = NULL ,
     X <- helper_pathway_mean_st( data  , geneset = geneset , ncores = ncores )
   }
 
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -415,16 +427,17 @@ run_pathway_mean <- function( data, geneset = NULL ,
 #' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 #' feature_pathway_prop <- run_pathway_prop(data, geneset = NULL, species = "Homo sapiens",  type = "scrna" ,  ncores = 1 )
 #' 
-#' @import msigdbr
-#' @import ensembldb
-#' @import GSVA
+#' @importFrom msigdbr msigdbr
+#' @importFrom ensembldb select
+#' @importFrom GSVA gsva
+#' @importFrom AUCell AUCell_buildRankings AUCell_calcAUC getAUC
 #' @import EnsDb.Hsapiens.v79
 #' @import EnsDb.Mmusculus.v79
-#' @import ensembldb
-#' @import dplyr
-#' @import reshape2
-#' @import DelayedArray
-#' @import parallel
+#' @importFrom dplyr select %>%
+#' @importFrom reshape2 melt
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom DelayedArray DelayedArray
+#' @importFrom DelayedMatrixStats colMeans2
 #' 
 #' @export
 run_pathway_prop <- function( data, geneset = NULL , 
@@ -450,6 +463,7 @@ run_pathway_prop <- function( data, geneset = NULL ,
     return(NULL)
   }
   
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -475,12 +489,11 @@ run_pathway_prop <- function( data, geneset = NULL ,
 #' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 #' feature_CCI <- run_CCI(data, species = "Homo sapiens",  type = "scrna" ,  ncores = 1 )
 #' 
-#' @import dplyr
-#' @import reshape2
-#' @import DelayedArray
-#' @import parallel
-#' @import CellChat
-#' @import plyr
+#' @importFrom dplyr %>% 
+#' @importFrom BiocParallel SerialParam bplapply
+#' @import CellChat  
+#' @importFrom plyr rbind.fill
+#' @importFrom tidyr pivot_wider
 #' 
 #' @export
 run_CCI <- function( data,  species = "Homo sapiens" , type = "scrna" , ncores = 1  ){
@@ -501,6 +514,7 @@ run_CCI <- function( data,  species = "Homo sapiens" , type = "scrna" , ncores =
     return(NULL)
   }
   
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -531,9 +545,12 @@ run_CCI <- function( data,  species = "Homo sapiens" , type = "scrna" , ncores =
 #' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 #' feature_gene_mean <- run_gene_mean(data, type = "scrna" , num_top_gene= 1500, ncores = 1 )
 #' 
-#' @import proxyC
-#' @import DelayedMatrixStats
-#' @import parallel
+#' @importFrom proxyC simil
+#' @importFrom DelayedMatrixStats rowMeans2
+#' @importFrom DelayedArray DelayedArray
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom reshape2 melt
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_gene_mean  <- function( data, type = "scrna" , genes  = NULL,  num_top_gene= NULL, ncores = 1 ){
@@ -544,6 +561,7 @@ run_gene_mean  <- function( data, type = "scrna" , genes  = NULL,  num_top_gene=
     X <- helper_gene_mean(data,  genes , num_top_gene , ncores )
   }
  
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -571,10 +589,12 @@ run_gene_mean  <- function( data, type = "scrna" , genes  = NULL,  num_top_gene=
 #' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 #' feature_gene_prop <- run_gene_prop(data, type = "scrna" , num_top_gene= 1500, ncores = 1 )
 #' 
-#' @import proxyC
-#' @import DelayedMatrixStats
-#' @import parallel
-#' @import DelayedArray
+#' @importFrom proxyC simil
+#' @importFrom DelayedMatrixStats rowMeans2
+#' @importFrom DelayedArray DelayedArray
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom reshape2 melt
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_gene_prop <- function( data, type = "scrna" , genes = NULL, num_top_gene  = NULL, ncores = 1 ){
@@ -585,6 +605,7 @@ run_gene_prop <- function( data, type = "scrna" , genes = NULL, num_top_gene  = 
     X <- helper_gene_prop(data ,  genes , num_top_gene , ncores)
   }
 
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -612,10 +633,12 @@ run_gene_prop <- function( data, type = "scrna" , genes = NULL, num_top_gene  = 
 #' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 #' feature_gene_cor <- run_gene_cor(data, type = "scrna" , num_top_gene= 1500, ncores = 1 )
 #' 
-#' @import proxyC
-#' @import DelayedMatrixStats
-#' @import parallel
-#' @import DelayedArray
+#' @importFrom proxyC simil
+#' @importFrom DelayedMatrixStats rowMeans2
+#' @importFrom DelayedArray DelayedArray
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom reshape2 melt
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_gene_cor  <- function( data, type = "scrna" , genes = NULL , num_top_gene = NULL, ncores = 1 ){
@@ -626,6 +649,7 @@ run_gene_cor  <- function( data, type = "scrna" , genes = NULL , num_top_gene = 
     X <- helper_gene_cor(data  , genes , num_top_gene , ncores)
   }
  
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -646,8 +670,12 @@ run_gene_cor  <- function( data, type = "scrna" , genes = NULL , num_top_gene = 
 #' data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
 #' feature_L_function <- run_L_function(data, type = "spatial_p", ncores = 1 )
 #' 
-#' @import spatstat.geom
-#' @import parallel
+#' @importFrom spatstat.geom ppp pairdist 
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom reshape2 melt
+#' @importFrom ape Moran.I
+#' @importFrom spatstat.core nncorr
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_L_function <- function( data, type = "spatial_p" , ncores = 1 ){
@@ -667,6 +695,7 @@ run_L_function <- function( data, type = "spatial_p" , ncores = 1 ){
     X <- helper_L_stat_st(data)
   }
   
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -688,8 +717,12 @@ run_L_function <- function( data, type = "spatial_p" , ncores = 1 ){
 #' data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
 #' feature_celltype_interaction <- run_celltype_interaction(data, type = "spatial_p", ncores = 1 )
 #' 
-#' @import spatstat.geom
-#' @import parallel
+#' @importFrom spatstat.geom ppp pairdist 
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom reshape2 melt
+#' @importFrom ape Moran.I
+#' @importFrom spatstat.core nncorr
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_celltype_interaction <- function( data, type = "spatial_p" , ncores = 1  ){
@@ -709,6 +742,7 @@ run_celltype_interaction <- function( data, type = "spatial_p" , ncores = 1  ){
     X <- helper_celltype_interaction_st(data)
   }
   
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -733,9 +767,12 @@ run_celltype_interaction <- function( data, type = "spatial_p" , ncores = 1  ){
 #' data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
 #' feature_Morans_I <- run_Morans_I(data, type = "spatial_p", ncores = 1 )
 #' 
-#' @import spatstat.geom
-#' @import parallel
-#' @import ape
+#' @importFrom spatstat.geom ppp pairdist 
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom reshape2 melt
+#' @importFrom ape Moran.I
+#' @importFrom spatstat.core nncorr
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_Morans_I <- function( data, type = "spatial_p" , ncores = 1  ){
@@ -751,6 +788,7 @@ run_Morans_I <- function( data, type = "spatial_p" , ncores = 1  ){
     X <- helper_moran( data , num_top_gene =  NULL,   ncores = 1)
   }
   
+  X <- as.data.frame(X)
   return (X)
   
 }
@@ -776,9 +814,12 @@ run_Morans_I <- function( data, type = "spatial_p" , ncores = 1  ){
 #' data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
 #' feature_nn_correlation <- run_nn_correlation(data, type = "spatial_p", ncores = 1 )
 #' 
-#' @import spatstat.geom
-#' @import spatstat.core
-#' @import parallel
+#' @importFrom spatstat.geom ppp pairdist 
+#' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom reshape2 melt
+#' @importFrom ape Moran.I
+#' @importFrom spatstat.core nncorr
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_nn_correlation <- function( data, type = "spatial_p", ncores = 1){
@@ -794,6 +835,7 @@ run_nn_correlation <- function( data, type = "spatial_p", ncores = 1){
     X <- helper_nncorr_protein(data, num_top_gene  =  NULL , ncores = ncores  )
   }
 
+  X <- as.data.frame(X)
   return (X)
   
 }

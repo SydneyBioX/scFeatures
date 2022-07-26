@@ -7,7 +7,7 @@
 # get hallmark geneset if the user does not provide one 
 get_geneset <- function(species = "Homo sapiens"){
   
-  m_df <- msigdbr(species = species , category = "H")
+  m_df <- msigdbr::msigdbr(species = species , category = "H")
   m_t2g <- m_df %>% dplyr::select(gs_name, entrez_gene) %>% as.data.frame()
   geneset <- split(x = m_t2g$entrez_gene, f = m_t2g$gs_name)
   
@@ -73,14 +73,14 @@ helper_pathway_gsva <- function(data,  method = "ssgsea"  , geneset, ncores = 1 
   
   if (method == "aucell"){
     
-    cells_rankings <- AUCell_buildRankings(data@assays$RNA@data, nCores = ncores, plotStats = F)
+    cells_rankings <- AUCell::AUCell_buildRankings(data@assays$RNA@data, nCores = ncores, plotStats = F)
     
     
     # geneSets <- GSEABase::GeneSet(genes, setName="geneSet1") # alternative
-    cells_AUC <- AUCell_calcAUC(geneSets =  geneset,  rankings = cells_rankings, 
+    cells_AUC <- AUCell::AUCell_calcAUC(geneSets =  geneset,  rankings = cells_rankings, 
                                 aucMaxRank=nrow(cells_rankings)*0.05,     nCores = ncores)
     
-    cells_AUC <- getAUC(cells_AUC)
+    cells_AUC <- AUCell::getAUC(cells_AUC)
     
     X <- format_pathway(data, cells_AUC, ncores)
     
@@ -98,7 +98,9 @@ helper_pathway_gsva <- function(data,  method = "ssgsea"  , geneset, ncores = 1 
 # helper function to run the pathway mean 
 helper_pathway_mean <- function(data, geneset , ncores = 1 ){
   
-  geneset_score_all <-  mclapply(geneset, function(x){
+  BPparam <- generateBPParam(ncores)
+  
+  geneset_score_all <- BiocParallel::bplapply( geneset, function(x){
     
     exprsMat_geneset <- data[rownames(data) %in% x ,  ]
     
@@ -108,7 +110,7 @@ helper_pathway_mean <- function(data, geneset , ncores = 1 ){
     
     geneset_score <- data.frame(  geneset =   geneset  ) 
     geneset_score
-  }, mc.cores = ncores)
+  } , BPPARAM =  BPparam)
   
   geneset_score_all  <- as.data.frame(do.call(cbind,   geneset_score_all ))
   colnames( geneset_score_all ) <- names(geneset)
@@ -184,15 +186,16 @@ individual_geneset_proportion_celltype  <- function(data, this_geneset){
 
 helper_pathway_prop <- function(data, geneset ,   ncores = 1 ){
   
+  BPparam <- generateBPParam(ncores)
   
-  geneset_prop_df <-  mclapply( c(1:length(geneset)), function(i){
+  geneset_prop_df <-  BiocParallel::bplapply( c(1:length(geneset)), function(i){
     this_geneset <- geneset[[i]]
     geneset_prop <- individual_geneset_proportion_celltype(data, this_geneset )
     geneset_prop$condition <-  data$condition[ match(geneset_prop$sample, data$sample) ]
     geneset_prop$geneset <- names(geneset)[i]
     geneset_prop
     
-  }, mc.cores = ncores)
+  }, BPPARAM =  BPparam)
   
   
   geneset_prop_df <- do.call(rbind,  geneset_prop_df)
@@ -250,6 +253,9 @@ format_pathway <- function(data, topMatrixGSVA = geneset_score_all , ncores ){
 
 helper_pathway_mean_st  <- function( data , geneset, ncores = 1 ){
   
+  
+  BPparam <- generateBPParam(ncores)
+  
   prob <- as.matrix(data@assays$predictions@data)
   prob <- prob[ !rownames(prob ) == "max", ]
   zero_celltype <- names( which ( rowSums( prob )  == 0 ))
@@ -262,7 +268,7 @@ helper_pathway_mean_st  <- function( data , geneset, ncores = 1 ){
   
   x = 3
   
-  allgeneset <- mclapply( 1:length(geneset) ,  function(x){
+  allgeneset <- BiocParallel::bplapply( 1:length(geneset) ,  function(x){
     
     thisgeneset <- geneset[[x]]
     
@@ -333,18 +339,14 @@ helper_pathway_mean_st  <- function( data , geneset, ncores = 1 ){
     final
     
     
-  }, mc.cores = ncores )
+  } , BPPARAM =  BPparam)
   
   allgeneset <- do.call(rbind, allgeneset)
   
   colnames(  allgeneset  ) <- unique(data$sample)
   
   allgeneset  <- t( allgeneset )
-  # allgeneset <- CreateSeuratObject(   allgeneset)
-  # 
-  # allgeneset$sample <- unique(data$sample)
-  # allgeneset$condition <- data[ , match(   allgeneset$sample, data$sample)]$condition 
-  # 
+ 
   return(  allgeneset)
 }
 

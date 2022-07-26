@@ -61,8 +61,6 @@ library(scFeatures)
 
 scFeatures can be run using one line of code `scfeatures_result <- scFeatures(data)`, which generates a list of dataframes containing all feature types in the form of samples x features.    
 
-For input data format, refer to sections below.  
-
 ```{r eval=FALSE, include=TRUE}
 data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 data <- process_data(data, normalise = T) #  perform normalisation 
@@ -86,7 +84,7 @@ scfeatures_result <- scFeatures(data,
              # by default assumes `Homo sapiens`, this is now set to `Mus musculus`.       
              species  = "Mus musculus"  ,   
              # by default uses the 50 hallmark genes,  now set to user specified pathways.   
-             geneset = list("pathway_a" = c("SMA" ,  "Vimentin"  ),  "pathway_b" = c("B7H3" ,"FoxP3"   )) ,
+             geneset = list("pathway_a" = c("SMA" ,  "Vimentin"  ),  "pathway_b" = c("B7H3" ,"FoxP3"   )) ,/
              # by default uses top variable genes to generate the celltype specific gene expression feature category,now set to user defined genes. 
              celltype_genes = data.frame(celltype = c("Macrophages"  , "Mono/Neu" ) , marker = c("CD3" , "p53")) ,
              # by default uses top variable genes to generate the overall aggregated gene expression feature category, now set to user defined genes.    
@@ -96,13 +94,43 @@ scfeatures_result <- scFeatures(data,
 
 ```
 
-Below we list the function for generating each individual feature types for reference. 
+Below we list the function for generating each individual feature types for scRNA-seq, spatial proteomic and spatial transcriptomic data and the input data format. 
+
+
+
+# Converting SingleCellExperiment and SpatialExperiment object to Seurat object
+
+scFeatures takes a Seurat data as input. We provide a function `makeSeurat()` for the conversion.   
+
+The SingleCellExperiment or SpatialExperiment object needs to contain a column named "sample" and a column named "celltype".  
+Alternatively, user can provide the name of the column containing sample and celltype into the `sample` and `celltype` argument.   
+
+
+When passing as SingleCellExperiment or SpatialExperiment, by default we use the assay stored in "logcount".      
+Alternatively, user can provide the assay to use in the `assay` argument.     
+
+
+If users want to construct features from the spatial metrics category, by default we need columns called "x_cord" and "y_cord".      
+Alternatively, user can provide the names of the columns containing the coordinates in the `spatialCoords` argument.     
+
+For spot-based spatial transcriptomics, we also requires a matrix containing cell type prediction probability of each spot, in the format of celltype x spot, where each entry represents the prediction probability of each cell type for each spot.    
+
+```{r eval=FALSE, include=TRUE}
+# example not run
+converted_data <- makeSeurat(my_data,  assay = "norm",  sample = "imageID", 
+             celltype = "cellType", spatialCoords = c("x", "y"), 
+             spotProbability = predicted_matrix)
+
+```
+
+
+
 
 
 # scFeatures for single-cell RNA-seq data
 
-The input data is a Seurat object containing `celltype` and `sample` label.
-
+scFeatures accept a Seurat object containing the `sample` and `celltype` columns.       
+ 
 
 ```{r eval=FALSE, include=TRUE}
 #---------------------------------------------------------------------------
@@ -185,7 +213,7 @@ feature_performance <- run_classification( X, y, model = "randomforest",
 
 # scFeatures for spatial proteomics 
 
-The input data is a Seurat object containing `celltype`,  `sample`, `x_coord` and `y_coord` label. 
+The input data is a Seurat object containing `celltype`,  `sample`, `x_coord` and `y_coord` columns.   
 
 Note that, as spatial proteomics contain few genes, the feature categories of pathway expressions and cell-cell interactions are not applicable. 
 
@@ -234,9 +262,8 @@ feature_nn_correlation <- run_nn_correlation( data, type = "spatial_p"  )
 
 # scFeature for spatial transcriptomics 
 
-The input data is a Seurat object containing `sample`, `x_cord` and `y_cord`.  
-
-Additionally, there are two assays needed, the `RNA`, which contains the gene expression of each spot and the `predictions`. 
+The input data is a Seurat object containing `sample`, `x_cord` and `y_cord` columns.  
+Additionally, apart from the `RNA` assay, which contains the gene expression of each spot, a `predictions` assay is also needed. 
 
 The `predictions` assay is a matrix in the form of cell types x spot, which stores the cell type probability of each spot. This can be obtained from performing cell type prediction using reference data. 
 

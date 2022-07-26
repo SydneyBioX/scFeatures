@@ -9,7 +9,7 @@
 #' 
 #' @return data with the mito and rib genes removed 
 #' 
-#' @import proxyC
+#' @importFrom proxyC simil
 #' 
 #' @export
 remove_mito <- function(data ){
@@ -56,29 +56,27 @@ remove_mito <- function(data ){
 # find variable genes per sample,  then take the union  
 # for cell type specific methods, find the variable genes per cell type per sample 
 
-find_var_gene <- function(data,  num_top_gene  = 1500 ,   ncores = 8 , celltype = T ){
+find_var_gene <- function(data,  num_top_gene  = 1500 ,   ncores = 1 , celltype = T ){
   
-  
+  BPparam <- generateBPParam(ncores)
   
   if (celltype == T){
     
     # here calculates the HVG across all cells across all cell types
     
-    hvg_across_all_cells <-  mclapply(unique(data$sample) , function(thissample){
+    hvg_across_all_cells <-  BiocParallel::bplapply( unique(data$sample) , function(thissample){
       this <- data[, data$sample == thissample]
-      gene_var <- DelayedMatrixStats::rowVars(DelayedArray( this@assays$RNA@data))
+      gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray( this@assays$RNA@data))
       top_gene <- order(gene_var , decreasing = T)[1:num_top_gene  ]
       thisgene <- rownames(data)[top_gene]
-    }, mc.cores =  ncores )
+    }, BPPARAM =  BPparam)
     
     hvg_across_all_cells <- unique( unlist(hvg_across_all_cells) )
     
-    
-    
-    
+
     # below calculates the HVG within each cell type 
     # thiscelltype <- unique( data$celltype)[1]
-    gene  <-  mclapply ( unique( data$celltype) , function( thiscelltype ){
+    gene  <-  BiocParallel::bplapply( unique( data$celltype) , function( thiscelltype ){
       
       this_data <- data[, data$celltype == thiscelltype ]
       
@@ -88,7 +86,7 @@ find_var_gene <- function(data,  num_top_gene  = 1500 ,   ncores = 8 , celltype 
       for (thissample in unique( this_data$sample) ){
         this <-   this_data[, this_data$sample == thissample]
         if (ncol(this) > 1 ){
-          gene_var <- DelayedMatrixStats::rowVars(DelayedArray( this@assays$RNA@data))
+          gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray( this@assays$RNA@data))
           top_gene <- order(gene_var , decreasing = T)[1:num_top_gene  ]
           temp  <- rownames(data)[top_gene]
           thisgene <- c(thisgene, temp )
@@ -102,7 +100,7 @@ find_var_gene <- function(data,  num_top_gene  = 1500 ,   ncores = 8 , celltype 
       
       thisgene 
       
-    }, mc.cores = ncores )
+    }, BPPARAM =  BPparam)
     
     names(gene) <-  unique( data$celltype)
     
@@ -121,12 +119,12 @@ find_var_gene <- function(data,  num_top_gene  = 1500 ,   ncores = 8 , celltype 
     
   }else{
     
-    gene <-  mclapply(unique(data$sample) , function(thissample){
+    gene <-   BiocParallel::bplapply( unique(data$sample) , function(thissample){
       this <- data[, data$sample == thissample]
-      gene_var <- DelayedMatrixStats::rowVars(DelayedArray( this@assays$RNA@data))
+      gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray( this@assays$RNA@data))
       top_gene <- order(gene_var , decreasing = T)[1:num_top_gene  ]
       thisgene <- rownames(data)[top_gene]
-    }, mc.cores =  ncores )
+    }, BPPARAM =  BPparam)
     
     gene <- unique( unlist(gene) )
     
@@ -145,6 +143,10 @@ find_var_gene <- function(data,  num_top_gene  = 1500 ,   ncores = 8 , celltype 
 # cell type specific gene mean, set to top 100 variable genes per cell type per sample 
 helper_gene_mean_celltype  <- function( data , genes  = NULL , num_top_gene = NULL  , ncores = 1 ){
   
+  
+  BPparam <- generateBPParam(ncores)
+  
+  
   if ( is.null( num_top_gene  )){
     num_top_gene = min(nrow(data), 100 ) 
   }
@@ -159,7 +161,7 @@ helper_gene_mean_celltype  <- function( data , genes  = NULL , num_top_gene = NU
   }
   
   # j <- unique(data$celltype)[15]
-  final_matrix <-   parallel::mclapply (  unique(all_marker$celltype) , function( j ){
+  final_matrix <-   BiocParallel::bplapply(   unique(all_marker$celltype) , function( j ){
     #   i <- unique( data$sample) [1]
     
     gene <- all_marker[ all_marker$celltype == j ,  ]$marker
@@ -192,7 +194,7 @@ helper_gene_mean_celltype  <- function( data , genes  = NULL , num_top_gene = NU
     
     X_this_celltype
     
-  }, mc.cores = ncores) 
+  }, BPPARAM =  BPparam)
   
   final_matrix <- do.call(rbind,   final_matrix)
   colnames( final_matrix ) <- unique( data$sample) 
@@ -216,6 +218,8 @@ helper_gene_mean_celltype  <- function( data , genes  = NULL , num_top_gene = NU
 helper_gene_prop_celltype  <- function( data, genes = NULL ,  num_top_gene  = NULL , ncores = 1 ){
   
   
+  BPparam <- generateBPParam(ncores)
+  
   if ( is.null( num_top_gene ) ){
     num_top_gene = min(nrow(data), 100 ) 
   }
@@ -229,7 +233,7 @@ helper_gene_prop_celltype  <- function( data, genes = NULL ,  num_top_gene  = NU
   }
   
   # j <- unique(data$celltype)[3]
-  final_matrix <-   mclapply (  unique(all_marker$celltype) , function( j ){
+  final_matrix <-   BiocParallel::bplapply(  unique(all_marker$celltype) , function( j ){
     #   i <- unique( data$sample) [2]
     
     gene <- all_marker[ all_marker$celltype == j ,  ]$marker
@@ -262,7 +266,7 @@ helper_gene_prop_celltype  <- function( data, genes = NULL ,  num_top_gene  = NU
     
     X_this_celltype
     
-  }, mc.cores = ncores) 
+  }, BPPARAM =  BPparam)
   
   final_matrix <- do.call(rbind,   final_matrix)
   
@@ -288,6 +292,7 @@ helper_gene_prop_celltype  <- function( data, genes = NULL ,  num_top_gene  = NU
 # set to just top 5 genes per cell type per sample, because otherwise creates too many features 
 helper_gene_cor_celltype <- function(data, genes  = NULL, num_top_gene  = NULL   , ncores = 1 ){
   
+  BPparam <- generateBPParam(ncores)
   
   if ( is.null( num_top_gene ) ){
     num_top_gene = min(nrow(data), 5 ) 
@@ -304,7 +309,7 @@ helper_gene_cor_celltype <- function(data, genes  = NULL, num_top_gene  = NULL  
   
   #  thiscelltype <- unique( data$celltype) [13]
   
-  cor_thiscelltype <-  mclapply ( unique( all_marker$celltype) , function( thiscelltype ){
+  cor_thiscelltype <-  BiocParallel::bplapply( unique( all_marker$celltype) , function( thiscelltype ){
     
     thisdata <- data[, data$celltype  == thiscelltype]
     gene <- all_marker[ all_marker$celltype == thiscelltype, ]$marker
@@ -343,7 +348,7 @@ helper_gene_cor_celltype <- function(data, genes  = NULL, num_top_gene  = NULL  
     colnames(cor_data) <- unique(data$sample)
     
     cor_data
-  }, mc.cores = ncores )
+  }  , BPPARAM =  BPparam) 
   
   
   
@@ -371,7 +376,8 @@ helper_gene_cor_celltype <- function(data, genes  = NULL, num_top_gene  = NULL  
 
 
 helper_gene_mean_celltype_st <- function( data , num_top_gene  = NULL , ncores = 1  ){
-  
+ 
+  BPparam <- generateBPParam(ncores)
   
   if ( is.null( num_top_gene ) ){
     num_top_gene = min(nrow(data), 1500 ) 
@@ -395,7 +401,7 @@ helper_gene_mean_celltype_st <- function( data , num_top_gene  = NULL , ncores =
   
   s <- unique(data$sample)[1]
   
-  temp <-  mclapply( unique(data$sample) , function(s){
+  temp <-  BiocParallel::bplapply( unique(data$sample) , function(s){
     
     index <- which(data$sample == s)
     thispatient <- data[, index ]
@@ -454,7 +460,7 @@ helper_gene_mean_celltype_st <- function( data , num_top_gene  = NULL , ncores =
     
     list(result_p, result_coef)
     
-  }, mc.cores = ncores )
+  } , BPPARAM =  BPparam)
   
   
   result_coef <- lapply(  temp , `[[`, 2)

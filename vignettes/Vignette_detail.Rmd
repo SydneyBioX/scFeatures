@@ -57,6 +57,38 @@ library(scFeatures)
 ```
 
 
+
+
+# Converting SingleCellExperiment and SpatialExperiment object to Seurat object
+
+scFeatures takes a Seurat data as input. We provide a function `makeSeurat()` for the conversion.   
+
+The SingleCellExperiment or SpatialExperiment object needs to contain a column named "sample" and a column named "celltype".  
+Alternatively, user can provide the name of the column containing sample and celltype into the `sample` and `celltype` argument.   
+
+
+When passing as SingleCellExperiment or SpatialExperiment, by default we use the assay stored in "logcount".      
+Alternatively, user can provide the assay to use in the `assay` argument.     
+
+
+If users want to construct features from the spatial metrics category, by default we need columns called "x_cord" and "y_cord".      
+Alternatively, user can provide the names of the columns containing the coordinates in the `spatialCoords` argument.     
+
+For spot-based spatial transcriptomics, we also requires a matrix containing cell type prediction probability of each spot, in the format of celltype x spot, where each entry represents the prediction probability of each cell type for each spot.    
+
+```{r eval=FALSE, include=TRUE}
+# example not run
+converted_data <- makeSeurat(my_data,  assay = "norm",  sample = "imageID", 
+             celltype = "cellType", spatialCoords = c("x", "y"), 
+             spotProbability = predicted_matrix)
+
+```
+
+
+
+
+
+
 # scFeatures on single-cell RNA-seq data
 
 For demonstration purpose, we provide a subsampled version of the melanoma pre-treatment dataset [1] as used in our manuscript. 
@@ -514,6 +546,9 @@ feature_celltype_interaction <- run_celltype_interaction(data, type = "spatial_t
 feature_nn_correlation <- run_nn_correlation(data, type = "spatial_t")
 ```
  
+
+
+
 
 
 # Reference 

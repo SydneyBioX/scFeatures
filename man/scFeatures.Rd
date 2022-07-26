@@ -16,7 +16,8 @@ scFeatures(
 )
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
+\item{data}{input data, a Seurat object containing "sample" and "celltype" column.
+"x_cord" and "y_cord" is also required for constructing the features in the spatial metrics category.}
 
 \item{feature_types}{vector containing the name of the feature types to generate,
 options are "proportion_raw", "proportion_logit" , "proportion_ratio",

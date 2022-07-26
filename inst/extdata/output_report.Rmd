@@ -212,10 +212,7 @@ find_de_celltype_interaction <- function(data){
 
 
 
-This file provides an overview of the types of figures that one can potentially generate from each feature category to gain insight into the features associating with disease conditions (Section 1).   
-Section 2 then runs an association study using the given features and sample conditions and plots the key features from each feature category using a representative figure.    
-
-The purpose is not to provide a comprehensive analysis in a single HTML but to help point directions for future investigation. 
+This file runs association study using the given features and sample conditions and plots the key features from each feature category using a representative figure. The purpose is not to provide a comprehensive analysis in a single HTML but to help point directions for future investigation. 
 
 
 
@@ -250,150 +247,198 @@ colnames(num_features) <- "Number of features"
 
 df <- NULL
 
-data <- scfeatures_result$feature_proportion_raw
-de_proportion_raw <- find_de_not_celltype_specific(data)
+if ( "proportion_raw" %in% names( scfeatures_result ) ){
+  data <- scfeatures_result$proportion_raw
+  de_proportion_raw <- find_de_not_celltype_specific(data)
+  
+  de_proportion_raw <- data.frame("proportion_raw" ,
+                                  de_proportion_raw[[1]][1],
+                    paste0( unlist( de_proportion_raw[[2]]),  collapse=",  " ) )
 
-de_proportion_raw <- data.frame("feature_proportion_raw" , de_proportion_raw[[1]][1],
-                              paste0( unlist( de_proportion_raw[[2]]),  collapse=",  " ) )
+  df <- rbindlist(list(df ,de_proportion_raw ), use.names=FALSE )
 
-df <- rbindlist(list(df ,de_proportion_raw ), use.names=FALSE )
+}
 
 
-data <- scfeatures_result$feature_proportion_logit
+if ("proportion_logit" %in% names( scfeatures_result )){
+  data <- scfeatures_result$proportion_logit
 de_proportion_logit <- find_de_not_celltype_specific(data)
-de_proportion_logit  <- data.frame("feature_proportion_logit" , de_proportion_logit [[1]][1],
+de_proportion_logit  <- data.frame("proportion_logit" , 
+                                   de_proportion_logit [[1]][1],
                               paste0( unlist( de_proportion_logit [[2]]),   collapse=",  "  ) )
 df <- rbindlist(list(df , de_proportion_logit ), use.names=FALSE )
 
 
+}
 
+if ("proportion_ratio" %in% names(scfeatures_result)){
+  data <- scfeatures_result$proportion_ratio
+  de_proportion_ratio <- find_de_CCI(data)
+  de_proportion_ratio   <- data.frame("proportion_ratio" ,
+                                de_proportion_ratio[[1]][1],
+                                paste0( unlist( de_proportion_ratio[[2]]$celltype ),   collapse="\n"  ) )
+  df <- rbindlist(list(df , de_proportion_ratio ), use.names=FALSE )
+}
 
-data <- scfeatures_result$feature_proportion_ratio
-de_proportion_ratio <- find_de_CCI(data)
-de_proportion_ratio   <- data.frame("feature_proportion_ratio" , de_proportion_ratio[[1]][1],
-                              paste0( unlist( de_proportion_ratio[[2]]$celltype ),   collapse="\n"  ) )
-df <- rbindlist(list(df , de_proportion_ratio ), use.names=FALSE )
 
  
-
-data <- scfeatures_result$feature_gene_mean_celltype
-de_gene_mean_celltype <- find_de_celltype_specific(data)
-de_gene_mean_celltype    <- data.frame("feature_gene_mean_celltype " ,
+if ("gene_mean_celltype" %in% names(scfeatures_result)){
+  data <- scfeatures_result$gene_mean_celltype
+  de_gene_mean_celltype <- find_de_celltype_specific(data)
+  de_gene_mean_celltype    <- data.frame("gene_mean_celltype " ,
                                  sum( de_gene_mean_celltype$num_sig_features),
                    paste0( unlist( de_gene_mean_celltype$celltype ),   collapse=",  "  ) )
-df <- rbindlist(list(df , de_gene_mean_celltype ), use.names=FALSE )
+  df <- rbindlist(list(df , de_gene_mean_celltype ), use.names=FALSE )
+
+}
 
 
-data <- scfeatures_result$feature_gene_prop_celltype
-de_gene_prop_celltype <- find_de_celltype_specific(data)
-de_gene_prop_celltype    <- data.frame("feature_gene_prop_celltype " ,
+if ("gene_prop_celltype" %in% names(scfeatures_result)){
+  data <- scfeatures_result$gene_prop_celltype
+ de_gene_prop_celltype <- find_de_celltype_specific(data)
+ de_gene_prop_celltype    <- data.frame("gene_prop_celltype " ,
                                  sum( de_gene_prop_celltype$num_sig_features),
                    paste0( unlist( de_gene_prop_celltype$celltype ),  collapse=",  "  ) )
-df <- rbindlist(list(df , de_gene_prop_celltype ), use.names=FALSE )
+ df <- rbindlist(list(df , de_gene_prop_celltype ), use.names=FALSE )
+ 
+}
 
 
-data <- scfeatures_result$feature_gene_cor_celltype
+if ("gene_cor_celltype" %in% names(scfeatures_result)){
+  data <- scfeatures_result$gene_cor_celltype
 de_gene_cor_celltype <- find_de_celltype_specific(data)
-de_gene_cor_celltype    <- data.frame("feature_gene_cor_celltype" ,
+de_gene_cor_celltype    <- data.frame("gene_cor_celltype" ,
                                  sum( de_gene_cor_celltype$num_sig_features),
                    paste0( unlist( de_gene_cor_celltype$celltype ),  collapse=",  "  ) )
 df <- rbindlist(list(df , de_gene_cor_celltype), use.names=FALSE )
 
 
+  
+}
 
 
+if ("pathway_gsva" %in% names(scfeatures_result)){
 
-data <- scfeatures_result$feature_pathway_gsva
-de_pathway_gsva <-  find_de_pathway_specific(data)
-de_pathway_gsva  <- data.frame("feature_pathway_gsva" ,
-                                 sum( de_pathway_gsva$num_sig_features),
-                   paste0( unlist( de_pathway_gsva$celltype ),  collapse=",  "  ) )
-df <- rbindlist(list(df , de_pathway_gsva  ), use.names=FALSE )
+  data <- scfeatures_result$pathway_gsva
+  de_pathway_gsva <-  find_de_pathway_specific(data)
+  de_pathway_gsva  <- data.frame("pathway_gsva" ,
+                                   sum( de_pathway_gsva$num_sig_features),
+                     paste0( unlist( de_pathway_gsva$celltype ),  collapse=",  "  ) )
+  df <- rbindlist(list(df , de_pathway_gsva  ), use.names=FALSE )
+  
 
-
-
-data <- scfeatures_result$feature_pathway_mean
-de_pathway_mean <-  find_de_pathway_specific(data)
-de_pathway_mean  <- data.frame("feature_pathway_mean" ,
-                                 sum( de_pathway_mean$num_sig_features),
-                   paste0( unlist( de_pathway_mean$celltype ),   collapse=",  " ) )
-df <- rbindlist(list(df , de_pathway_mean  ), use.names=FALSE )
+}
 
 
+if ("pathway_mean" %in% names(scfeatures_result)){
+  
+  data <- scfeatures_result$pathway_mean
+  de_pathway_mean <-  find_de_pathway_specific(data)
+  de_pathway_mean  <- data.frame("pathway_mean" ,
+                                   sum( de_pathway_mean$num_sig_features),
+                     paste0( unlist( de_pathway_mean$celltype ),   collapse=",  " ) )
+  df <- rbindlist(list(df , de_pathway_mean  ), use.names=FALSE )
 
-data <- scfeatures_result$feature_pathway_prop
-de_pathway_prop <-  find_de_pathway_specific(data)
-de_pathway_prop  <- data.frame("feature_pathway_prop" ,
-                                 sum(de_pathway_prop$num_sig_features),
-                   paste0( unlist( de_pathway_prop$celltype ), collapse=",  "  ) )
-df <- rbindlist(list(df , de_pathway_prop ), use.names=FALSE )
+}
 
 
-data <- scfeatures_result$feature_CCI
-de_CCI <- find_de_CCI(data)
-de_CCI   <- data.frame("feature_CCI" ,
+if ("pathway_prop" %in% names(scfeatures_result)){
+
+  data <- scfeatures_result$pathway_prop
+  de_pathway_prop <-  find_de_pathway_specific(data)
+  de_pathway_prop  <- data.frame("pathway_prop" ,
+                                   sum(de_pathway_prop$num_sig_features),
+                     paste0( unlist( de_pathway_prop$celltype ), collapse=",  "  ) )
+  df <- rbindlist(list(df , de_pathway_prop ), use.names=FALSE )
+
+}
+
+
+if ("CCI" %in% names(scfeatures_result)){
+
+  data <- scfeatures_result$CCI
+  de_CCI <- find_de_CCI(data)
+  de_CCI   <- data.frame("CCI" ,
                      de_CCI[[1]][1] ,
                     paste0( unlist( de_CCI[[2]]$celltype  ),  collapse=",  " ) )
-df <- rbindlist(list(df , de_CCI  ), use.names=FALSE )
+  df <- rbindlist(list(df , de_CCI  ), use.names=FALSE )
+
+} 
 
 
-data <- scfeatures_result$feature_gene_mean_aggregated
-de_gene_mean_aggregated <-  find_de_not_celltype_specific(data)
-de_gene_mean_aggregated    <- data.frame("feature_gene_mean_aggregated" ,
-                     de_gene_mean_aggregated[[1]][1] ,
-                      "not applicable" )
-df <- rbindlist(list(df , de_gene_mean_aggregated  ), use.names=FALSE )
+if ("gene_mean_aggregated" %in% names(scfeatures_result)){
 
+  data <- scfeatures_result$gene_mean_aggregated
+  de_gene_mean_aggregated <-  find_de_not_celltype_specific(data)
+  de_gene_mean_aggregated    <- data.frame("gene_mean_aggregated" ,
+                       de_gene_mean_aggregated[[1]][1] ,
+                        "not applicable" )
+  df <- rbindlist(list(df , de_gene_mean_aggregated  ), use.names=FALSE )
+} 
 
-data <- scfeatures_result$feature_gene_cor_aggregated
-de_gene_cor_aggregated <-  find_de_not_celltype_specific(data)
-de_gene_cor_aggregated    <- data.frame("feature_gene_cor_aggregated" ,
-                    de_gene_cor_aggregated[[1]][1] ,
-                      "not applicable" )
-df <- rbindlist(list(df ,de_gene_cor_aggregated), use.names=FALSE )
+if ("gene_cor_aggregated" %in% names(scfeatures_result)){
+  data <- scfeatures_result$gene_cor_aggregated
+  de_gene_cor_aggregated <-  find_de_not_celltype_specific(data)
+  de_gene_cor_aggregated    <- data.frame("gene_cor_aggregated" ,
+                      de_gene_cor_aggregated[[1]][1] ,
+                        "not applicable" )
+  df <- rbindlist(list(df ,de_gene_cor_aggregated), use.names=FALSE )
+} 
 
+if ("gene_prop_aggregated" %in% names(scfeatures_result)){
+  data <- scfeatures_result$gene_prop_aggregated
+  de_gene_prop_aggregated <-  find_de_not_celltype_specific(data)
+  de_gene_prop_aggregated    <- data.frame("gene_prop_aggregated" ,
+                      de_gene_prop_aggregated[[1]][1] ,
+                        "not applicable" )
+  df <- rbindlist(list(df , de_gene_prop_aggregated ), use.names=FALSE )
 
-data <- scfeatures_result$feature_gene_prop_aggregated
-de_gene_prop_aggregated <-  find_de_not_celltype_specific(data)
-de_gene_prop_aggregated    <- data.frame("feature_gene_prop_aggregated" ,
-                    de_gene_prop_aggregated[[1]][1] ,
-                      "not applicable" )
-df <- rbindlist(list(df , de_gene_prop_aggregated ), use.names=FALSE )
-
-
-
-
-data <- scfeatures_result$feature_L_stats
-de_L_stats <-  find_de_celltype_interaction(data)
-de_L_stats  <- data.frame("feature_L_stats" ,
-                   de_L_stats[[1]][1] ,   
-              paste0( unlist( de_L_stats [[2]]$celltype  ),   collapse=",  "  )  )
-df <- rbindlist(list(df , de_L_stats ), use.names=FALSE )
-
+} 
 
 
 
-data <- scfeatures_result$feature_morans_I
-de_morans_I <-  find_de_not_celltype_specific(data)
-de_morans_I    <- data.frame("feature_morans_I" ,
-                  de_morans_I[[1]][1] ,   "not applicable" )
-df <- rbindlist(list(df , de_morans_I), use.names=FALSE )
+if ("L_stats" %in% names(scfeatures_result)){
+  data <- scfeatures_result$L_stats
+  de_L_stats <-  find_de_celltype_interaction(data)
+  de_L_stats  <- data.frame("L_stats" ,
+                     de_L_stats[[1]][1] ,   
+                paste0( unlist( de_L_stats [[2]]$celltype  ),   collapse=",  "  )  )
+  df <- rbindlist(list(df , de_L_stats ), use.names=FALSE )
+  
+} 
 
 
 
-data <- scfeatures_result$feature_celltype_interaction
-de_celltype_interaction <-  find_de_celltype_interaction(data)
-de_celltype_interaction    <- data.frame("feature_celltype_interaction" ,
-             de_celltype_interaction [[1]][1] ,
+if ("morans_I" %in% names(scfeatures_result)){
+
+  data <- scfeatures_result$morans_I
+  de_morans_I <-  find_de_not_celltype_specific(data)
+  de_morans_I    <- data.frame("morans_I" ,
+                    de_morans_I[[1]][1] ,   "not applicable" )
+  df <- rbindlist(list(df , de_morans_I), use.names=FALSE )
+
+} 
+
+
+if ("celltype_interaction" %in% names(scfeatures_result)){
+
+  data <- scfeatures_result$celltype_interaction
+  de_celltype_interaction <-  find_de_celltype_interaction(data)
+  de_celltype_interaction    <- data.frame("celltype_interaction" ,
+              de_celltype_interaction [[1]][1] ,
               paste0( unlist( de_celltype_interaction [[2]]$celltype  ),  collapse=",  "  ) )
-df <- rbindlist(list(df , de_celltype_interaction), use.names=FALSE )
+  df <- rbindlist(list(df , de_celltype_interaction), use.names=FALSE )
 
+} 
 
-data <- scfeatures_result$feature_nn_correlation
-de_nn_correlation <-  find_de_not_celltype_specific(data)
-de_nn_correlation  <- data.frame("feature_nn_correlation" ,
-              de_nn_correlation[[1]][1] ,  "not applicable")
-df <- rbindlist(list(df ,de_nn_correlation ), use.names=FALSE )
+if ("nn_correlation" %in% names(scfeatures_result)){
+  data <- scfeatures_result$nn_correlation
+  de_nn_correlation <-  find_de_not_celltype_specific(data)
+  de_nn_correlation  <- data.frame("nn_correlation" ,
+                de_nn_correlation[[1]][1] ,  "not applicable")
+  df <- rbindlist(list(df ,de_nn_correlation ), use.names=FALSE )
+
+} 
 
     
 num_features <- data.frame(num_features)
@@ -535,12 +580,16 @@ knitr::include_graphics( system.file("extdata/figure", "celltypeproportion_examp
 
 ```{r}
  
-data <- scfeatures_result$feature_proportion_raw
 
-p <-  plot_barplot(data  ) 
-
-ggplotly(p)
+if ("proportion_raw" %in% names(scfeatures_result)){
+    
+  data <- scfeatures_result$proportion_raw
+  
+  p <-  plot_barplot(data  ) 
+  
+  ggplotly(p)
  
+} 
 ```
 
 
@@ -548,20 +597,22 @@ ggplotly(p)
 ## Boxplot of top features
 
 ```{r}
-data <- scfeatures_result$feature_proportion_raw
-p <- plot_boxplot(data ) 
- ggplotly(p) %>% layout(boxmode = "group") 
-
+if ("proportion_raw" %in% names(scfeatures_result)){
+  data <- scfeatures_result$proportion_raw
+  p <- plot_boxplot(data ) 
+   ggplotly(p) %>% layout(boxmode = "group") 
+} 
 ```
 
 
 ## PCA plot 
 
 ```{r}
- 
-data <- scfeatures_result$feature_proportion_raw
-p <- plot_pca(data )  
-ggplotly(p) 
+if ("proportion_raw" %in% names(scfeatures_result)){
+    data <- scfeatures_result$proportion_raw
+    p <- plot_pca(data )  
+    ggplotly(p) 
+} 
 
 ```
 
@@ -678,20 +729,22 @@ knitr::include_graphics( system.file("extdata/figure",  "celltypegene_example_fi
 
 ```{r}
 
-data <- scfeatures_result$feature_gene_mean_celltype
-data <- t(data)
-    
-
-celltype <- rownames(data)
-celltype <- unlist( lapply( strsplit(celltype, "--" ), `[`, 1) )
-
-topcelltype <- strsplit( de_gene_mean_celltype[, 3] , ", ")[[1]][1]
-
-data <- data[ which(celltype == topcelltype ) , ]
-
-result <- plot_heatmap_bulk(data , num_features = 20 )
-
-gene_output <- result$gene_output
+if ("gene_mean_celltype" %in% names(scfeatures_result)){
+  data <- scfeatures_result$gene_mean_celltype
+  data <- t(data)
+      
+  
+  celltype <- rownames(data)
+  celltype <- unlist( lapply( strsplit(celltype, "--" ), `[`, 1) )
+  
+  topcelltype <- strsplit( de_gene_mean_celltype[, 3] , ", ")[[1]][1]
+  
+  data <- data[ which(celltype == topcelltype ) , ]
+  
+  result <- plot_heatmap_bulk(data , num_features = 20 )
+  
+  gene_output <- result$gene_output
+}
 
 ```
 
@@ -699,15 +752,18 @@ gene_output <- result$gene_output
 
 ```{r}
 
-gene_output$gene <- rownames(gene_output)
+if ("gene_mean_celltype" %in% names(scfeatures_result)){
+  
+  gene_output$gene <- rownames(gene_output)
+   
+  g <- ggplot(gene_output, aes(x = AveExpr, y = logFC , text  = gene))+
+      geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
+      scale_colour_gradient(low="blue",high="red")+
+      ylab("log2 fold change") + xlab("Average expression")+ theme_minimal()
+   
+  ggplotly(g)
  
-g <- ggplot(gene_output, aes(x = AveExpr, y = logFC , text  = gene))+
-    geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
-    scale_colour_gradient(low="blue",high="red")+
-    ylab("log2 fold change") + xlab("Average expression")+ theme_minimal()
- 
-ggplotly(g)
- 
+}
 
 ```
 
@@ -715,51 +771,66 @@ ggplotly(g)
 
 ```{r}
 
-
- 
-p <- ggplot( gene_output , aes(logFC,-log10(P.Value) , text = gene ) )+
-    geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
-    scale_colour_gradient(low="blue",high="red")+
-    xlab("log2 fold change") + ylab("-log10 p-value") + theme_minimal()
+if ("gene_mean_celltype" %in% names(scfeatures_result)){
   
-
-ggplotly(p)
-
  
-
+  p <- ggplot( gene_output , aes(logFC,-log10(P.Value) , text = gene ) )+
+      geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
+      scale_colour_gradient(low="blue",high="red")+
+      xlab("log2 fold change") + ylab("-log10 p-value") + theme_minimal()
+    
+  
+  ggplotly(p)
+  
+   
+}
 
 ```
 
 ## PCA plot
 
 ```{r}
+if ("gene_mean_celltype" %in% names(scfeatures_result)){
+  
+  p <- plot_pca(t( data) )
 
- p <- plot_pca(t( data) )
+  ggplotly(p)
 
-ggplotly(p)
+}
 ```
 
 ## Dot plot
 
 ```{r}
-rownames( gene_output  ) <- unlist( lapply ( strsplit( rownames( gene_output  ) , "--"), `[` , 2) )
-result <- plot_go_bulk(gene_output )
 
-print(result$dotplot)
+if ("gene_mean_celltype" %in% names(scfeatures_result)){
+  
+  rownames( gene_output  ) <- unlist( lapply ( strsplit( rownames( gene_output  ) , "--"), `[` , 2) )
+  result <- plot_go_bulk(gene_output )
+  
+  print(result$dotplot)
+
+}
 ```
 
 ## Enrichment map
 
 ```{r}
-print(result$emapplot) 
 
+if ("gene_mean_celltype" %in% names(scfeatures_result)){
+  
+  print(result$emapplot) 
+
+}
 ```
 
 ## Functional grouping
 
 ```{r}
-print(result$treeplot) 
-
+if ("gene_mean_celltype" %in% names(scfeatures_result)){
+ 
+   print(result$treeplot) 
+}
 ```
 
 
@@ -768,6 +839,7 @@ print(result$treeplot)
 ```{r echo=TRUE,  out.width = '60%'}
 knitr::include_graphics(  system.file("extdata/figure",  "pathway_example_figures.png" ,   package = "scFeatures")    )
 ``` 
+
 1. Heatmaps shows the top cell type specific pathway expression features that differs between conditions    
 2. Boxplot shows the top cell type specific pathway expression features that differs between conditions     
 3. PCA plot shows the separation of conditions based on the cell type specific pathway expression features     
@@ -776,31 +848,41 @@ knitr::include_graphics(  system.file("extdata/figure",  "pathway_example_figure
 ## Heatmap 
 
 ```{r}
-data <- scfeatures_result$feature_pathway_gsva
-data <- t(data)
-    
-gene_output <- plot_heatmap_bulk(data )
-    
 
+if ("pathway_gsva" %in% names(scfeatures_result)){
+   
+  data <- scfeatures_result$pathway_gsva
+  data <- t(data)
+      
+  gene_output <- plot_heatmap_bulk(data )
+      
+} 
 ```
 
 
 ## Boxplot
 
 ```{r}
-    
-p <- plot_boxplot(t(data) )
+if ("pathway_gsva" %in% names(scfeatures_result)){
+      
+  p <- plot_boxplot(t(data) )
+  
+  ggplotly(p)  %>% layout(boxmode = "group") 
 
-ggplotly(p)  %>% layout(boxmode = "group") 
-
+}
 ```
 
 
 ## PCA plot
 
 ```{r}
-p <- plot_pca(t( data) )
-ggplotly(p)
+
+if ("pathway_gsva" %in% names(scfeatures_result)){
+   
+  p <- plot_pca(t( data) )
+  ggplotly(p)
+
+}
 ```
 
 
@@ -894,8 +976,15 @@ knitr::include_graphics(  system.file("extdata/figure",
                    "CCI_example_figures.png"  ,   package = "scFeatures")    )
 
 ``` 
-1. Heatmap shows the top cell cell interactions features that differs between conditions    
-2. Heatmap shows the difference in the number of interactions between conditions  
+
+1. Heatmap shows the top cell cell interactions features that differs between conditions 
+2. Heatmap shows the difference in the number of interactions between conditions   
+
+For each interacting cell type, the difference is calculated as:    
+$$
+\frac{total\: number\: of\: non-zero\: interactions \:in \: condition 1\: patients}{number \:of\: condition 1\:patients} - \frac{total\: number\: of\: non-zero\: interactions \:in \: condition 2\: patients}{number \:of\: condition 2 \:patients}
+$$
+
 3. PCA plot shows the separation of conditions based on the cell type specific pathway expression features   
 4. Network plot shows the difference in the number of interactions between conditions
 5. Boxplot shows the top cell cell interaction features that differs between conditions       
@@ -905,46 +994,70 @@ knitr::include_graphics(  system.file("extdata/figure",
 ## Heatmap of top cell cell interactions
 
 ```{r}
- data <- scfeatures_result$feature_CCI
- data <- t(data)
+
+
+if ("CCI" %in% names(scfeatures_result)){
  
-data <- data[, -c( which( colnames(data) == "NA"))]
- 
-result <- plot_heatmap_bulk(data,  num_feature = 20 )
-    
-gene_output <- result$gene_output
+   data <- scfeatures_result$CCI
+   data <- t(data)
+   
+  data <- data[, -c( which( colnames(data) == "NA"))]
+   
+  result <- plot_heatmap_bulk(data,  num_feature = 20 )
+      
+  gene_output <- result$gene_output
+
+}
 ```
 
 ## Heatmap of difference in number of interactions
 
 ```{r}
-df <- plot_CCI(data )
+
+if ("CCI" %in% names(scfeatures_result)){
+ 
+  df <- plot_CCI(data )
+
+}
 ```
 
 
 ## PCA plot
 
 ```{r}
-p <- plot_pca(t(data) )
 
-ggplotly(p)
+if ("CCI" %in% names(scfeatures_result)){
+ 
+  p <- plot_pca(t(data) )
+  
+  ggplotly(p)
+
+}
 ```
 
 
 ## Network plot
 
 ```{r}
-plot_CCI_difference(df)
+if ("CCI" %in% names(scfeatures_result)){
+ 
+  plot_CCI_difference(df)
+  
+}
 ```
 
 
 ## Boxplot 
 
 ```{r}
-p <- plot_boxplot(t(data))  
 
-ggplotly(p)  %>% layout(boxmode = "group") 
+if ("CCI" %in% names(scfeatures_result)){
+   
+  p <- plot_boxplot(t(data))  
+  
+  ggplotly(p)  %>% layout(boxmode = "group") 
 
+}
 ```
 
 
@@ -970,14 +1083,16 @@ knitr::include_graphics(  system.file("extdata/figure",
 ## Heatmap
 
 ```{r}
+if ("gene_mean_aggregated" %in% names(scfeatures_result)){
 
-data <- as.matrix ( scfeatures_result$feature_gene_mean_aggregated)
-data <- t(data)
-    
-result <- plot_heatmap_bulk(data ,  num_features = 20)
+  data <- as.matrix ( scfeatures_result$gene_mean_aggregated)
+  data <- t(data)
+      
+  result <- plot_heatmap_bulk(data ,  num_features = 20)
+  
+  gene_output <- result$gene_output
 
-gene_output <- result$gene_output
-
+}
 
 ```
 
@@ -985,55 +1100,69 @@ gene_output <- result$gene_output
 
 ```{r}
 
-gene_output$gene <- rownames(gene_output)
- 
-g <-  ggplot(gene_output, aes(x = AveExpr, y = logFC, text = gene))+
-    geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
-    scale_colour_gradient(low="blue",high="red")+
-    ylab("log2 fold change") + xlab("Average expression")+ theme_minimal()
- 
-ggplotly(g)
+if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+  
+  gene_output$gene <- rownames(gene_output)
+   
+  g <-  ggplot(gene_output, aes(x = AveExpr, y = logFC, text = gene))+
+      geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
+      scale_colour_gradient(low="blue",high="red")+
+      ylab("log2 fold change") + xlab("Average expression")+ theme_minimal()
+   
+  ggplotly(g)
 
+}
 ```
 
 ## Volcano plot
 
 ```{r}
-p <-  ggplot( gene_output , aes(logFC,-log10(P.Value) , text = gene) )+
-    geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
-    scale_colour_gradient(low="blue",high="red")+
-    xlab("log2 fold change") + ylab("-log10 p-value") + theme_minimal()
- 
-ggplotly(p)
 
+if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+  
+  p <-  ggplot( gene_output , aes(logFC,-log10(P.Value) , text = gene) )+
+      geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
+      scale_colour_gradient(low="blue",high="red")+
+      xlab("log2 fold change") + ylab("-log10 p-value") + theme_minimal()
+   
+  ggplotly(p)
+
+}
 ```
 
 ## PCA plot
 
 ```{r}
-
-plot_pca( t(data)  )  
-
+if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+  plot_pca( t(data)  )  
+}
 ```
 
 ## Dot plot
 
 ```{r}
-result <- plot_go_bulk( gene_output  ) 
 
-print(result$dotplot)
+if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+  result <- plot_go_bulk( gene_output  ) 
+  
+  print(result$dotplot)
+}
 ```
 
 ## Enrichment map
 
 ```{r}
-print(result$emapplot)
+if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+  print(result$emapplot)
+}
 ```
 
 ## Functional grouping
 
 ```{r}
-print(result$treeplot)
+if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+  print(result$treeplot)
+}
 ```
 
 
@@ -1057,29 +1186,34 @@ knitr::include_graphics(  system.file("extdata/figure",
 ## Heatmap
 
 ```{r}
-data <- scfeatures_result$feature_morans_I
-data <- t(data)
-    
-gene_output <- plot_heatmap_bulk(data,    num_features = 20 ) 
 
+if ("morans_I" %in% names(scfeatures_result)){ 
+  data <- scfeatures_result$morans_I
+  data <- t(data)
+      
+  gene_output <- plot_heatmap_bulk(data,    num_features = 20 ) 
+
+}
  
 ```
 
 ## Boxplot
 
 ```{r}
- p <- plot_boxplot( t(data)  )  
-ggplotly(p) %>% layout(boxmode = "group") 
-
+if ("morans_I" %in% names(scfeatures_result)){ 
+   p <- plot_boxplot( t(data)  )  
+  ggplotly(p) %>% layout(boxmode = "group") 
+}
 ```
 
 
 ## PCA plot 
   
 ```{r}
-p <- plot_pca( t(data)  )  
-ggplotly(p)
-
+if ("morans_I" %in% names(scfeatures_result)){ 
+  p <- plot_pca( t(data)  )  
+  ggplotly(p)
+}
 ```
   
   

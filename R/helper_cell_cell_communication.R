@@ -3,15 +3,17 @@
  # helper function to run CCI 
 helper_CCI <- function( data , species = "Homo sapiens" ,  ncores = 1  ){
   
+  BPparam <- generateBPParam(ncores)
+  
   # run CCI for all samples
-  com_list <-  mclapply( unique(data$sample) , function(x) {
+  com_list <- BiocParallel::bplapply( unique(data$sample) , function(x) {
     try({ 
     this_sample <- data[, data$sample == x]
     this_sample$celltype <- as.character( this_sample$celltype)
     cellchat_thissample  <- cci_individual( this_sample , species)
     cellchat_thissample
     })
-  }, mc.cores = ncores  ) 
+  }  , BPPARAM =  BPparam)
   
   names(com_list) <- unique(data$sample)
   
