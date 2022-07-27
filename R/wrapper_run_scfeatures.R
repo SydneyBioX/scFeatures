@@ -24,7 +24,11 @@
 #' If no value is provided, the top variable genes will be used 
 #' @param geneset the geneset of interest for celltype specific pathway feature category
 #' If no value is provided, the 50 hallmark pathways will be used 
-#' 
+#' @param sample the sample identifier if using a SingleCellExperiment
+#' @param celltype the celltype identifier if using a SingleCellExperiment
+#' @param assay the assay identifier if using a SingleCellExperiment
+#' @param spatialCoords the spatialCoords identifiers if using a SingleCellExperiment
+#'
 #' @return a list of dataframes containing the generated feature matrix in the form of sample x features 
 #'
 #' @examples
@@ -34,7 +38,10 @@
 #' 
 #' @export
 scFeatures <- function( data , feature_types = NULL , type =  "scrna", ncores  = 1 ,
-                        species  = "Homo sapiens", celltype_genes = NULL, aggregated_genes = NULL , geneset = NULL){
+                        species  = "Homo sapiens", celltype_genes = NULL, aggregated_genes = NULL , geneset = NULL, 
+                       sample = "sample", celltype = "celltype", assay = "logcounts", spatialCoords = NULL){
+  
+  data <- makeSeurat(data, sample, celltype, assay, spatialCoords)
   
   return_list <- list()
   
