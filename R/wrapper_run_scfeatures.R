@@ -163,8 +163,7 @@ scFeatures <- function( data , feature_types = NULL , type =  "scrna", ncores  =
     })
   }
   
-  lapply(return_list, as.data.frame)
-  #return (return_list)
+  return (return_list)
 }
 
 
@@ -191,7 +190,7 @@ scFeatures <- function( data , feature_types = NULL , type =  "scrna", ncores  =
 #' @importFrom SpatialExperiment spatialCoords
 #' 
 #' @export
-makeSeurat <- function(data, sample, celltype, assay, spatialCoords, spotProbability ){
+makeSeurat <- function(data, sample, celltype, assay, spatialCoords = NULL, spotProbability = NULL ){
  
   if(is(data, "SingleCellExperiment")){
     df <- data
