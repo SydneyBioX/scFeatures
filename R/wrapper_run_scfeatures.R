@@ -156,8 +156,8 @@ scFeatures <- function( data , feature_types = NULL , type =  "scrna", ncores  =
     })
   }
   
-  
-  return (return_list)
+  lapply(return_list, as.data.frame)
+  #return (return_list)
 }
 
 
