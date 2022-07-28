@@ -12,7 +12,11 @@ scFeatures(
   species = "Homo sapiens",
   celltype_genes = NULL,
   aggregated_genes = NULL,
-  geneset = NULL
+  geneset = NULL,
+  sample = "sample",
+  celltype = "celltype",
+  assay = "logcounts",
+  spatialCoords = NULL
 )
 }
 \arguments{
@@ -42,6 +46,14 @@ If no value is provided, the top variable genes will be used}
 
 \item{geneset}{the geneset of interest for celltype specific pathway feature category
 If no value is provided, the 50 hallmark pathways will be used}
+
+\item{sample}{the sample identifier if using a SingleCellExperiment}
+
+\item{celltype}{the celltype identifier if using a SingleCellExperiment}
+
+\item{assay}{the assay identifier if using a SingleCellExperiment}
+
+\item{spatialCoords}{the spatialCoords identifiers if using a SingleCellExperiment}
 }
 \value{
 a list of dataframes containing the generated feature matrix in the form of sample x features

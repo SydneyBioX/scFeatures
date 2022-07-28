@@ -7,10 +7,12 @@
 #' @return A matrix of the infile
 #' 
 #' @import ClassifyR
-#' @import dplyr
+#' @importFrom dplyr %>% 
 #' 
 #' @export
 run_classification <- function(X, y, model = "randomforest", ncores = 1  ){
+  
+  BPparam <- generateBPParam(ncores)
   
   X <- as.matrix(t(X))
   
@@ -35,17 +37,16 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1  ){
   }
   
   params = list(trainParams, predictParams)
-  bpparam <- BiocParallel::MulticoreParam(ncores)
   
   result <- ClassifyR::runTests( X , y, datasetName = "scfeatures",
                          classificationName =  model ,
                          permutations = 20, folds = 3, seed = 2018,
                          params = params, verbose = 1, 
-                         parallelParams = bpparam)
+                         parallelParams = BPparam)
   
  
   
-  temp <- parallel::mclapply (  result@selectResult@rankedFeatures , function(x){
+  temp <- BiocParallel::bplapply(  result@selectResult@rankedFeatures , function(x){
     importance <- NULL
     for (i in c(1:length(x))) {
       this <- x[[i]]
@@ -54,7 +55,7 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1  ){
       importance <- rbind(importance, this)
     }
     importance
-  }) 
+  }, BPPARAM =  BPparam)  
   
   importance <- do.call(rbind,temp)
   

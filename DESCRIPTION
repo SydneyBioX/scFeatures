@@ -14,6 +14,8 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Remotes: 
+    sqjin/CellChat
 biocViews:
 Imports:
     ClassifyR,
@@ -34,17 +36,7 @@ Imports:
     reshape2,
     spatstat.core,
     spatstat.geom,
-    tidyr,
-    NMF,
-    CellChat,
-    circlize,
-    ComplexHeatmap,
-    SummarizedExperiment,
-    SpatialExperiment
-Remotes: 
-    jokergoo/circlize,
-    jokergoo/ComplexHeatmap,
-    sqjin/CellChat
+    tidyr
 Suggests: 
     knitr,
     rmarkdown
