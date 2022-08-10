@@ -191,7 +191,7 @@ scFeatures <- function( data , feature_types = NULL , type =  "scrna", ncores  =
 #' @importFrom SpatialExperiment spatialCoords
 #' 
 #' @export
-makeSeurat <- function(data, sample, celltype, assay, spatialCoords, spotProbability ){
+makeSeurat <- function(data, sample, celltype, assay, spatialCoords, spotProbability = NULL){
   if (is(data, "Seurat")){
     data$celltype <- data[[celltype]]
     data$sample <- data[[sample]]
