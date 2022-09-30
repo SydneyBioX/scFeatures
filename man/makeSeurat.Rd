@@ -4,7 +4,14 @@
 \alias{makeSeurat}
 \title{Format SingleCellExperiment or SpatialExperiment object into Seurat object for scFeatures functions}
 \usage{
-makeSeurat(data, sample, celltype, assay, spatialCoords, spotProbability)
+makeSeurat(
+  data,
+  sample,
+  celltype,
+  assay,
+  spatialCoords,
+  spotProbability = NULL
+)
 }
 \arguments{
 \item{data}{input data, either a SingleCellExperiment or SpatialExperiment object.
