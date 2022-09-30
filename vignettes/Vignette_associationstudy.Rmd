@@ -2,7 +2,7 @@
 title: "Vignette - association study of features with conditions"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette_detail}
+  %\VignetteIndexEntry{Vignette_associationstudy}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
