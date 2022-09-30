@@ -46,9 +46,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction 
 
-This vignette provide a list of all functions in scFeatures for quick reference. For detailed explanation of scFeatures and case studies, please refer to the other vigentte "Vignette - detailed explanation of scFeatures".  
+This vignette provides a list of all functions in scFeatures for quick reference. For detailed explanation of scFeatures and case studies, please refer to the other vignette "Vignette - detailed explanation of scFeatures".  
 
-If you wish to run downstream analysis using the generated features (see "Vignette - association study"), please make sure that when you run scFeatures, the `sample` is in the format of `a_cond_b`. Where `a` is sample ID and `b` is  the condition, eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running the analysis. 
+If you wish to run downstream analysis using the generated features (see "Vignette - association study"), please make sure that when you run scFeatures, the `sample` is in the format of `a_cond_b`. Where `a` is sample ID and `b` is the condition, e.g., `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running the analysis. 
 
 
 
@@ -59,7 +59,7 @@ library(scFeatures)
 
 # Quick run of scFeatures
 
-scFeatures can be run using one line of code `scfeatures_result <- scFeatures(data)`, which generates a list of dataframes containing all feature types in the form of samples x features.    
+scFeatures can be run using one line of code `scfeatures_result <- scFeatures(data)`, which generates a list of data frames containing all feature types in the form of samples x features.    
 
 ```{r eval=FALSE, include=TRUE}
 data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
