@@ -36,7 +36,8 @@ Imports:
     reshape2,
     spatstat.core,
     spatstat.geom,
-    tidyr
+    tidyr,
+    inline
 Suggests: 
     knitr,
     rmarkdown
