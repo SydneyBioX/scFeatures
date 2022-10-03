@@ -23,7 +23,7 @@ For demonstration purpose, we provide an example of this features list. The code
 
 ```{r, include=FALSE}
 
-.libPaths("/albona/nobackup/yuec/scfeatures/scfeatures_package/dependency")
+#.libPaths("/albona/nobackup/yuec/scfeatures/scfeatures_package/dependency")
 library(scFeatures)
 ```
 

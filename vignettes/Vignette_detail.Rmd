@@ -9,7 +9,7 @@ vignette: >
 
 ```{r, include = FALSE}
 
-.libPaths("/albona/nobackup/yuec/scfeatures/scfeatures_package/dependency")
+#.libPaths("/albona/nobackup/yuec/scfeatures/scfeatures_package/dependency")
 
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 ```{r eval=TRUE, include=FALSE, paged.print=TRUE}
 
-.libPaths("/albona/nobackup/yuec/scfeatures/scfeatures_package/dependency")
+#.libPaths("/albona/nobackup/yuec/scfeatures/scfeatures_package/dependency")
 
 library(inline)
 openblas.set.num.threads <- cfunction( signature(ipt="integer"),
