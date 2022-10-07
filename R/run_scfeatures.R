@@ -236,7 +236,7 @@ run_gene_prop_celltype <- function(data, type = "scrna", genes = NULL, num_top_g
 #'
 #' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 #' data_remove_mito <- remove_mito(data) # optional step, if mito and ribo genes are not of interest
-#' feature_gene_cor_celltype <- run_gene_cor_celltype(data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1)
+#' feature_gene_cor_celltype <- run_gene_cor_celltype(data_remove_mito, type = "scrna", num_top_gene = 100, ncores = 1)
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
