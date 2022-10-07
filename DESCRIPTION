@@ -26,6 +26,8 @@ Imports:
     GSVA,
     Seurat,
     ape,
+    caret,
+    glue,
     dplyr,
     ensembldb,
     gtools,
