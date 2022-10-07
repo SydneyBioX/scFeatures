@@ -49,7 +49,7 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
 
 
 
-  temp <- BiocParallel::bplapply(result@selectResult@rankedFeatures, function(x) {
+  temp <- BiocParallel::bplapply(result@rankedFeatures, function(x) {
     importance <- NULL
     for (i in c(1:length(x))) {
       this <- x[[i]]
