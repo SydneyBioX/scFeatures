@@ -32,14 +32,12 @@ Imports:
     ensembldb,
     gtools,
     msigdbr,
-    parallel,
     plyr,
     proxyC,
     reshape2,
     spatstat.core,
     spatstat.geom,
     tidyr,
-    inline,
     AUCell,
     BiocParallel,
     CellChat,
@@ -47,5 +45,6 @@ Imports:
     SummarizedExperiment,
     rmarkdown
 Suggests: 
-    knitr
+    knitr,
+    inline
 VignetteBuilder: knitr
