@@ -19,7 +19,7 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
   y <- as.factor(y)
 
   if (model == "randomforest") {
-    trainParams <-  ClassifyR::TrainParams("randomForest")
+    trainParams <-  ClassifyR::TrainParams("randomForest", trees = 100)
     predictParams <- ClassifyR::PredictParams("randomForest")
   }
 
