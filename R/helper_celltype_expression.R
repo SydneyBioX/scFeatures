@@ -22,16 +22,16 @@ remove_mito <- function(data) {
   nms <- rownames(temp)
 
   bad_genes <- unique(c(
-    grep("^MT-", nms, v = T),
-    grep("^MTMR", nms, v = T),
-    grep("^MTND", nms, v = T),
-    grep("RPL|RPS", nms, v = T),
+    grep("^MT-", nms, value = T),
+    grep("^MTMR", nms, value = T),
+    grep("^MTND", nms, value = T),
+    grep("RPL|RPS", nms, value = T),
     "NEAT1", "TMSB4X", "TMSB10"
   ), c(
-    grep("^mt-", nms, v = T),
-    grep("^Mtmr", nms, v = T),
-    grep("^Mtnd", nms, v = T),
-    grep("Rpl|Rps", nms, v = T),
+    grep("^mt-", nms, value = T),
+    grep("^Mtmr", nms, value = T),
+    grep("^Mtnd", nms, value = T),
+    grep("Rpl|Rps", nms, value = T),
     "Neat1", "Tmsb4x", "Tmsb10"
   ))
 
