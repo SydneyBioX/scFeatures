@@ -34,14 +34,21 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
     predictParams <- ClassifyR::PredictParams("DLDA")
   }
 
-  params <- list(trainParams, predictParams)
+  params <- ClassifyR::ModellingParams(
+    trainParams = trainParams,
+    predictParams = predictParams
+  )
+  cross_val_params = ClassifyR::CrossValParams(
+    permutations = 20, folds = 3,
+    parallelParams = BPparam
+  )
 
   result <- ClassifyR::runTests(X, y,
     datasetName = "scfeatures",
     classificationName = model,
-    permutations = 20, folds = 3, seed = 2018,
-    params = params, verbose = 1,
-    parallelParams = BPparam
+    crossValParams = cross_val_params,
+    modellingParams = params,
+    verbose = 1
   )
 
 
