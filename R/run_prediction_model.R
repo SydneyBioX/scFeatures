@@ -68,11 +68,11 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
 
 
 
-  classLevels <- levels(ClassifyR::actualClasses(result))
+  classLevels <- levels(ClassifyR::actualOutcome(result))
   samples <- lapply(result@predictions, function(sample) factor(sample[, "sample"], levels = ClassifyR::sampleNames(result)))
   predictedClasses <- lapply(result@predictions, function(sample) factor(sample[, "class"], levels = classLevels))
   actualClasses <- lapply(result@predictions, function(sample) {
-    factor(ClassifyR::actualClasses(result)[match(sample[, "sample"], ClassifyR::sampleNames(result))],
+    factor(ClassifyR::actualOutcome(result)[match(sample[, "sample"], ClassifyR::sampleNames(result))],
       levels = classLevels, ordered = TRUE
     )
   })
