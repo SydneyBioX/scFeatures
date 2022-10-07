@@ -18,23 +18,20 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
   y <- as.factor(y)
 
   if (model == "randomforest") {
-    trainParams <-  ClassifyR::TrainParams("randomForest")
+    trainParams <-  ClassifyR::TrainParams("randomForest", trees = 100)
     predictParams <- ClassifyR::PredictParams("randomForest")
   }
   }
 
 
   if (model == "svm") {
-    trainParams <- ClassifyR::TrainParams(
-      ClassifyR::SVMtrainInterface,
-      kernel = "linear"
-    )
-    predictParams <- ClassifyR::PredictParams(ClassifyR::SVMpredictInterface)
+    trainParams <- ClassifyR::TrainParams("SVM", kernel = "linear")
+    predictParams <- ClassifyR::PredictParams("SVM")
   }
 
   if (model == "dlda") {
-    trainParams <- ClassifyR::TrainParams(ClassifyR::DLDAtrainInterface)
-    predictParams <- ClassifyR::PredictParams(ClassifyR::DLDApredictInterface)
+    trainParams <- ClassifyR::TrainParams("DLDA")
+    predictParams <- ClassifyR::PredictParams("DLDA")
   }
 
   params <- list(trainParams, predictParams)
