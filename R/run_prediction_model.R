@@ -24,7 +24,7 @@ randomForestTrainInterface <- function(measurementsTrain, classesTrain, mTryProp
 #' @importFrom dplyr %>% 
 #' 
 #' @export
-run_classification <- function(X, y, model = "randomForest", ncores = 1  ){
+run_classification <- function(X, y, model = "randomforest", ncores = 1  ){
   
   BPparam <- generateBPParam(ncores)
   
@@ -32,7 +32,7 @@ run_classification <- function(X, y, model = "randomForest", ncores = 1  ){
   
   y <- as.factor(y)
   
-  if (model == "randomForest"){
+  if (model == "randomforest"){
     trainParams <-  ClassifyR::TrainParams(randomForestTrainInterface, ntree = 100, 
                                getFeatures = ClassifyR::forestFeatures)
     predictParams <- ClassifyR::PredictParams(ClassifyR::randomForestPredictInterface)
