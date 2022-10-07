@@ -22,7 +22,6 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
     trainParams <-  ClassifyR::TrainParams("randomForest", trees = 100)
     predictParams <- ClassifyR::PredictParams("randomForest")
   }
-  }
 
 
   if (model == "svm") {
