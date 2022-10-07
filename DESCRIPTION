@@ -8,7 +8,7 @@ Authors@R:
     person(given = "Ellis",family = "Patrick", email = "ellis.patrick@sydney.edu.au",  role="aut" ),
     person(given = "Pengyi",family = "Yang", email = "pengyi.yang@sydney.edu.au",  role="aut" ),
     person(given = "Jean Yee Hwa",family = "Yang", email = "jean.yang@sydney.edu.au",  role="aut" ))
-Description: scFeatures constructs multi-view representations of single-cell and spatial data 
+Description: scFeatures constructs multi-view representations of single-cell and spatial data.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
