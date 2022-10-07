@@ -315,7 +315,7 @@ y <- y[match(rownames(X), y$sample), ]$condition
 
 # run the classification model using random forest
 feature_performance <- run_classification(
-  X, y, model = "randomforest", ncores = 8
+  X, y, model = "randomForest", ncores = 8
 )
 
 # get the feature importance
