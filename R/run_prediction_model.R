@@ -1,18 +1,3 @@
-# An Interface for randomForest Package's randomForest Function
-randomForestTrainInterface <- function(measurementsTrain, classesTrain, mTryProportion = 0.5, ..., verbose = 3) {
-  if (!requireNamespace("randomForest", quietly = TRUE)) {
-    stop("The package 'randomForest' could not be found. Please install it.")
-  }
-  if (verbose == 3) {
-    message("Fitting random forest classifier to training data and making predictions on test
-            data.")
-  }
-  mtry <- round(mTryProportion * ncol(measurementsTrain)) # Number of features to try.
-
-  # Convert to base data.frame as randomForest doesn't understand DataFrame.
-  randomForest::randomForest(as(measurementsTrain, "data.frame"), classesTrain, mtry = mtry, keep.forest = TRUE, ...)
-}
-
 #' run cross-validated classification
 #'
 #' This function takes a feature matrix in the form of samples by features and performs cross-validated classification.
@@ -33,13 +18,9 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
   y <- as.factor(y)
 
   if (model == "randomforest") {
-    trainParams <- ClassifyR::TrainParams(randomForestTrainInterface,
-      ntree = 100,
-      getFeatures = ClassifyR::forestFeatures
-    )
-    predictParams <- ClassifyR::PredictParams(
-      ClassifyR::randomForestPredictInterface
-    )
+    trainParams <-  ClassifyR::TrainParams("randomForest")
+    predictParams <- ClassifyR::PredictParams("randomForest")
+  }
   }
 
 
