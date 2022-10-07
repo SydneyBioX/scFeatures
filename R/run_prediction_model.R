@@ -8,6 +8,7 @@
 #'
 #' @import ClassifyR
 #' @importFrom dplyr %>%
+#' @importFrom caret confusionMatrix
 #'
 #' @export
 run_classification <- function(X, y, model = "randomforest", ncores = 1) {

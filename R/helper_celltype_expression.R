@@ -367,7 +367,7 @@ helper_gene_cor_celltype <- function(data, genes = NULL, num_top_gene = NULL, nc
 
 
 
-
+#' @importFrom glue glue
 helper_gene_mean_celltype_st <- function(data, num_top_gene = NULL, ncores = 1) {
   BPparam <- generateBPParam(ncores)
 

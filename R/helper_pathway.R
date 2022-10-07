@@ -248,7 +248,7 @@ format_pathway <- function(data, topMatrixGSVA = geneset_score_all, ncores) {
 
 
 
-
+#' @importFrom glue glue
 helper_pathway_mean_st <- function(data, geneset, ncores = 1) {
   BPparam <- generateBPParam(ncores)
 
