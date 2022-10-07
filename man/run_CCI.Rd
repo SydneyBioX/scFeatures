@@ -24,6 +24,6 @@ generate cell cell communication score
 \examples{
 
 data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-feature_CCI <- run_CCI(data, species = "Homo sapiens",  type = "scrna" ,  ncores = 1 )
+feature_CCI <- run_CCI(data, species = "Homo sapiens", type = "scrna", ncores = 1)
 
 }

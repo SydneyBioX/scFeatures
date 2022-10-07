@@ -22,6 +22,6 @@ generate cell type interaction
 \examples{
 
 data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
-feature_celltype_interaction <- run_celltype_interaction(data, type = "spatial_p", ncores = 1 )
+feature_celltype_interaction <- run_celltype_interaction(data, type = "spatial_p", ncores = 1)
 
 }

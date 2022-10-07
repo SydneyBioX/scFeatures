@@ -36,6 +36,6 @@ generate overall aggregated mean expression
 \examples{
 
 data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-feature_gene_mean <- run_gene_mean(data, type = "scrna" , num_top_gene= 1500, ncores = 1 )
+feature_gene_mean <- run_gene_mean(data, type = "scrna", num_top_gene = 1500, ncores = 1)
 
 }

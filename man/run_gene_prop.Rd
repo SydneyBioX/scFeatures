@@ -36,6 +36,6 @@ generate overall aggregated gene proportion expression
 \examples{
 
 data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-feature_gene_prop <- run_gene_prop(data, type = "scrna" , num_top_gene= 1500, ncores = 1 )
+feature_gene_prop <- run_gene_prop(data, type = "scrna", num_top_gene = 1500, ncores = 1)
 
 }

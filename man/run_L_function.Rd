@@ -22,6 +22,6 @@ generate L stats
 \examples{
 
 data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
-feature_L_function <- run_L_function(data, type = "spatial_p", ncores = 1 )
+feature_L_function <- run_L_function(data, type = "spatial_p", ncores = 1)
 
 }
