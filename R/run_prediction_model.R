@@ -44,8 +44,6 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
   )
 
   result <- ClassifyR::runTests(X, y,
-    datasetName = "scfeatures",
-    classificationName = model,
     crossValParams = cross_val_params,
     modellingParams = params,
     verbose = 1
