@@ -1,6 +1,6 @@
 ## scFeatures: Multi-view representations of single-cell and spatial data for disease outcome prediction
 
-<img src="img/sticker.png" align="right" width="120">
+<img src="inst/sticker.png" align="right" width="120">
 
 scFeatures is a tool that generates multi-view representations of single-cell and spatial data through the construction of a total of 17 feature types belonging to the following six categories. 
 
@@ -11,7 +11,7 @@ scFeatures is a tool that generates multi-view representations of single-cell an
 5. overall aggregated gene expressions
 6. spatial metrics
 
-![Overview](img/overview.png)
+![Overview](inst/overview.png)
 
 ##  Installation 
 
