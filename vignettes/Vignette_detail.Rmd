@@ -308,24 +308,27 @@ The output from the `run_classification` is a list containing importance and per
 
 ```{r eval=TRUE, include=TRUE, fig.height=4, fig.width=7}
 # X is the feature type generated
-# y is the condition for classification 
+# y is the condition for classification
 X <- feature_gene_mean_celltype
 y <- data@meta.data[!duplicated(data$sample), ]
 y <- y[match(rownames(X), y$sample), ]$condition
 
 # run the classification model using random forest
-feature_performance <- run_classification(X, y, model = "randomforest", ncores = 8)
+feature_performance <- run_classification(
+  X, y, model = "randomforest", ncores = 8
+)
 
-# get the feature importance 
+# get the feature importance
 feature_performance$importance[1:5, ]
- 
+
 # model performance 
 feature_performance$performance[1:5, ]
 
-# plotting model performance  
+# plotting model performance
 library(ggplot2)
-ggplot(feature_performance$performance , aes( y = value, x = class )) + 
-  geom_boxplot() + theme_minimal() + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + 
+ggplot(feature_performance$performance , aes( y = value, x = class )) +
+  geom_boxplot() + theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
   ylab("Model performance") + xlab("Performance metric")
 
 ```
