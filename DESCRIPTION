@@ -37,8 +37,13 @@ Imports:
     spatstat.core,
     spatstat.geom,
     tidyr,
-    inline
-Suggests: 
-    knitr,
+    inline,
+    AUCell,
+    BiocParallel,
+    CellChat,
+    SpatialExperiment,
+    SummarizedExperiment,
     rmarkdown
+Suggests: 
+    knitr
 VignetteBuilder: knitr
