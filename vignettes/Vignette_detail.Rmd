@@ -240,22 +240,6 @@ feature_pathway_prop <- run_pathway_prop(data)
 ```
 
 
-### Cell type specific cell-cell communications 
-
-* Detail: 
-  * `CCI`: This uses the `Cellchat` package to calculate the cell-cell interaction score of ligand recepor pairs.  
-
-* Expected output: 
-  * `CCI`: The features are in the form of ligand 1 receptor 2 celltype a, ligand 1 receptor 2 celltype b ... etc, with the numbers representing cell-cell interaction probability.  
-
-
-Options for species are "Homo sapiens" or "Mus musculus". The default is "Homo sapiens".  
-
-```{r eval=FALSE, include=TRUE}
-feature_CCI <- run_CCI(data, species = "Homo sapiens") 
-```
-
-
 
 ### Overall aggregated gene expressions 
 

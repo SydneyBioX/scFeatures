@@ -457,55 +457,6 @@ run_pathway_prop <- function(data, geneset = NULL,
 
 
 
-#' generate cell cell communication score
-#'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
-#' @param species whether the species is "Homo sapiens" or "Mus musculus". Default is "Homo sapiens".
-#' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param ncores number of cores
-#'
-#' @return a matrix of samples x features
-#'
-#' @examples
-#'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' feature_CCI <- run_CCI(data, species = "Homo sapiens", type = "scrna", ncores = 1)
-#'
-#' @importFrom dplyr %>%
-#' @importFrom BiocParallel SerialParam bplapply
-#' @import CellChat
-#' @importFrom plyr rbind.fill
-#' @importFrom tidyr pivot_wider
-#'
-#' @export
-run_CCI <- function(data, species = "Homo sapiens", type = "scrna", ncores = 1) {
-  check_data(data, type)
-
-  if (type == "scrna") {
-    X <- helper_CCI(data, species = species, ncores = ncores)
-  }
-
-  if (type == "spatial_p") {
-    print("This feature class currently does not support spatial proteomics")
-    return(NULL)
-  }
-
-  if (type == "spatial_t") {
-    print("This feature class currently does not support spatial transcriptomics")
-    return(NULL)
-  }
-
-  X <- as.data.frame(X)
-  return(X)
-}
-
-
-
-
-
-
-
-
 #' generate overall aggregated mean expression
 #'
 #' @param data input data, a Seurat object containing `celltype` and `sample` label

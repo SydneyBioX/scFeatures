@@ -26,7 +26,7 @@ scFeatures(
 \item{feature_types}{vector containing the name of the feature types to generate,
 options are "proportion_raw", "proportion_logit" , "proportion_ratio",
 "gene_mean_celltype", "gene_prop_celltype", "gene_cor_celltype",
-"pathway_gsva" , "pathway_mean", "pathway_prop" , "CCI",
+"pathway_gsva" , "pathway_mean", "pathway_prop",
 "gene_mean_aggregated", "gene_prop_aggregated", 'gene_cor_aggregated',
 "L_stats" , "celltype_interaction" , "morans_I", "nn_correlation".
 If no value is provided, all the above feature types will be generated.}
