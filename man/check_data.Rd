@@ -6,6 +6,11 @@
 \usage{
 check_data(data, type = "scrna")
 }
+\arguments{
+\item{data}{Dataset to be checked.}
+
+\item{type}{Type of dataset (e.g., "scrna", "spatial_t", "spatial_p").}
+}
 \description{
 check that all metadata are in the data
 }
