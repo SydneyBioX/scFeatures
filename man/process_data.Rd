@@ -9,7 +9,9 @@ process_data(data, normalise = T)
 \arguments{
 \item{data}{input data}
 
-\item{normalise}{whether to normalise the data. Note if the data has already been normalised (eg, log2CPM), there is no need to normalise again.}
+\item{normalise}{whether to normalise the data. Note if the data has already
+been normalised (eg, log2CPM), there is no need to normalise
+again.}
 }
 \value{
 a matrix of samples x features

@@ -36,8 +36,13 @@ generate cell type specific gene proportion expression
 }
 \examples{
 
-data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-data_remove_mito <- remove_mito(data) # optional step, if mito and ribo genes are not of interest
-feature_gene_prop_celltype <- feature_gene_prop_celltype(data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1)
+data <- readRDS(
+   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+)
+# optional step, if mito and ribo genes are not of interest
+data_remove_mito <- remove_mito(data)
+feature_gene_prop_celltype <- feature_gene_prop_celltype(
+   data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1
+)
 
 }

@@ -13,11 +13,12 @@ run_gene_mean_celltype(
 )
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
+\item{data}{input data, a Seurat object containing \code{celltype} and
+\code{sample} label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
-\item{genes}{default to NULL, in which case the top variable genes will be used
+\item{genes}{defaults to NULL, in which case the top variable genes are used
 If provided by user, need to be in the format of a dataframe with two columns 'marker' and 'celltype'.
 The marker column contains the genes of interest, eg: S100A11 , CCL4 ,
 the celltype column contains the celltype that the gene expression is to be computed from, eg: CD8, B cells}
@@ -36,8 +37,13 @@ generate cell type specific gene mean expression
 }
 \examples{
 
-data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-data_remove_mito <- remove_mito(data) # optional step, if mito and ribo genes are not of interest
-feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1)
+data <- readRDS(
+   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+)
+# optional step, if mito and ribo genes are not of interest
+data_remove_mito <- remove_mito(data) 
+feature_gene_mean_celltype <- run_gene_mean_celltype(
+   data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1
+)
 
 }

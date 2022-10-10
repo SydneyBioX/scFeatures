@@ -7,12 +7,13 @@
 run_association_study_report(scfeatures_result, output_folder)
 }
 \arguments{
-\item{output_folder}{directory for saving the html report file}
+\item{scfeatures_result}{A named list storing the scFeatures feature output}
 
-\item{scfeatures_list}{a named list storing the feature output from scfeatures}
+\item{output_folder}{A directory for saving the html report file}
 }
 \value{
-the html file will be saved in the directory defined in the output_folder
+the html file will be saved in the directory defined in the output
+folder
 }
 \description{
 automatically generate the association study report in an html format

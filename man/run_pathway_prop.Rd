@@ -33,7 +33,12 @@ generate pathway score using proportion of expression
 }
 \examples{
 
-data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-feature_pathway_prop <- run_pathway_prop(data, geneset = NULL, species = "Homo sapiens", type = "scrna", ncores = 1)
+data <- readRDS(
+   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+)
+feature_pathway_prop <- run_pathway_prop(
+   data, geneset = NULL, species = "Homo sapiens",
+   type = "scrna", ncores = 1
+)
 
 }

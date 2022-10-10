@@ -10,7 +10,7 @@ get_num_cell_per_spot(data)
 \item{data}{input data}
 }
 \value{
-data with the relative number of cells per spot stored in the meta.data
+data with the relative number of cells/spot stored in it's metadata
 }
 \description{
 estimate a relative number of cells per spot
