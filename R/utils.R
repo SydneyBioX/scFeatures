@@ -1,7 +1,7 @@
 
 
 #' check that all metadata are in the data
-#' 
+#'
 #' @importFrom methods is
 check_data <- function(data, type = "scrna") {
   if (is(data, "Seurat")) {
@@ -44,11 +44,15 @@ generateBPParam <- function(cores = 1) {
   if (cores == 1) {
     BPparam <- BiocParallel::SerialParam(RNGseed = seed)
   } else { # Parallel processing is desired.
-    # Also set the BPparam RNGseed if the user ran set.seed(someNumber) themselves.
+    # set BPparam RNGseed if the user ran set.seed(someNumber) themselves.
     if (Sys.info()["sysname"] == "Windows") { # Only SnowParam suits Windows.
-      BPparam <- BiocParallel::SnowParam(min(cores, BiocParallel::snowWorkers("SOCK")), RNGseed = seed)
+      BPparam <- BiocParallel::SnowParam(
+        min(cores, BiocParallel::snowWorkers("SOCK")), RNGseed = seed
+      )
     } else if (Sys.info()["sysname"] %in% c("MacOS", "Linux")) {
-      BPparam <- BiocParallel::MulticoreParam(min(cores, BiocParallel::multicoreWorkers()), RNGseed = seed) # Multicore is faster than SNOW, but it doesn't work on Windows.
+      BPparam <- BiocParallel::MulticoreParam(
+        min(cores, BiocParallel::multicoreWorkers()), RNGseed = seed
+      ) # Multicore is faster than SNOW, but it doesn't work on Windows.
     } else { # Something weird.
       BPparam <- BiocParallel::bpparam() # BiocParallel will figure it out.
     }
@@ -75,7 +79,7 @@ bulk_sample_celltype <- function(data, ncores = 1) {
     this_sample_bulk <- lapply(unique(data$celltype), function(y) {
       index <- which(this_sample$celltype == y)
 
-      # if this cell type does not exist in this patient, expression is 0 for all genes
+      # if cell type does not exist in patient, expression is 0 for all genes
       if (length(index) == 0) {
         temp <- rep(0, nrow(data))
         # if there is only 1 cell, do not need to take mean
@@ -83,7 +87,9 @@ bulk_sample_celltype <- function(data, ncores = 1) {
         temp <- this_sample@assays$RNA@data[, index]
         # if multiple cells, average across all cells
       } else {
-        temp <- DelayedMatrixStats::rowMeans2(DelayedArray(this_sample@assays$RNA@data[, index]))
+        temp <- DelayedMatrixStats::rowMeans2(
+          DelayedArray(this_sample@assays$RNA@data[, index])
+        )
       }
 
       temp <- as.matrix(temp)
@@ -118,7 +124,9 @@ bulk_sample <- function(data, ncores = 1) {
 
   bulk <- BiocParallel::bplapply(unique(data$sample), function(x) {
     index <- which(data$sample == x)
-    temp <- DelayedMatrixStats::rowMeans2(DelayedArray(data@assays$RNA@data[, index]))
+    temp <- DelayedMatrixStats::rowMeans2(
+      DelayedArray(data@assays$RNA@data[, index])
+    )
     temp <- as.matrix(temp)
   }, BPPARAM = BPparam)
 
@@ -165,7 +173,8 @@ rearrange_string <- function(str) {
 
 
 # get number of cells in each cell type in each spot
-# calculated by cell type probability in each spot times the relative number of cells in each spot
+# calculated by cell type probability in each spot times the relative
+# number of cells in each spot
 # relative number of cells are estimated using library size of each spot
 get_num_cell_per_celltype <- function(data) {
   prob <- data@assays$predictions
@@ -214,7 +223,9 @@ L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
 #' perform pre-processing
 #'
 #' @param data input data
-#' @param normalise whether to normalise the data. Note if the data has already been normalised (eg, log2CPM), there is no need to normalise again.
+#' @param normalise whether to normalise the data. Note if the data has already
+#'                  been normalised (eg, log2CPM), there is no need to normalise
+#'                  again.
 #'
 #' @return a matrix of samples x features
 #'
@@ -255,14 +266,15 @@ process_data <- function(data, normalise = T) {
   return(data)
 }
 
-
+# TODO: check if return value is html file.
 
 #' automatically generate the association study report in an html format
 #'
 #' @param scfeatures_result A named list storing the scFeatures feature output
 #' @param output_folder A directory for saving the html report file
 #'
-#' @return the html file will be saved in the directory defined in the output_folder
+#' @return the html file will be saved in the directory defined in the output
+#'         folder
 #'
 #' @import rmarkdown
 #'
