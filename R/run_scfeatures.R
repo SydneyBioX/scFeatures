@@ -4,7 +4,8 @@
 
 #' generate cell type proportion raw
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param data the input data, a Seurat object containing `celltype` and 
+#'             `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param ncores number of cores
 #'
@@ -12,8 +13,12 @@
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' feature_proportion_raw <- run_proportion_raw(data, type = "scnrna", ncores = 1)
+#' data <- readRDS(
+#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' )
+#' feature_proportion_raw <- run_proportion_raw(
+#'    data, type = "scnrna", ncores = 1
+#' )
 #'
 #' @importFrom gtools logit
 #' @importFrom tidyr pivot_wider
@@ -42,7 +47,8 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 
 #' generate cell type proportion raw and cell type proportion logit transformed
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param data the input data, a Seurat object containing `celltype` and
+#'             `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param ncores number of cores
 #'
@@ -50,8 +56,12 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' feature_proportion_logit <- run_proportion_logit(data, type = "scnrna", ncores = 1)
+#' data <- readRDS(
+#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' )
+#' feature_proportion_logit <- run_proportion_logit(
+#'    data, type = "scnrna", ncores = 1
+#' )
 #'
 #' @importFrom gtools logit
 #' @importFrom tidyr pivot_wider
@@ -80,7 +90,8 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 
 #' generate cell type proportion ratio
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param data input data, a Seurat object containing `celltype` and
+#'             `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param ncores number of cores
 #'
@@ -88,8 +99,12 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' feature_proportion_ratio <- run_proportion_ratio(data, type = "scnrna", ncores = 1)
+#' data <- readRDS(
+#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' )
+#' feature_proportion_ratio <- run_proportion_ratio(
+#'    data, type = "scnrna", ncores = 1
+#' )
 #'
 #' @importFrom tidyr pivot_wider
 #' @importFrom BiocParallel SerialParam bplapply
@@ -123,9 +138,10 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 
 #' generate cell type specific gene mean expression
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param data input data, a Seurat object containing `celltype` and
+#'             `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param genes default to NULL, in which case the top variable genes will be used
+#' @param genes defaults to NULL, in which case the top variable genes are used
 #' If provided by user, need to be in the format of a dataframe with two columns 'marker' and 'celltype'.
 #' The marker column contains the genes of interest, eg: S100A11 , CCL4 ,
 #' the celltype column contains the celltype that the gene expression is to be computed from, eg: CD8, B cells
@@ -138,9 +154,14 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' data_remove_mito <- remove_mito(data) # optional step, if mito and ribo genes are not of interest
-#' feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1)
+#' data <- readRDS(
+#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' )
+#' # optional step, if mito and ribo genes are not of interest
+#' data_remove_mito <- remove_mito(data) 
+#' feature_gene_mean_celltype <- run_gene_mean_celltype(
+#'    data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1
+#' )
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
@@ -149,7 +170,11 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #' @importFrom dplyr %>%
 #'
 #' @export
-run_gene_mean_celltype <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL, ncores = 1) {
+run_gene_mean_celltype <- function(data,
+                                   type = "scrna",
+                                   genes = NULL,
+                                   num_top_gene = NULL,
+                                   ncores = 1) {
   check_data(data, type)
 
   if (type %in% c("scrna", "spatial_p")) {
@@ -165,7 +190,7 @@ run_gene_mean_celltype <- function(data, type = "scrna", genes = NULL, num_top_g
 }
 
 
-
+# TODO: Several warnings below should probably be errors.
 
 
 #' generate cell type specific gene proportion expression
@@ -185,9 +210,14 @@ run_gene_mean_celltype <- function(data, type = "scrna", genes = NULL, num_top_g
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' data_remove_mito <- remove_mito(data) # optional step, if mito and ribo genes are not of interest
-#' feature_gene_prop_celltype <- feature_gene_prop_celltype(data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1)
+#' data <- readRDS(
+#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' )
+#' # optional step, if mito and ribo genes are not of interest
+#' data_remove_mito <- remove_mito(data)
+#' feature_gene_prop_celltype <- feature_gene_prop_celltype(
+#'    data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1
+#' )
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
@@ -196,7 +226,11 @@ run_gene_mean_celltype <- function(data, type = "scrna", genes = NULL, num_top_g
 #' @importFrom dplyr %>%
 #'
 #' @export
-run_gene_prop_celltype <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL, ncores = 1) {
+run_gene_prop_celltype <- function(data,
+                                   type = "scrna",
+                                   genes = NULL,
+                                   num_top_gene = NULL,
+                                   ncores = 1) {
   check_data(data, type)
 
   if (type %in% c("scrna", "spatial_p")) {
@@ -205,7 +239,9 @@ run_gene_prop_celltype <- function(data, type = "scrna", genes = NULL, num_top_g
 
 
   if (type == "spatial_t") {
-    print("This feature class currently does not support spatial transcriptomics")
+    warning(
+      "This feature class currently does not support spatial transcriptomics"
+    )
     return(NULL)
   }
 
@@ -234,9 +270,14 @@ run_gene_prop_celltype <- function(data, type = "scrna", genes = NULL, num_top_g
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' data_remove_mito <- remove_mito(data) # optional step, if mito and ribo genes are not of interest
-#' feature_gene_cor_celltype <- run_gene_cor_celltype(data_remove_mito, type = "scrna", num_top_gene = 100, ncores = 1)
+#' data <- readRDS(system.file("extdata",
+#'                             "example_scrnaseq.rds",
+#'                              package = "scFeatures"))
+#' # optional step, if mito and ribo genes are not of interest
+#' data_remove_mito <- remove_mito(data)
+#' feature_gene_cor_celltype <- run_gene_cor_celltype(
+#'    data_remove_mito, type = "scrna", num_top_gene = 100, ncores = 1
+#' )
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
@@ -253,7 +294,9 @@ run_gene_cor_celltype <- function(data, type = "scrna", genes = NULL, num_top_ge
   }
 
   if (type == "spatial_t") {
-    print("This feature class currently does not support spatial transcriptomics")
+    warning(
+      "This feature class currently does not support spatial transcriptomics"
+    )
     return(NULL)
   }
 
@@ -282,8 +325,13 @@ run_gene_cor_celltype <- function(data, type = "scrna", genes = NULL, num_top_ge
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' feature_pathway_gsva <- run_pathway_gsva(data, geneset = NULL, species = "Homo sapiens", type = "scrna", subsample = F, ncores = 1)
+#' data <- readRDS(
+#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' )
+#' feature_pathway_gsva <- run_pathway_gsva(
+#'    data, geneset = NULL, species = "Homo sapiens",
+#'    type = "scrna", subsample = F, ncores = 1
+#' )
 #'
 #' @importFrom msigdbr msigdbr
 #' @importFrom ensembldb select
@@ -307,22 +355,28 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
     geneset <- get_geneset(species = species)
   }
 
-  if (subsample & ncol(data) > 90000) {
-    data <- data[, sample(1:ncol(data), 90000)]
+  if (subsample && ncol(data) > 90000) {
+    data <- data[, sample(seq_len(ncol(data)), 90000)]
   }
 
   if (type == "scrna") {
     # if the user does not provide geneset, need to get the geneset from msigdb
-    X <- helper_pathway_gsva(data, method = method, geneset = geneset, ncores = ncores)
+    X <- helper_pathway_gsva(
+      data, method = method, geneset = geneset, ncores = ncores
+    )
   }
 
   if (type == "spatial_p") {
-    print("This feature class currently does not support spatial proteomics")
+    warning(
+      "This feature class currently does not support spatial proteomics"
+    )
     return(NULL)
   }
 
   if (type == "spatial_t") {
-    print("This feature class currently does not support spatial transcriptomics")
+    warning(
+      "This feature class currently does not support spatial transcriptomics"
+    )
     return(NULL)
   }
 
@@ -349,8 +403,13 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' feature_pathway_mean <- run_pathway_mean(data, geneset = NULL, species = "Homo sapiens", type = "scrna", ncores = 1)
+#' data <- readRDS(
+#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' )
+#' feature_pathway_mean <- run_pathway_mean(
+#'    data, geneset = NULL, species = "Homo sapiens",
+#'    type = "scrna", ncores = 1
+#' )
 #'
 #' @importFrom msigdbr msigdbr
 #' @importFrom ensembldb select
@@ -366,7 +425,9 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #'
 #' @export
 run_pathway_mean <- function(data, geneset = NULL,
-                             species = "Homo sapiens", type = "scrna", ncores = 1) {
+                             species = "Homo sapiens", 
+                             type = "scrna", 
+                             ncores = 1) {
   check_data(data, type)
 
   if (is.null(geneset)) {
@@ -378,7 +439,7 @@ run_pathway_mean <- function(data, geneset = NULL,
   }
 
   if (type == "spatial_p") {
-    print("This feature class currently does not support spatial proteomics")
+    warning("This feature class currently does not support spatial proteomics")
     return(NULL)
   }
 
@@ -408,8 +469,13 @@ run_pathway_mean <- function(data, geneset = NULL,
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' feature_pathway_prop <- run_pathway_prop(data, geneset = NULL, species = "Homo sapiens", type = "scrna", ncores = 1)
+#' data <- readRDS(
+#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' )
+#' feature_pathway_prop <- run_pathway_prop(
+#'    data, geneset = NULL, species = "Homo sapiens",
+#'    type = "scrna", ncores = 1
+#' )
 #'
 #' @importFrom msigdbr msigdbr
 #' @importFrom ensembldb select
@@ -425,7 +491,9 @@ run_pathway_mean <- function(data, geneset = NULL,
 #'
 #' @export
 run_pathway_prop <- function(data, geneset = NULL,
-                             species = "Homo sapiens", type = "scrna", ncores = 1) {
+                             species = "Homo sapiens",
+                             type = "scrna",
+                             ncores = 1) {
   check_data(data, type)
 
   if (is.null(geneset)) {
@@ -437,12 +505,14 @@ run_pathway_prop <- function(data, geneset = NULL,
   }
 
   if (type == "spatial_p") {
-    print("This feature class currently does not support spatial proteomics")
+    warning("This feature class currently does not support spatial proteomics")
     return(NULL)
   }
 
   if (type == "spatial_t") {
-    print("This feature class currently does not support spatial transcriptomics")
+    warning(
+      "This feature class currently does not support spatial transcriptomics"
+    )
     return(NULL)
   }
 
