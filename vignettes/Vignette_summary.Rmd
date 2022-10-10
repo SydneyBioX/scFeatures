@@ -20,15 +20,9 @@ knitr::opts_chunk$set(
 ```{r include=FALSE, paged.print=TRUE}
 
 library(inline)
-openblas.set.num.threads <- cfunction( signature(ipt="integer"),
-                                       body = 'openblas_set_num_threads(*ipt);',
-                                       otherdefs = c ('extern void openblas_set_num_threads(int);'),
-                                       libargs = c ('/usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so'),
-                                       language = "C",
-                                       convention = ".C"
-)
-openblas.set.num.threads(1)
+library(RhpcBLASctl)
 
+blas_set_num_threads(1)
 
 ```
 

@@ -43,5 +43,6 @@ Imports:
     rmarkdown
 Suggests: 
     knitr,
-    inline
+    inline,
+    RhpcBLASctl
 VignetteBuilder: knitr
