@@ -44,5 +44,6 @@ Imports:
 Suggests: 
     knitr,
     inline,
-    RhpcBLASctl
+    RhpcBLASctl,
+    S4Vectors
 VignetteBuilder: knitr
