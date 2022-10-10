@@ -1,6 +1,9 @@
 
 
 #' check that all metadata are in the data
+#' 
+#' @param data Dataset to be checked.
+#' @param type Type of dataset (e.g., "scrna", "spatial_t", "spatial_p").
 #'
 #' @importFrom methods is
 check_data <- function(data, type = "scrna") {
