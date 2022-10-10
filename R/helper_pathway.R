@@ -125,7 +125,10 @@ helper_pathway_mean <- function(data, geneset, ncores = 1) {
 
 
 
-# helper function to calculate proportion that a gene is expressed in each cell type in a sample
+#' helper function to calculate proportion that a gene is expressed in each
+#' cell type in a sample
+#' 
+#' @importFrom stats quantile
 individual_geneset_proportion_celltype <- function(data, this_geneset) {
 
   # first find the average expression of the genes across cells
@@ -249,6 +252,7 @@ format_pathway <- function(data, topMatrixGSVA = geneset_score_all, ncores) {
 
 
 #' @importFrom glue glue
+#' @importFrom stats lm
 helper_pathway_mean_st <- function(data, geneset, ncores = 1) {
   BPparam <- generateBPParam(ncores)
 
