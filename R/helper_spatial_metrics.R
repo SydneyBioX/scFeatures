@@ -75,7 +75,7 @@ helper_celltype_interaction_sp <- function(data, ncores = 1) {
     )
 
 
-    if (class(err) == "try-error") {
+    if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$nn_list_cellTypes <- temp$nn_list_cellTypes
       temp <- suppressWarnings(merge(temp, a, by = "nn_list_cellTypes", all = T))
@@ -272,7 +272,7 @@ helper_L_stat_st <- function(data, ncores = 1) {
     )
 
 
-    if (class(err) == "try-error") {
+    if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$rowname <- temp$rowname
       temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
@@ -368,7 +368,7 @@ helper_L_stat_sp <- function(data, ncores = 1) {
     )
 
 
-    if (class(err) == "try-error") {
+    if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$rowname <- temp$rowname
       temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
@@ -422,7 +422,7 @@ individual_nncorr_protein <- function(thissample) {
     },
     silent = T
   )
-  if (class(err) == "try-error") {
+  if (is(err, "try-error")) {
     nncorr_protein <- NA
   }
 
@@ -432,7 +432,7 @@ individual_nncorr_protein <- function(thissample) {
 
 
 
-
+#' @importFrom methods is
 helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
   BPparam <- generateBPParam(ncores)
 
@@ -475,7 +475,7 @@ helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
     )
 
 
-    if (class(err) == "try-error") {
+    if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$rowname <- temp$rowname
       temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
@@ -587,7 +587,7 @@ helper_moran <- function(data, num_top_gene = NULL, ncores = 1) {
     )
 
 
-    if (class(err) == "try-error") {
+    if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$rowname <- temp$rowname
       temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
