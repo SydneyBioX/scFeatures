@@ -1,15 +1,19 @@
 
 
-# check that all metadata are in the data
+#' check that all metadata are in the data
+#' 
+#' @importFrom methods is
 check_data <- function(data, type = "scrna") {
-  if (class(data) != "Seurat") {
+  if (is(data, "Seurat")) {
     print("please make sure the data is in a Seurat object")
   }
 
   if (!"sample" %in% names(data@meta.data)) {
-    print("For scRNA-seq and spatial proteomics, please make sure the data contains celltype and sample label.
-            For spatial proteomics, please make sure the data contains sample information.")
-    stop()
+    stop(
+      "For scRNA-seq and spatial proteomics,",
+      "please make sure the data contains celltype and sample label.",
+      "For spatial proteomics, ensure the data contain sample information."
+    )
   }
 
   if (type %in% c("spatial_t", "spatial_p")) {
