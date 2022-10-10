@@ -39,7 +39,8 @@ Imports:
     BiocParallel,
     SpatialExperiment,
     SummarizedExperiment,
-    rmarkdown
+    rmarkdown,
+    methods
 Suggests: 
     knitr,
     inline,
