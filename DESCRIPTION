@@ -30,7 +30,6 @@ Imports:
     ensembldb,
     gtools,
     msigdbr,
-    plyr,
     proxyC,
     reshape2,
     spatstat.core,
