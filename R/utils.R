@@ -7,7 +7,8 @@
 #'
 #' @importFrom methods is
 check_data <- function(data, type = "scrna") {
-  if (is(data, "Seurat")) {
+  if (!is(data, "Seurat")) {
+    # TODO: Should this be a warning/error?
     print("please make sure the data is in a Seurat object")
   }
 
