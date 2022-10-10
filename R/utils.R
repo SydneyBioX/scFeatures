@@ -10,24 +10,24 @@ check_data <- function(data, type = "scrna") {
 
   if (!"sample" %in% names(data@meta.data)) {
     stop(
-      "For scRNA-seq and spatial proteomics,",
-      "please make sure the data contains celltype and sample label.",
+      "For scRNA-seq and spatial proteomics, ",
+      "please make sure the data contains celltype and sample label. ",
       "For spatial proteomics, ensure the data contain sample information."
     )
   }
 
   if (type %in% c("spatial_t", "spatial_p")) {
     if (!"y_cord" %in% names(data@meta.data) || !"x_cord" %in% names(data@meta.data)) {
-      print("please make sure the data contains x_cord and y_cord")
-      stop()
+      stop("Please ensure the data contain x_cord and y_cord.")
     }
   }
 
   if (type == "spatial_t") {
     if (!"predictions" %in% names(data@assays)) {
-      print("please make sure the data contains a predictions assay")
-      print("see vignette's section on spatial transcriptomics for more explanation")
-      stop()
+      stop(
+        "Please make sure the data contain a predictions assay.\n",
+        "See vignette's section on spatial transcriptomics for details."
+      )
     }
   }
 }
@@ -139,7 +139,7 @@ bulk_sample <- function(data, ncores = 1) {
 #'
 #' @param data input data
 #'
-#' @return data with the relative number of cells per spot stored in the meta.data
+#' @return data with the relative number of cells/spot stored in it's metadata
 #'
 #'
 #' @export
