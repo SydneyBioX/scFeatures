@@ -259,8 +259,8 @@ process_data <- function(data, normalise = T) {
 
 #' automatically generate the association study report in an html format
 #'
-#' @param scfeatures_list a named list storing the feature output from scfeatures
-#' @param output_folder directory for saving the html report file
+#' @param scfeatures_result A named list storing the scFeatures feature output
+#' @param output_folder A directory for saving the html report file
 #'
 #' @return the html file will be saved in the directory defined in the output_folder
 #'
@@ -278,7 +278,9 @@ run_association_study_report <- function(scfeatures_result, output_folder) {
     "gene_mean_aggregated", "gene_cor_aggregated", "gene_prop_aggregated"
   ))
   if (correct_name == FALSE) {
-    print("Please check you have named the feature types in correct naming format.")
+    warning(
+      "Please check you have named the feature types in correct naming format."
+    )
   }
 
   # need to retrieve the output report structure from the package
