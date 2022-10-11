@@ -21,7 +21,8 @@ helper_proportion_raw <- function(data, logit = T) {
   colnames(df) <- c("sample", "celltype", "proportion")
 
 
-  df <- df %>% tidyr::pivot_wider(names_from = celltype, values_from = proportion)
+  df <- df %>% 
+    tidyr::pivot_wider(names_from = "celltype", values_from = "proportion")
   df <- as.data.frame(df)
   rownames(df) <- df$sample
   df <- df[, -1]
@@ -49,8 +50,8 @@ helper_proportion_ratio <- function(data, ncores = 1) {
 
     # keep track of ratio for this sample
     temp_df <- NULL
-    for (i in (1:length(allcelltype))) {
-      for (j in (1:length(allcelltype))) {
+    for (i in (seq_along(allcelltype))) {
+      for (j in (seq_along(allcelltype))) {
         if (i < j) {
           celltype1 <- allcelltype[i]
           celltype2 <- allcelltype[j]
@@ -91,7 +92,8 @@ helper_proportion_ratio <- function(data, ncores = 1) {
   colnames(df) <- c("sample", "celltype", "proportion")
 
 
-  df <- df %>% tidyr::pivot_wider(names_from = celltype, values_from = proportion)
+  df <- df %>%
+    tidyr::pivot_wider(names_from = "celltype", values_from = "proportion")
   df <- as.data.frame(df)
   rownames(df) <- df$sample
   df <- df[, -1, drop = FALSE]
@@ -179,8 +181,8 @@ helper_proportion_ratio_st <- function(data, ncores = 1) {
 
     # keep track of ratio for this sample
     temp_df <- NULL
-    for (i in (1:length(allcelltype))) {
-      for (j in (1:length(allcelltype))) {
+    for (i in (seq_along(allcelltype))) {
+      for (j in (seq_along(allcelltype))) {
         if (i < j) {
           celltype1 <- allcelltype[i]
           celltype2 <- allcelltype[j]
@@ -217,7 +219,7 @@ helper_proportion_ratio_st <- function(data, ncores = 1) {
 
   colnames(tab) <- c("sample", "celltype", "ratio")
 
-  tab <- tab %>% tidyr::pivot_wider(names_from = celltype, values_from = ratio)
+  tab <- tab %>% tidyr::pivot_wider(names_from = "celltype", values_from = "ratio")
   tab <- as.data.frame(tab)
   rownames(tab) <- tab$sample
   tab <- tab[, -1]
