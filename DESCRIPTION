@@ -1,5 +1,6 @@
 Package: scFeatures
-Title: scFeatures: Multi-view representations of single-cell and spatial data for disease outcome prediction
+Title: scFeatures: Multi-view representations of single-cell and spatial data
+       for disease outcome prediction
 Version: 0.99.1
 Authors@R: 
     c(
@@ -8,13 +9,15 @@ Authors@R:
     person(given = "Ellis",family = "Patrick", email = "ellis.patrick@sydney.edu.au",  role="aut" ),
     person(given = "Pengyi",family = "Yang", email = "pengyi.yang@sydney.edu.au",  role="aut" ),
     person(given = "Jean Yee Hwa",family = "Yang", email = "jean.yang@sydney.edu.au",  role="aut" ))
-Description: scFeatures constructs multi-view representations of single-cell and spatial data.
+Description: scFeatures constructs multi-view representations of single-cell
+             and spatial data. scFeatures is a tool that generates multi-view
+             representations of single-cell and spatial data through the
+             construction of a total of 17 feature types.
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
-biocViews: CellBasedAssays, SingleCell, Software
+biocViews: CellBasedAssays, SingleCell, Spatial, Software
 Imports:
     ClassifyR,
     DelayedArray,
@@ -41,6 +44,7 @@ Imports:
     SummarizedExperiment,
     rmarkdown,
     methods,
+    stats,
     BiocGenerics
 Suggests: 
     knitr,
