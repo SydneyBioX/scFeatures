@@ -40,11 +40,12 @@ generate pathway score using gene set enrichement analysis
 \examples{
 
 data <- readRDS(
-   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 )
 feature_pathway_gsva <- run_pathway_gsva(
-   data, geneset = NULL, species = "Homo sapiens",
-   type = "scrna", subsample = FALSE, ncores = 1
+  data,
+  geneset = NULL, species = "Homo sapiens",
+  type = "scrna", subsample = FALSE, ncores = 1
 )
 
 }
