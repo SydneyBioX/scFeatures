@@ -263,3 +263,9 @@ feature_celltype_interaction <- run_celltype_interaction( data, type = "spatial_
 feature_nn_correlation <- run_nn_correlation( data, type = "spatial_t" )
 ```
 
+
+# sessionInfo()
+
+```{r}
+sessionInfo()
+```
