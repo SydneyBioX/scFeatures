@@ -14,7 +14,7 @@
 run_classification <- function(X, y, model = "randomforest", ncores = 1) {
   BPparam <- generateBPParam(ncores)
 
-  X <- as.matrix(t(X))
+  X <- as.matrix(X)
 
   y <- as.factor(y)
 
