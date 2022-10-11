@@ -199,8 +199,10 @@ individual_geneset_proportion_celltype <- function(data, this_geneset) {
         )
       }
     }
-    this_geneset_prop <- this_geneset_prop[match(unique(data$celltype), 
-                                           this_geneset_prop$celltype), ]
+    this_geneset_prop <- this_geneset_prop[match(
+      unique(data$celltype),
+      this_geneset_prop$celltype
+    ), ]
 
     geneset_prop <- rbind(geneset_prop, this_geneset_prop)
   }
@@ -217,8 +219,10 @@ helper_pathway_prop <- function(data, geneset, ncores = 1) {
   geneset_prop_df <- BiocParallel::bplapply(seq_along(geneset), function(i) {
     this_geneset <- geneset[[i]]
     geneset_prop <- individual_geneset_proportion_celltype(data, this_geneset)
-    geneset_prop$condition <- data$condition[match(geneset_prop$sample,
-                                             data$sample)]
+    geneset_prop$condition <- data$condition[match(
+      geneset_prop$sample,
+      data$sample
+    )]
     geneset_prop$geneset <- names(geneset)[i]
     geneset_prop
   }, BPPARAM = BPparam)
@@ -230,8 +234,10 @@ helper_pathway_prop <- function(data, geneset, ncores = 1) {
     "--",
     geneset_prop_df$celltype
   )
-  geneset_prop_df <- geneset_prop_df[, c("sample", "celltype",
-                                         "proportion_expressed")]
+  geneset_prop_df <- geneset_prop_df[, c(
+    "sample", "celltype",
+    "proportion_expressed"
+  )]
   geneset_prop_df <- geneset_prop_df %>%
     pivot_wider(names_from = "celltype", values_from = "proportion_expressed")
 
@@ -268,7 +274,7 @@ format_pathway <- function(data, topMatrixGSVA, ncores) {
   bulk_data$Var1 <- unlist(
     lapply(strsplit(as.character(bulk_data$Var1), "--"), `[`, 1)
   )
-  bulk_data <- bulk_data %>% 
+  bulk_data <- bulk_data %>%
     pivot_wider(names_from = "Var2", values_from = "value")
   bulk_data[is.na(bulk_data)] <- 0
 

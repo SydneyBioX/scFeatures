@@ -1,7 +1,7 @@
 
 
 #' check that all metadata are in the data
-#' 
+#'
 #' @param data Dataset to be checked.
 #' @param type Type of dataset (e.g., "scrna", "spatial_t", "spatial_p").
 #'
@@ -51,11 +51,13 @@ generateBPParam <- function(cores = 1) {
     # set BPparam RNGseed if the user ran set.seed(someNumber) themselves.
     if (Sys.info()["sysname"] == "Windows") { # Only SnowParam suits Windows.
       BPparam <- BiocParallel::SnowParam(
-        min(cores, BiocParallel::snowWorkers("SOCK")), RNGseed = seed
+        min(cores, BiocParallel::snowWorkers("SOCK")),
+        RNGseed = seed
       )
     } else if (Sys.info()["sysname"] %in% c("MacOS", "Linux")) {
       BPparam <- BiocParallel::MulticoreParam(
-        min(cores, BiocParallel::multicoreWorkers()), RNGseed = seed
+        min(cores, BiocParallel::multicoreWorkers()),
+        RNGseed = seed
       ) # Multicore is faster than SNOW, but it doesn't work on Windows.
     } else { # Something weird.
       BPparam <- BiocParallel::bpparam() # BiocParallel will figure it out.

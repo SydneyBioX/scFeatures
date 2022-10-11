@@ -21,7 +21,7 @@ helper_proportion_raw <- function(data, logit = TRUE) {
   colnames(df) <- c("sample", "celltype", "proportion")
 
 
-  df <- df %>% 
+  df <- df %>%
     tidyr::pivot_wider(names_from = "celltype", values_from = "proportion")
   df <- as.data.frame(df)
   rownames(df) <- df$sample
@@ -148,7 +148,7 @@ helper_proportion_raw_st <- function(data, logit = TRUE, ncores = 1) {
   colnames(tab) <- c("sample", "celltype", "proportion")
 
 
-  tab <- tab %>% 
+  tab <- tab %>%
     tidyr::pivot_wider(names_from = "celltype", values_from = "proportion")
   tab <- as.data.frame(tab)
   rownames(tab) <- tab$sample

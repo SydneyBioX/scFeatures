@@ -41,7 +41,8 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
   }
 
   result <- ClassifyR::crossValidate(
-    X, y, classifier = model, nCores = ncores,
+    X, y,
+    classifier = model, nCores = ncores,
     nFolds = 3, nRepeats = 20
   )
 
@@ -81,8 +82,10 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
   )
   actualClasses <- lapply(result@predictions, function(sample) {
     factor(
-      ClassifyR::actualOutcome(result)[match(sample[, "sample"],
-                                       ClassifyR::sampleNames(result))],
+      ClassifyR::actualOutcome(result)[match(
+        sample[, "sample"],
+        ClassifyR::sampleNames(result)
+      )],
       levels = classLevels, ordered = TRUE
     )
   })

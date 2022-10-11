@@ -4,7 +4,7 @@
 
 #' generate cell type proportion raw
 #'
-#' @param data the input data, a Seurat object containing `celltype` and 
+#' @param data the input data, a Seurat object containing `celltype` and
 #'             `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param ncores number of cores
@@ -14,10 +14,11 @@
 #' @examples
 #'
 #' data <- readRDS(
-#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#'   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #' )
 #' feature_proportion_raw <- run_proportion_raw(
-#'    data, type = "scnrna", ncores = 1
+#'   data,
+#'   type = "scnrna", ncores = 1
 #' )
 #'
 #' @importFrom gtools logit
@@ -57,10 +58,11 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #' @examples
 #'
 #' data <- readRDS(
-#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#'   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #' )
 #' feature_proportion_logit <- run_proportion_logit(
-#'    data, type = "scnrna", ncores = 1
+#'   data,
+#'   type = "scnrna", ncores = 1
 #' )
 #'
 #' @importFrom gtools logit
@@ -100,10 +102,11 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #' @examples
 #'
 #' data <- readRDS(
-#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#'   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #' )
 #' feature_proportion_ratio <- run_proportion_ratio(
-#'    data, type = "scnrna", ncores = 1
+#'   data,
+#'   type = "scnrna", ncores = 1
 #' )
 #'
 #' @importFrom tidyr pivot_wider
@@ -155,12 +158,13 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #' @examples
 #'
 #' data <- readRDS(
-#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#'   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #' )
 #' # optional step, if mito and ribo genes are not of interest
-#' data_remove_mito <- remove_mito(data) 
+#' data_remove_mito <- remove_mito(data)
 #' feature_gene_mean_celltype <- run_gene_mean_celltype(
-#'    data_remove_mito, type = "scrna", num_top_gene = 100, ncores = 1
+#'   data_remove_mito,
+#'   type = "scrna", num_top_gene = 100, ncores = 1
 #' )
 #'
 #' @importFrom proxyC simil
@@ -211,12 +215,13 @@ run_gene_mean_celltype <- function(data,
 #' @examples
 #'
 #' data <- readRDS(
-#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#'   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #' )
 #' # optional step, if mito and ribo genes are not of interest
 #' data_remove_mito <- remove_mito(data)
 #' feature_gene_prop_celltype <- run_gene_prop_celltype(
-#'    data_remove_mito, type = "scrna", num_top_gene = 100, ncores = 1
+#'   data_remove_mito,
+#'   type = "scrna", num_top_gene = 100, ncores = 1
 #' )
 #'
 #' @importFrom proxyC simil
@@ -271,12 +276,14 @@ run_gene_prop_celltype <- function(data,
 #' @examples
 #'
 #' data <- readRDS(system.file("extdata",
-#'                             "example_scrnaseq.rds",
-#'                              package = "scFeatures"))
+#'   "example_scrnaseq.rds",
+#'   package = "scFeatures"
+#' ))
 #' # optional step, if mito and ribo genes are not of interest
 #' data_remove_mito <- remove_mito(data)
 #' feature_gene_cor_celltype <- run_gene_cor_celltype(
-#'    data_remove_mito, type = "scrna", num_top_gene = 100, ncores = 1
+#'   data_remove_mito,
+#'   type = "scrna", num_top_gene = 100, ncores = 1
 #' )
 #'
 #' @importFrom proxyC simil
@@ -326,11 +333,12 @@ run_gene_cor_celltype <- function(data, type = "scrna", genes = NULL, num_top_ge
 #' @examples
 #'
 #' data <- readRDS(
-#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#'   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #' )
 #' feature_pathway_gsva <- run_pathway_gsva(
-#'    data, geneset = NULL, species = "Homo sapiens",
-#'    type = "scrna", subsample = FALSE, ncores = 1
+#'   data,
+#'   geneset = NULL, species = "Homo sapiens",
+#'   type = "scrna", subsample = FALSE, ncores = 1
 #' )
 #'
 #' @importFrom msigdbr msigdbr
@@ -362,7 +370,8 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
   if (type == "scrna") {
     # if the user does not provide geneset, need to get the geneset from msigdb
     X <- helper_pathway_gsva(
-      data, method = method, geneset = geneset, ncores = ncores
+      data,
+      method = method, geneset = geneset, ncores = ncores
     )
   }
 
@@ -404,11 +413,12 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #' @examples
 #'
 #' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#'   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #' )
 #' feature_pathway_mean <- run_pathway_mean(
-#'    data, geneset = NULL, species = "Homo sapiens",
-#'    type = "scrna", ncores = 1
+#'   data,
+#'   geneset = NULL, species = "Homo sapiens",
+#'   type = "scrna", ncores = 1
 #' )
 #'
 #' @importFrom msigdbr msigdbr
@@ -425,8 +435,8 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #'
 #' @export
 run_pathway_mean <- function(data, geneset = NULL,
-                             species = "Homo sapiens", 
-                             type = "scrna", 
+                             species = "Homo sapiens",
+                             type = "scrna",
                              ncores = 1) {
   check_data(data, type)
 
@@ -470,11 +480,12 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' @examples
 #'
 #' data <- readRDS(
-#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#'   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #' )
 #' feature_pathway_prop <- run_pathway_prop(
-#'    data, geneset = NULL, species = "Homo sapiens",
-#'    type = "scrna", ncores = 1
+#'   data,
+#'   geneset = NULL, species = "Homo sapiens",
+#'   type = "scrna", ncores = 1
 #' )
 #'
 #' @importFrom msigdbr msigdbr
