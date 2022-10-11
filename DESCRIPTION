@@ -40,7 +40,8 @@ Imports:
     SpatialExperiment,
     SummarizedExperiment,
     rmarkdown,
-    methods
+    methods,
+    BiocGenerics
 Suggests: 
     knitr,
     inline,
