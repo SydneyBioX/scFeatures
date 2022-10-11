@@ -22,16 +22,16 @@ remove_mito <- function(data) {
   nms <- rownames(temp)
 
   bad_genes <- unique(c(
-    grep("^MT-", nms, value = T),
-    grep("^MTMR", nms, value = T),
-    grep("^MTND", nms, value = T),
-    grep("RPL|RPS", nms, value = T),
+    grep("^MT-", nms, value = TRUE),
+    grep("^MTMR", nms, value = TRUE),
+    grep("^MTND", nms, value = TRUE),
+    grep("RPL|RPS", nms, value = TRUE),
     "NEAT1", "TMSB4X", "TMSB10"
   ), c(
-    grep("^mt-", nms, value = T),
-    grep("^Mtmr", nms, value = T),
-    grep("^Mtnd", nms, value = T),
-    grep("Rpl|Rps", nms, value = T),
+    grep("^mt-", nms, value = TRUE),
+    grep("^Mtmr", nms, value = TRUE),
+    grep("^Mtnd", nms, value = TRUE),
+    grep("Rpl|Rps", nms, value = TRUE),
     "Neat1", "Tmsb4x", "Tmsb10"
   ))
 
@@ -58,17 +58,17 @@ remove_mito <- function(data) {
 # find variable genes per sample,  then take the union
 # for cell type specific methods, find the variable genes per cell type per sample
 
-find_var_gene <- function(data, num_top_gene = 1500, ncores = 1, celltype = T) {
+find_var_gene <- function(data, num_top_gene = 1500, ncores = 1, celltype = TRUE) {
   BPparam <- generateBPParam(ncores)
 
-  if (celltype == T) {
+  if (celltype) {
 
     # here calculates the HVG across all cells across all cell types
 
     hvg_across_all_cells <- BiocParallel::bplapply(unique(data$sample), function(thissample) {
       this <- data[, data$sample == thissample]
       gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this@assays$RNA@data))
-      top_gene <- order(gene_var, decreasing = T)[1:num_top_gene]
+      top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
       thisgene <- rownames(data)[top_gene]
     }, BPPARAM = BPparam)
 
@@ -87,7 +87,7 @@ find_var_gene <- function(data, num_top_gene = 1500, ncores = 1, celltype = T) {
         this <- this_data[, this_data$sample == thissample]
         if (ncol(this) > 1) {
           gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this@assays$RNA@data))
-          top_gene <- order(gene_var, decreasing = T)[1:num_top_gene]
+          top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
           temp <- rownames(data)[top_gene]
           thisgene <- c(thisgene, temp)
         }
@@ -123,7 +123,7 @@ find_var_gene <- function(data, num_top_gene = 1500, ncores = 1, celltype = T) {
     gene <- BiocParallel::bplapply(unique(data$sample), function(thissample) {
       this <- data[, data$sample == thissample]
       gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this@assays$RNA@data))
-      top_gene <- order(gene_var, decreasing = T)[1:num_top_gene]
+      top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
       thisgene <- rownames(data)[top_gene]
     }, BPPARAM = BPparam)
 
@@ -153,7 +153,7 @@ helper_gene_mean_celltype <- function(data, genes = NULL, num_top_gene = NULL, n
   if (is.null(genes)) {
     all_marker <- find_var_gene(data,
       num_top_gene = num_top_gene,
-      ncores = ncores, celltype = T
+      ncores = ncores, celltype = TRUE
     )
   } else {
     all_marker <- genes
@@ -222,7 +222,7 @@ helper_gene_prop_celltype <- function(data, genes = NULL, num_top_gene = NULL, n
   if (is.null(genes)) {
     all_marker <- find_var_gene(data,
       num_top_gene = num_top_gene,
-      ncores = ncores, celltype = T
+      ncores = ncores, celltype = TRUE
     )
   } else {
     all_marker <- genes
@@ -293,7 +293,7 @@ helper_gene_cor_celltype <- function(data, genes = NULL, num_top_gene = NULL, nc
   if (is.null(genes)) {
     all_marker <- find_var_gene(data,
       num_top_gene = num_top_gene,
-      ncores = ncores, celltype = T
+      ncores = ncores, celltype = TRUE
     )
   } else {
     all_marker <- genes
@@ -383,7 +383,7 @@ helper_gene_mean_celltype_st <- function(data, num_top_gene = NULL, ncores = 1) 
 
   top_gene <- find_var_gene(data,
     num_top_gene = num_top_gene,
-    ncores = ncores, celltype = F
+    ncores = ncores, celltype = FALSE
   )
 
   data@assays$RNA@data <- data@assays$RNA@data[rownames(data@assays$RNA@data) %in% top_gene, ]

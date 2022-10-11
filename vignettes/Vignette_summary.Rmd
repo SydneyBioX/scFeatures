@@ -53,7 +53,7 @@ scFeatures can be run using one line of code `scfeatures_result <- scFeatures(da
 
 ```{r eval=FALSE, include=TRUE}
 data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-data <- process_data(data, normalise = T) #  perform normalisation 
+data <- process_data(data, normalise = TRUE) #  perform normalisation 
 
 scfeatures_result <- scFeatures(data)
 ```
@@ -75,7 +75,7 @@ For SingleCellExperiment or SpatialExperiment object, we provide a function `mak
 # read in data 
 #---------------------------------------------------------------------------
 data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-data <- process_data(data, normalise = T) #  perform normalisation 
+data <- process_data(data, normalise = TRUE) #  perform normalisation 
 
 # format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features 
 data$sample <- paste0( data$sample  , "_cond_", data$condition)
@@ -163,7 +163,7 @@ Note that, as spatial proteomics contain few genes, the feature categories of pa
 # read in data 
 #---------------------------------------------------------------------------
 data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
-data <- process_data(data, normalise = F) # here we don't normalise , because the data has already been normalised 
+data <- process_data(data, normalise = FALSE) # here we don't normalise , because the data has already been normalised 
  
 
 #---------------------------------------------------------------------------

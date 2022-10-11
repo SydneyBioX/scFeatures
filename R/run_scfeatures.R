@@ -30,12 +30,12 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
   check_data(data, type)
 
   if (type %in% c("scrna", "spatial_p")) {
-    X <- helper_proportion_raw(data, logit = F)
+    X <- helper_proportion_raw(data, logit = FALSE)
   }
 
 
   if (type == "spatial_t") {
-    X <- helper_proportion_raw_st(data, logit = F, ncores)
+    X <- helper_proportion_raw_st(data, logit = FALSE, ncores)
   }
 
   X <- as.data.frame(X)
@@ -73,12 +73,12 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
   check_data(data, type)
 
   if (type %in% c("scrna", "spatial_p")) {
-    X <- helper_proportion_raw(data, logit = T)
+    X <- helper_proportion_raw(data, logit = TRUE)
   }
 
 
   if (type == "spatial_t") {
-    X <- helper_proportion_raw_st(data, logit = T, ncores)
+    X <- helper_proportion_raw_st(data, logit = TRUE, ncores)
   }
 
 
@@ -330,7 +330,7 @@ run_gene_cor_celltype <- function(data, type = "scrna", genes = NULL, num_top_ge
 #' )
 #' feature_pathway_gsva <- run_pathway_gsva(
 #'    data, geneset = NULL, species = "Homo sapiens",
-#'    type = "scrna", subsample = F, ncores = 1
+#'    type = "scrna", subsample = FALSE, ncores = 1
 #' )
 #'
 #' @importFrom msigdbr msigdbr
@@ -348,7 +348,7 @@ run_gene_cor_celltype <- function(data, type = "scrna", genes = NULL, num_top_ge
 #' @export
 run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
                              species = "Homo sapiens",
-                             type = "scrna", subsample = T, ncores = 1) {
+                             type = "scrna", subsample = TRUE, ncores = 1) {
   check_data(data, type)
 
   if (is.null(geneset)) {

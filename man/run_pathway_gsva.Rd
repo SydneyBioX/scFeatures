@@ -10,7 +10,7 @@ run_pathway_gsva(
   geneset = NULL,
   species = "Homo sapiens",
   type = "scrna",
-  subsample = T,
+  subsample = TRUE,
   ncores = 1
 )
 }
@@ -44,7 +44,7 @@ data <- readRDS(
 )
 feature_pathway_gsva <- run_pathway_gsva(
    data, geneset = NULL, species = "Homo sapiens",
-   type = "scrna", subsample = F, ncores = 1
+   type = "scrna", subsample = FALSE, ncores = 1
 )
 
 }

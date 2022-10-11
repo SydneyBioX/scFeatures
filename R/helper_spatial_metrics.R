@@ -68,20 +68,20 @@ helper_celltype_interaction_sp <- function(data, ncores = 1) {
         if (is.null(temp)) {
           temp <- a
         } else {
-          temp <- suppressWarnings(merge(temp, a, by = "nn_list_cellTypes", all = T))
+          temp <- suppressWarnings(merge(temp, a, by = "nn_list_cellTypes", all = TRUE))
         }
       },
-      silent = T
+      silent = TRUE
     )
 
 
     if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$nn_list_cellTypes <- temp$nn_list_cellTypes
-      temp <- suppressWarnings(merge(temp, a, by = "nn_list_cellTypes", all = T))
+      temp <- suppressWarnings(merge(temp, a, by = "nn_list_cellTypes", all = TRUE))
     }
 
-    colnames(temp) <- make.names(colnames(temp), unique = T)
+    colnames(temp) <- make.names(colnames(temp), unique = TRUE)
   }
 
 
@@ -265,20 +265,20 @@ helper_L_stat_st <- function(data, ncores = 1) {
         if (is.null(temp)) {
           temp <- a
         } else {
-          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
         }
       },
-      silent = T
+      silent = TRUE
     )
 
 
     if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$rowname <- temp$rowname
-      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
     }
 
-    colnames(temp) <- make.names(colnames(temp), unique = T)
+    colnames(temp) <- make.names(colnames(temp), unique = TRUE)
   }
 
 
@@ -361,20 +361,20 @@ helper_L_stat_sp <- function(data, ncores = 1) {
         if (is.null(temp)) {
           temp <- a
         } else {
-          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
         }
       },
-      silent = T
+      silent = TRUE
     )
 
 
     if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$rowname <- temp$rowname
-      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
     }
 
-    colnames(temp) <- make.names(colnames(temp), unique = T)
+    colnames(temp) <- make.names(colnames(temp), unique = TRUE)
   }
 
 
@@ -420,7 +420,7 @@ individual_nncorr_protein <- function(thissample) {
     {
       nncorr_protein <- spatstat.core::nncorr(cell_points_cts)["correlation", ]
     },
-    silent = T
+    silent = TRUE
   )
   if (is(err, "try-error")) {
     nncorr_protein <- NA
@@ -442,7 +442,7 @@ helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
 
   top_gene <- find_var_gene(data,
     num_top_gene = num_top_gene,
-    ncores = ncores, celltype = F
+    ncores = ncores, celltype = FALSE
   )
 
   data@assays$RNA@data <- data@assays$RNA@data[rownames(data@assays$RNA@data) %in% top_gene, ]
@@ -468,20 +468,20 @@ helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
         if (is.null(temp)) {
           temp <- a
         } else {
-          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
         }
       },
-      silent = T
+      silent = TRUE
     )
 
 
     if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$rowname <- temp$rowname
-      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
     }
 
-    colnames(temp) <- make.names(colnames(temp), unique = T)
+    colnames(temp) <- make.names(colnames(temp), unique = TRUE)
   }
 
 
@@ -555,7 +555,7 @@ helper_moran <- function(data, num_top_gene = NULL, ncores = 1) {
 
   top_gene <- find_var_gene(data,
     num_top_gene = num_top_gene,
-    ncores = ncores, celltype = F
+    ncores = ncores, celltype = FALSE
   )
 
   data@assays$RNA@data <- data@assays$RNA@data[rownames(data@assays$RNA@data) %in% top_gene, ]
@@ -580,20 +580,20 @@ helper_moran <- function(data, num_top_gene = NULL, ncores = 1) {
         if (is.null(temp)) {
           temp <- a
         } else {
-          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
         }
       },
-      silent = T
+      silent = TRUE
     )
 
 
     if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$rowname <- temp$rowname
-      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
     }
 
-    colnames(temp) <- make.names(colnames(temp), unique = T)
+    colnames(temp) <- make.names(colnames(temp), unique = TRUE)
   }
 
 

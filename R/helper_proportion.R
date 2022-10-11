@@ -2,7 +2,7 @@
 
 # calculates cell type proportion raw and logit transformed
 # applicable to scRNA-seq and spatial proteomics
-helper_proportion_raw <- function(data, logit = T) {
+helper_proportion_raw <- function(data, logit = TRUE) {
   df <- data@meta.data
   df <- table(df$sample, data$celltype)
   df <- df / rowSums(df)
@@ -119,7 +119,7 @@ helper_proportion_ratio <- function(data, ncores = 1) {
 
 # calculates cell type proportion raw and logit transformed
 # applicable to spatial transcriptomics
-helper_proportion_raw_st <- function(data, logit = T, ncores = 1) {
+helper_proportion_raw_st <- function(data, logit = TRUE, ncores = 1) {
   BPparam <- generateBPParam(ncores)
 
   num_cell_spot <- get_num_cell_per_celltype(data)

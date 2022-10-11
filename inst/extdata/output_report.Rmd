@@ -84,7 +84,7 @@ find_de_CCI <- function(data){
     
     celltype <- unlist(lapply ( strsplit( rownames(tT), "--"), `[`, 1))
     
-    celltype <-  sort(table(celltype), decreasing = T) 
+    celltype <-  sort(table(celltype), decreasing = TRUE) 
     celltype <- celltype[1:min(length(celltype), 3)]
     celltype <- data.frame(data.frame(celltype))
     
@@ -110,7 +110,7 @@ find_de_pathway_specific <- function(data){
       df <- rbind(df, data.frame( thiscelltype  , thisresult[[1]][1],  thisresult[[1]][1] / ncol(thisdata) ) )
     }
     colnames(df) <- c("celltype" , "num_sig_features" , "prop_sig_features")
-    df <- df[order(df$prop_sig_features, decreasing = T), ]
+    df <- df[order(df$prop_sig_features, decreasing = TRUE), ]
     df <- df[ 1: min(nrow(df), 3), ]
     
     return(df )
@@ -129,7 +129,7 @@ find_de_celltype_specific <- function(data){
       df <- rbind(df, data.frame( thiscelltype  , thisresult[[1]][1],  thisresult[[1]][1] / ncol(thisdata) ) )
     }
     colnames(df) <- c("celltype" , "num_sig_features" , "prop_sig_features")
-    df <- df[order(df$prop_sig_features, decreasing = T), ]
+    df <- df[order(df$prop_sig_features, decreasing = TRUE), ]
     df <- df[ 1: min(nrow(df), 3), ]
     
     return(df )
@@ -197,7 +197,7 @@ find_de_celltype_interaction <- function(data){
     
     celltype <- rownames(tT)
    
-    celltype <-  sort(table(celltype), decreasing = T) 
+    celltype <-  sort(table(celltype), decreasing = TRUE) 
     celltype <- celltype[1:min(length(celltype), 3)]
     celltype <- data.frame(data.frame(celltype))
     
@@ -653,7 +653,7 @@ plot_heatmap_bulk <- function(data , num_features = 20  ){
     }else if (length(top_gene) == 1){
              pheatmap( thiscelltype[top_gene, , drop=FALSE]  ,   
                   annotation = condition,
-                 main = label , cluster_rows = F  , color=colorRampPalette(c("navy", "white", "red"))(50) )
+                 main = label , cluster_rows = FALSE  , color=colorRampPalette(c("navy", "white", "red"))(50) )
    }else{
 
         p <-  pheatmap( data[top_gene, ]  ,  annotation = condition,
@@ -928,8 +928,8 @@ plot_CCI <- function(data ){
      
      
    setHook("grid.newpage", function() pushViewport(viewport(x=1,y=1,width=0.9, height=0.9, name="vp", just=c("right","top"))), action="prepend")
-     pheatmap(  df , fontsize_row = 10 , fontsize_col = 10,  cluster_cols = F,
-                 cluster_rows = F ,
+     pheatmap(  df , fontsize_row = 10 , fontsize_col = 10,  cluster_cols = FALSE,
+                 cluster_rows = FALSE ,
                 display_numbers =T ,  number_color = "black" )
   setHook("grid.newpage", NULL, "replace")
   grid::grid.text("sender (ligand)", y=-0.07, gp=gpar(fontsize=16))
@@ -945,7 +945,7 @@ plot_CCI_difference <- function(df){
   
    #  https://stackoverflow.com/questions/49171958/igraph-edge-width-and-color-positive-and-negative-correlation
     df_net <- round( as.matrix(df) , 2)
-    g <- graph_from_adjacency_matrix(df_net, mode = "directed", weighted = T)
+    g <- graph_from_adjacency_matrix(df_net, mode = "directed", weighted = TRUE)
     E(g)$color <- ifelse(E(g)$weight > 0,'coral1','cornflowerblue')  
     E(g)$label.color<- "black"
  

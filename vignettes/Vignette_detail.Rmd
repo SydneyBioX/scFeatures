@@ -55,7 +55,7 @@ scFeatures can be run using one line of code `scfeatures_result <- scFeatures(da
 
 ```{r eval=FALSE, include=TRUE}
 data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-data <- process_data(data, normalise = T) #  perform normalisation 
+data <- process_data(data, normalise = TRUE) #  perform normalisation 
 
 scfeatures_result <- scFeatures(data)
 ```
@@ -66,7 +66,7 @@ The above function uses all default settings and generate all feature types. We 
 
 ```{r eval=FALSE, include=TRUE}
 data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
-data <- process_data(data, normalise = F) # here we don't normalise , because the data has already been normalised 
+data <- process_data(data, normalise = FALSE) # here we don't normalise , because the data has already been normalised 
  
 scfeatures_result <- scFeatures(data, 
              # input selective feature types to generate.      
@@ -225,7 +225,7 @@ Note that it is necessarily to indicate whether the species is "Homo sapiens" or
 
 ```{r eval=FALSE, include=TRUE}
 # This function can take a while. Therefore for larger datasets (eg, over 30,000 cells), we provide a subsample function to increase the speed. 
-feature_pathway_gsva <- run_pathway_gsva(data, geneset = NULL, species = "Homo sapiens", subsample = F)
+feature_pathway_gsva <- run_pathway_gsva(data, geneset = NULL, species = "Homo sapiens", subsample = FALSE)
 feature_pathway_mean <- run_pathway_mean(data)
 feature_pathway_prop <- run_pathway_prop(data)
 ```
@@ -321,7 +321,7 @@ data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds",
                                    package = "scFeatures"))
 
 # here we don't normalise , because the data has already been normalised 
-data <- process_data(data, normalise = F)
+data <- process_data(data, normalise = FALSE)
 
 # For spatial proteomics, we require the x- and y- coordinates  
 data$x_cord[1:5]
@@ -416,7 +416,7 @@ meta_patients$cluster <- factor(cluster_res)
 
 # plot survival curve 
 fit <- survfit(Surv(Survival_days_capped_2016.1.1, Censoring) ~ cluster, data = meta_patients)
-ggsurv <- ggsurvplot(fit, conf.int = F, risk.table = TRUE, 
+ggsurv <- ggsurvplot(fit, conf.int = FALSE, risk.table = TRUE, 
                      risk.table.col="strata", pval = TRUE)
 ggsurv
 
@@ -439,7 +439,7 @@ The `predictions` assay is a matrix in the form of cell types x spot, which stor
 
 data <- readRDS(system.file("extdata", "example_spatial_transcriptomics.rds", 
                                    package = "scFeatures"))
-data <- process_data(data, normalise = F) # data already normalised
+data <- process_data(data, normalise = FALSE) # data already normalised
 
 # for spatial transcriptomics, we need to estimate the number of cells in each spot
 data <- get_num_cell_per_spot(data)

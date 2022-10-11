@@ -4,7 +4,7 @@
 \alias{process_data}
 \title{perform pre-processing}
 \usage{
-process_data(data, normalise = T)
+process_data(data, normalise = TRUE)
 }
 \arguments{
 \item{data}{input data}

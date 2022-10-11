@@ -236,7 +236,7 @@ L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
 #' @import Seurat
 #'
 #' @export
-process_data <- function(data, normalise = T) {
+process_data <- function(data, normalise = TRUE) {
   if (!is.null(data@meta.data$celltype)) {
     data$celltype <- gsub("\\+", "plus", data$celltype)
     data$celltype <- gsub("\\-", "minus", data$celltype)
@@ -263,7 +263,7 @@ process_data <- function(data, normalise = T) {
   }
 
 
-  if (normalise == T) {
+  if (normalise) {
     data <- Seurat::NormalizeData(data)
   }
 
