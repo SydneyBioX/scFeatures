@@ -152,7 +152,7 @@ bulk_sample <- function(data, ncores = 1) {
 #' @param data input data
 #'
 #' @return data with the relative number of cells/spot stored in it's metadata
-#' @import BiocGenerics colSums
+#' @importFrom BiocGenerics colSums
 #'
 #' @export
 get_num_cell_per_spot <- function(data) {
