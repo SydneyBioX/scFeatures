@@ -14,7 +14,7 @@
 #' @export
 remove_mito <- function(data) {
   if (ncol(data) > 20000) {
-    temp <- data[, sample(1:ncol(data), 20000)]
+    temp <- data[, sample(seq_len(ncol(data)), 20000)]
   } else {
     temp <- data
   }
@@ -64,13 +64,16 @@ find_var_gene <- function(data, num_top_gene = 1500, ncores = 1, celltype = TRUE
   if (celltype) {
 
     # here calculates the HVG across all cells across all cell types
-
-    hvg_across_all_cells <- BiocParallel::bplapply(unique(data$sample), function(thissample) {
-      this <- data[, data$sample == thissample]
-      gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this@assays$RNA@data))
-      top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
-      thisgene <- rownames(data)[top_gene]
-    }, BPPARAM = BPparam)
+    hvg_across_all_cells <- BiocParallel::bplapply(
+      unique(data$sample), function(thissample) {
+        this <- data[, data$sample == thissample]
+        gene_var <- DelayedMatrixStats::rowVars(
+          DelayedArray::DelayedArray(this@assays$RNA@data)
+        )
+        top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
+        thisgene <- rownames(data)[top_gene]
+    }, BPPARAM = BPparam
+    )
 
     hvg_across_all_cells <- unique(unlist(hvg_across_all_cells))
 
@@ -105,7 +108,7 @@ find_var_gene <- function(data, num_top_gene = 1500, ncores = 1, celltype = TRUE
 
     all_marker <- NULL
 
-    for (i in c(1:length(gene))) {
+    for (i in c(seq_along(gene))) {
       try(
         {
           this <- gene[[i]]
@@ -409,7 +412,7 @@ helper_gene_mean_celltype_st <- function(data, num_top_gene = NULL, ncores = 1) 
     result_coef <- NULL
     result_p <- NULL
 
-    for (i in c(1:nrow(gene_count))) {
+    for (i in c(seq_len(nrow(gene_count)))) {
       thisgene <- data.frame(count = gene_count[i, ])
       thisgene <- cbind(thisgene, t(thisprob))
 

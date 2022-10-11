@@ -58,7 +58,7 @@ helper_celltype_interaction_sp <- function(data, ncores = 1) {
 
   temp <- NULL
 
-  for (i in c(1:length(nn_list_cellTypes))) {
+  for (i in seq_along(nn_list_cellTypes)) {
     err <- try(
       {
         a <- nn_list_cellTypes[[i]]
@@ -106,7 +106,7 @@ helper_celltype_interaction_sp <- function(data, ncores = 1) {
 
 individual_celltype_interaction_st <- function(thisprob) {
   x <- 1
-  temp <- lapply(1:ncol(thisprob), function(x) {
+  temp <- lapply(seq_len(ncol(thisprob)), function(x) {
     thisspot <- thisprob[, x]
     thisspot <- thisspot %*% t(thisspot)
     rownames(thisspot) <- colnames(thisspot)
@@ -179,7 +179,7 @@ individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
   gap_y <- (max(thissample$y_cord) - min(thissample$y_cord)) / length(thissample$y_cord) / 2
 
 
-  for (i in 1:ncol(thissample)) {
+  for (i in seq_len(ncol(thissample))) {
     thisspot <- thissample[, i]
     thisspot_num_cell <- this_num_cell_per_spot[, i]
 
@@ -218,7 +218,7 @@ individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
 
 
 
-  L_patient <- lapply(1:nrow(cellTypes_pair), function(i) {
+  L_patient <- lapply(seq_len(nrow(cellTypes_pair)), function(i) {
     L_stats(cell_points_threecelltype,
       from = cellTypes_pair[i, 1],
       to = cellTypes_pair[i, 2],
@@ -255,7 +255,7 @@ helper_L_stat_st <- function(data, ncores = 1) {
 
   temp <- NULL
 
-  for (i in c(1:length(L_stats))) {
+  for (i in seq_along(L_stats)) {
     err <- try(
       {
         a <- L_stats[[i]]
@@ -318,7 +318,7 @@ individual_L_stat_sp <- function(this_sample) {
 
 
   L_patient <- list()
-  for (i in 1:nrow(cellTypes_pair)) {
+  for (i in seq_len(nrow(cellTypes_pair))) {
     L_patient[[i]] <- L_stats(cell_points,
       from = cellTypes_pair[i, 1],
       to = cellTypes_pair[i, 2],
@@ -351,7 +351,7 @@ helper_L_stat_sp <- function(data, ncores = 1) {
 
   temp <- NULL
 
-  for (i in c(1:length(L_stats_result))) {
+  for (i in seq_along(L_stats_result)) {
     err <- try(
       {
         a <- L_stats_result[[i]]
@@ -458,7 +458,7 @@ helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
 
   temp <- NULL
 
-  for (i in c(1:length(nncorr_protein))) {
+  for (i in seq_along(nncorr_protein)) {
     err <- try(
       {
         a <- nncorr_protein[[i]]
@@ -527,7 +527,7 @@ individual_moran_cor <- function(thissample) {
   w <- 1 / d
 
 
-  moran_cor <- lapply(1:nrow(exprsMat), function(x) {
+  moran_cor <- lapply(seq_len(nrow(exprsMat)), function(x) {
     err <- try(val <- ape::Moran.I(exprsMat[x, ], w)$observed, silent = TRUE)
     if (is(err, "try-error")) {
       NA
@@ -558,7 +558,9 @@ helper_moran <- function(data, num_top_gene = NULL, ncores = 1) {
     ncores = ncores, celltype = FALSE
   )
 
-  data@assays$RNA@data <- data@assays$RNA@data[rownames(data@assays$RNA@data) %in% top_gene, ]
+  data@assays$RNA@data <- data@assays$RNA@data[
+    rownames(data@assays$RNA@data) %in% top_gene,
+  ]
 
 
   s <- unique(data$sample)[1]
@@ -570,7 +572,7 @@ helper_moran <- function(data, num_top_gene = NULL, ncores = 1) {
 
   temp <- NULL
 
-  for (i in c(1:length(moran_cor))) {
+  for (i in seq_along(moran_cor)) {
     err <- try(
       {
         a <- moran_cor[[i]]

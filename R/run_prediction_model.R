@@ -92,7 +92,7 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
 
 
   score <- NULL
-  for (i in c(1:20)) {
+  for (i in 1:20) {
     predicted <- predictedClasses[[i]]
     true <- actualClasses[[i]]
 
