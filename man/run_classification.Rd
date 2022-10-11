@@ -7,7 +7,15 @@
 run_classification(X, y, model = "randomforest", ncores = 1)
 }
 \arguments{
-\item{infile}{Path to the input file}
+\item{X}{A data matrix (i.e., observations by features)}
+
+\item{y}{A character vector or factor containing the outcomes.}
+
+\item{model}{Which classification model to use. Can be "randomforest", "svm"
+or "dlda". Defaults to "randomforest".}
+
+\item{ncores}{Number of cores to run cross validation on.
+Defaults to 1 core.}
 }
 \value{
 A matrix of the infile
