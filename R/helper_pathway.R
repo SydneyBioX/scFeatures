@@ -127,8 +127,13 @@ helper_pathway_mean <- function(data, geneset, ncores = 1) {
 
 #' helper function to calculate proportion that a gene is expressed in each
 #' cell type in a sample
-#' 
+#'
+#' @param data Data to run the calculation on.
+#' @param this_geneset geneset to run analysis on
+#'
 #' @importFrom stats quantile
+#' @importFrom DelayedMatrixStats colMeans2
+#' @importFrom DelayedArray DelayedArray
 individual_geneset_proportion_celltype <- function(data, this_geneset) {
 
   # first find the average expression of the genes across cells

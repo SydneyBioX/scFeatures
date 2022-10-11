@@ -2,7 +2,12 @@
 #'
 #' This function takes a feature matrix in the form of samples by features and performs cross-validated classification.
 #'
-#' @param infile Path to the input file
+#' @param X A data matrix (i.e., observations by features)
+#' @param y A character vector or factor containing the outcomes.
+#' @param model Which classification model to use. Can be "randomforest", "svm"
+#'              or "dlda". Defaults to "randomforest".
+#' @param ncores Number of cores to run cross validation on.
+#'               Defaults to 1 core.
 #'
 #' @return A matrix of the infile
 #'
