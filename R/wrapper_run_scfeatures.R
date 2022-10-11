@@ -59,17 +59,17 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
   for (thisfeature in feature_types) {
     try({
       if (thisfeature == "proportion_raw") {
-        print("generating proportion raw features")
+        message("generating proportion raw features")
         return_list[["proportion_raw"]] <- run_proportion_raw(data = data, type = type, ncores = ncores)
       }
 
       if (thisfeature == "proportion_logit") {
-        print("generating proportion logit features")
+        message("generating proportion logit features")
         return_list[["proportion_logit"]] <- run_proportion_logit(data = data, type = type, ncores = ncores)
       }
 
       if (thisfeature == "proportion_ratio") {
-        print("generating proportion ratio features")
+        message("generating proportion ratio features")
         return_list[["proportion_ratio"]] <- run_proportion_ratio(data = data, type = type, ncores = ncores)
       }
 
@@ -77,7 +77,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
       data_remove_mito <- remove_mito(data)
 
       if (thisfeature == "gene_mean_celltype") {
-        print("generating gene mean celltype features")
+        message("generating gene mean celltype features")
         return_list[["gene_mean_celltype"]] <- run_gene_mean_celltype(
           data = data_remove_mito, type = type, ncores = ncores,
           genes = celltype_genes
@@ -86,7 +86,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 
 
       if (thisfeature == "gene_prop_celltype") {
-        print("generating gene prop celltype features")
+        message("generating gene prop celltype features")
         return_list[["gene_prop_celltype"]] <- run_gene_prop_celltype(data_remove_mito,
           type = type, ncores = ncores,
           genes = celltype_genes
@@ -94,7 +94,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
       }
 
       if (thisfeature == "gene_cor_celltype") {
-        print("generating gene cor celltype features")
+        message("generating gene cor celltype features")
         return_list[["gene_cor_celltype"]] <- run_gene_cor_celltype(data_remove_mito,
           type = type, ncores = ncores,
           genes = celltype_genes
@@ -102,7 +102,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
       }
 
       if (thisfeature == "pathway_gsva") {
-        print("generating pathway GSVA features")
+        message("generating pathway GSVA features")
         return_list[["pathway_gsva"]] <- run_pathway_gsva(data,
           type = type, ncores = ncores,
           species = species, geneset = geneset
@@ -110,7 +110,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
       }
 
       if (thisfeature == "pathway_mean") {
-        print("generating pathway mean features")
+        message("generating pathway mean features")
         return_list[["pathway_mean"]] <- run_pathway_mean(data,
           type = type, ncores = ncores,
           species = species, geneset = geneset
@@ -118,7 +118,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
       }
 
       if (thisfeature == "pathway_prop") {
-        print("generating pathway prop features")
+        message("generating pathway prop features")
         return_list[["pathway_prop"]] <- run_pathway_prop(data,
           type = type, ncores = ncores,
           species = species, geneset = geneset
@@ -127,7 +127,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 
 
       if (thisfeature == "gene_mean_aggregated") {
-        print("generating gene mean aggregated features")
+        message("generating gene mean aggregated features")
         return_list[["gene_mean_bulk"]] <- run_gene_mean(data,
           type = type, ncores = ncores,
           genes = aggregated_genes
@@ -135,7 +135,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
       }
 
       if (thisfeature == "gene_prop_aggregated") {
-        print("generating gene prop aggregated features")
+        message("generating gene prop aggregated features")
         return_list[["gene_prop_bulk"]] <- run_gene_prop(data,
           type = type, ncores = ncores,
           genes = aggregated_genes
@@ -143,7 +143,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
       }
 
       if (thisfeature == "gene_cor_aggregated") {
-        print("generating gene cor aggregated features")
+        message("generating gene cor aggregated features")
         return_list[["gene_cor_bulk"]] <- run_gene_cor(data,
           type = type, ncores = ncores,
           genes = aggregated_genes
@@ -151,22 +151,22 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
       }
 
       if (thisfeature == "L_stats") {
-        print("generating L function features")
+        message("generating L function features")
         return_list[["L_stats"]] <- run_L_function(data, type = type, ncores = ncores)
       }
 
       if (thisfeature == "celltype_interaction") {
-        print("generating cell type interaction features")
+        message("generating cell type interaction features")
         return_list[["celltype_interaction"]] <- run_celltype_interaction(data, type = type, ncores = ncores)
       }
 
       if (thisfeature == "morans_I") {
-        print("generating Moran's I features")
+        message("generating Moran's I features")
         return_list[["morans_I"]] <- run_Morans_I(data, type = type, ncores = ncores)
       }
 
       if (thisfeature == "nn_correlation") {
-        print("generating nearest neighbour correlation features")
+        message("generating nearest neighbour correlation features")
         return_list[["nn_correlation"]] <- run_nn_correlation(data, type = type, ncores = ncores)
       }
     })

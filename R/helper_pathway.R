@@ -51,7 +51,7 @@ helper_pathway_gsva <- function(data, method = "ssgsea", geneset, ncores = 1) {
         start <- index[i - 1]
         finish <- index[i] - 1
 
-        print(paste0("calculating ", start, " to ", finish, " cells"))
+        message("calculating ", start, " to ", finish, " cells")
         thesecell <- as.matrix(data@assays$RNA@data[, start:finish])
         temp_topMatrixGSVA <- GSVA::gsva(thesecell, geneset,
           method = "ssgsea",

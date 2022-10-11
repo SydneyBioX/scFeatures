@@ -9,7 +9,7 @@
 check_data <- function(data, type = "scrna") {
   if (!is(data, "Seurat")) {
     # TODO: Should this be a warning/error?
-    print("please make sure the data is in a Seurat object")
+    warning("please make sure the data is in a Seurat object")
   }
 
   if (!"sample" %in% names(data@meta.data)) {

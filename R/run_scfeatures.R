@@ -688,7 +688,7 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
   check_data(data, type)
 
   if (type == "scrna") {
-    print("This feature class currently does not support scRNA-seq")
+    warning("This feature class currently does not support scRNA-seq")
     return(NULL)
   }
 
@@ -733,7 +733,7 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
   check_data(data, type)
 
   if (type == "scrna") {
-    print("This feature class currently does not support scRNA-seq")
+    warning("This feature class currently does not support scRNA-seq")
     return(NULL)
   }
 
@@ -781,7 +781,7 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
   check_data(data, type)
 
   if (type == "scrna") {
-    print("This feature class currently does not support scRNA-seq")
+    warning("This feature class currently does not support scRNA-seq")
     return(NULL)
   }
 
@@ -826,7 +826,7 @@ run_nn_correlation <- function(data, type = "spatial_p", ncores = 1) {
   check_data(data, type)
 
   if (type == "scrna") {
-    print("This feature class currently does not support scRNA-seq")
+    warning("This feature class currently does not support scRNA-seq")
     return(NULL)
   }
 
