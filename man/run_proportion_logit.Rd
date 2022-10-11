@@ -26,7 +26,7 @@ data <- readRDS(
    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 )
 feature_proportion_logit <- run_proportion_logit(
-   data, type = "scnrna", ncores = 1
+   data, type = "scrna", ncores = 1
 )
 
 }

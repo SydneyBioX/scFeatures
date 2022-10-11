@@ -18,7 +18,7 @@
 #' )
 #' feature_proportion_raw <- run_proportion_raw(
 #'   data,
-#'   type = "scnrna", ncores = 1
+#'   type = "scrna", ncores = 1
 #' )
 #'
 #' @importFrom gtools logit
@@ -62,7 +62,7 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #' )
 #' feature_proportion_logit <- run_proportion_logit(
 #'   data,
-#'   type = "scnrna", ncores = 1
+#'   type = "scrna", ncores = 1
 #' )
 #'
 #' @importFrom gtools logit
@@ -106,7 +106,7 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #' )
 #' feature_proportion_ratio <- run_proportion_ratio(
 #'   data,
-#'   type = "scnrna", ncores = 1
+#'   type = "scrna", ncores = 1
 #' )
 #'
 #' @importFrom tidyr pivot_wider

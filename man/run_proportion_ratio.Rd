@@ -26,7 +26,7 @@ data <- readRDS(
    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 )
 feature_proportion_ratio <- run_proportion_ratio(
-   data, type = "scnrna", ncores = 1
+   data, type = "scrna", ncores = 1
 )
 
 }
