@@ -156,7 +156,7 @@ bulk_sample <- function(data, ncores = 1) {
 #'
 #' @export
 get_num_cell_per_spot <- function(data) {
-  readcount <- log2(colSums(data))
+  readcount <- log2(colSums(as.matrix(data)))
 
   linMap <- function(x, from, to) {
     (x - min(x)) / max(x - min(x)) * (to - from) + from
