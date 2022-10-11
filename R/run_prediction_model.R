@@ -43,10 +43,10 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
 
   temp <- BiocParallel::bplapply(result@rankedFeatures, function(x) {
     importance <- NULL
-    for (i in c(1:length(x))) {
+    for (i in seq_along(x)) {
       this <- x[[i]]
       this <- data.frame(this)
-      this$importance <- 1:nrow(this)
+      this$importance <- seq_len(nrow(this))
       importance <- rbind(importance, this)
     }
     importance
