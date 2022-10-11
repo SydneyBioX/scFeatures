@@ -18,37 +18,27 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
 
   y <- as.factor(y)
 
+
   if (model == "randomforest") {
-    trainParams <-  ClassifyR::TrainParams("randomForest", trees = 100)
-    predictParams <- ClassifyR::PredictParams("randomForest")
+    # old hyperparams: trees = 100
+    model <- "randomForest"
+  } else if (model == "svm") {
+    # old hyperparams: kernel = "linear"
+    model <- "SVM"
+  } else if (model == "dlda") {
+    # old hyperparams: kernel = "linear"
+    model <- "DLDA"
+  } else {
+    stop(
+      "Unsupported model: '", model, "'.\n",
+      "Use one of randomforest, svm, dlda."
+    )
   }
 
-
-  if (model == "svm") {
-    trainParams <- ClassifyR::TrainParams("SVM", kernel = "linear")
-    predictParams <- ClassifyR::PredictParams("SVM")
-  }
-
-  if (model == "dlda") {
-    trainParams <- ClassifyR::TrainParams("DLDA")
-    predictParams <- ClassifyR::PredictParams("DLDA")
-  }
-
-  params <- ClassifyR::ModellingParams(
-    trainParams = trainParams,
-    predictParams = predictParams
+  result <- ClassifyR::crossValidate(
+    X, y, classifier = model, nCores = ncores,
+    nFolds = 3, nRepeats = 20
   )
-  cross_val_params = ClassifyR::CrossValParams(
-    permutations = 20, folds = 3,
-    parallelParams = BPparam
-  )
-
-  result <- ClassifyR::runTests(X, y,
-    crossValParams = cross_val_params,
-    modellingParams = params,
-    verbose = 1
-  )
-
 
 
   temp <- BiocParallel::bplapply(result@rankedFeatures, function(x) {
