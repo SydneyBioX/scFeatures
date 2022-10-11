@@ -61,7 +61,7 @@ run_classification <- function(X, y, model = "randomforest", ncores = 1) {
   importance <- do.call(rbind, temp)
 
   importance <- importance %>%
-    dplyr::group_by(this) %>%
+    dplyr::group_by("this") %>%
     dplyr::summarize(Mean = mean(importance, na.rm = TRUE))
 
   importance <- importance[order(importance$Mean), ]
