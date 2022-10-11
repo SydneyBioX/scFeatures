@@ -160,7 +160,7 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #' # optional step, if mito and ribo genes are not of interest
 #' data_remove_mito <- remove_mito(data) 
 #' feature_gene_mean_celltype <- run_gene_mean_celltype(
-#'    data_remove_mito, type = "scnrna", num_top_gene = 100, ncores = 1
+#'    data_remove_mito, type = "scrna", num_top_gene = 100, ncores = 1
 #' )
 #'
 #' @importFrom proxyC simil
