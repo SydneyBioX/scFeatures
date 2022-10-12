@@ -18,8 +18,8 @@ estimate a relative number of cells per spot
 \examples{
 
 data <- readRDS(system.file(
- "extdata", "example_spatial_transcriptomics.rds",
-                            package = "scFeatures"
+  "extdata", "example_spatial_transcriptomics.rds",
+  package = "scFeatures"
 ))
 data <- process_data(data, normalise = FALSE)
 data <- get_num_cell_per_spot(data)

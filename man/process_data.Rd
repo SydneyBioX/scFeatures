@@ -22,8 +22,8 @@ perform pre-processing
 \examples{
 
 data <- readRDS(system.file(
- "extdata", "example_spatial_transcriptomics.rds",
-                            package = "scFeatures"
+  "extdata", "example_spatial_transcriptomics.rds",
+  package = "scFeatures"
 ))
 data <- process_data(data, normalise = FALSE)
 
