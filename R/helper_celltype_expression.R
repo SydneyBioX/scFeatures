@@ -72,7 +72,8 @@ find_var_gene <- function(data, num_top_gene = 1500, ncores = 1, celltype = TRUE
         )
         top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
         thisgene <- rownames(data)[top_gene]
-    }, BPPARAM = BPparam
+      },
+      BPPARAM = BPparam
     )
 
     hvg_across_all_cells <- unique(unlist(hvg_across_all_cells))

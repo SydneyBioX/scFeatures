@@ -158,10 +158,10 @@ bulk_sample <- function(data, ncores = 1) {
 #' @importFrom BiocGenerics colSums
 #'
 #' @examples
-#' 
+#'
 #' data <- readRDS(system.file(
-#'  "extdata", "example_spatial_transcriptomics.rds",
-#'                             package = "scFeatures"
+#'   "extdata", "example_spatial_transcriptomics.rds",
+#'   package = "scFeatures"
 #' ))
 #' data <- process_data(data, normalise = FALSE)
 #' data <- get_num_cell_per_spot(data)
@@ -246,12 +246,12 @@ L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
 #' @return a matrix of samples x features
 #'
 #' @import Seurat
-#' 
+#'
 #' @examples
-#' 
+#'
 #' data <- readRDS(system.file(
-#'  "extdata", "example_spatial_transcriptomics.rds",
-#'                             package = "scFeatures"
+#'   "extdata", "example_spatial_transcriptomics.rds",
+#'   package = "scFeatures"
 #' ))
 #' data <- process_data(data, normalise = FALSE)
 #'

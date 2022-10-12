@@ -194,7 +194,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 #'  we need columns called "x_cord" and "y_cord".
 #'  Alternatively, please specify the relevant column in the `spatialCoords`
 #'  argument.
-#'  For spot-based spatial transcriptomics, we also requires a matrix 
+#'  For spot-based spatial transcriptomics, we also requires a matrix
 #'  containing cell type prediction probability of each spot, in the format of
 #'  celltype x spot
 #'
@@ -209,7 +209,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 #' If not provided, we use the columns called "x_cord" and "y_cord".
 #' @param spotProbability a matrix in the format of celltype x spot, where each
 #'  entry is the prediction probability of that cell type for each spot.
-#' 
+#'
 #' @return A `Seurat` dataset obtained by transforming input data
 #'
 #' @importFrom SummarizedExperiment colData
