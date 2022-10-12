@@ -145,12 +145,16 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #'             `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param genes defaults to NULL, in which case the top variable genes are used
-#' If provided by user, need to be in the format of a dataframe with two columns 'marker' and 'celltype'.
-#' The marker column contains the genes of interest, eg: S100A11 , CCL4 ,
-#' the celltype column contains the celltype that the gene expression is to be computed from, eg: CD8, B cells
-#' @param num_top_gene when the genes is not provided by the user, the top variable genes will be used
-#' The number of genes is set by this number.
-#' default to NULL, in which case top 100 genes from each cell type will be selected
+#'  If provided by user, need to be in the format of a dataframe with 2 columns
+#'  'marker' and 'celltype'.
+#'  The marker column contains the genes of interest, eg: S100A11 , CCL4 ,
+#'  the celltype column contains the celltype that the gene expression is to
+#'  be computed from, eg: CD8, B cells
+#' @param num_top_gene when the genes is not provided by the user, the top
+#'  variable genes will be used
+#'  The number of genes is set by this number.
+#'  Defaults to NULL, in which case top 100 genes from each cell type will be
+#'  selected
 #' @param ncores number of cores
 #'
 #' @return a matrix of samples x features
@@ -199,15 +203,21 @@ run_gene_mean_celltype <- function(data,
 
 #' generate cell type specific gene proportion expression
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param data input data, a Seurat object containing `celltype` and `sample`
+#'  label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param genes default to NULL, in which case the top variable genes will be used
-#' If provided by user, need to be in the format of a dataframe with two columns 'marker' and 'celltype'.
-#' The marker column contains the genes of interest, eg: S100A11 , CCL4 ,
-#' the celltype column contains the celltype that the gene expression is to be computed from, eg: CD8, B cells
-#' @param num_top_gene when the genes is not provided by the user, the top variable genes will be used
-#' The number of genes is set by this number.
-#' default to NULL, in which case top 100 genes from each cell type will be selected
+#' @param genes default to NULL, in which case the top variable genes will be
+#'  used
+#'  If provided by user, need to be in the format of a dataframe with 2 columns
+#'  'marker' and 'celltype'.
+#'  The marker column contains the genes of interest, eg: S100A11 , CCL4 ,
+#'  the celltype column contains the celltype that the gene expression is to be
+#'  computed from, eg: CD8, B cells
+#' @param num_top_gene when the genes is not provided by the user, the top
+#'  variable genes will be used
+#'  The number of genes is set by this number.
+#'  default to NULL, in which case top 100 genes from each cell type will be
+#'  selected
 #' @param ncores number of cores
 #'
 #' @return a matrix of samples x features
@@ -260,15 +270,21 @@ run_gene_prop_celltype <- function(data,
 
 #' generate cell type specific gene correlation
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param data input data, a Seurat object containing `celltype` and `sample`
+#'  label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param genes default to NULL, in which case the top variable genes will be used
-#' If provided by user, need to be in the format of a dataframe with two columns 'marker' and 'celltype'.
-#' The marker column contains the genes of interest, eg: S100A11 , CCL4 ,
-#' the celltype column contains the celltype that the gene expression is to be computed from, eg: CD8, B cells
-#' @param num_top_gene when the genes is not provided by the user, the top variable genes will be used
-#' The number of genes is set by this number.
-#' default to NULL, in which case top 5 genes from each cell type will be selected
+#' @param genes default to NULL, in which case the top variable genes will be
+#'  used
+#'  If provided by user, need to be in the format of a dataframe with 2 columns
+#'  'marker' and 'celltype'.
+#'  The marker column contains the genes of interest (e.g., S100A11 , CCL4),
+#'  the celltype column contains the celltype that the gene expression is to be
+#'  computed from, eg: CD8, B cells
+#' @param num_top_gene when the genes is not provided by the user, the top
+#'  variable genes will be used
+#'  The number of genes is set by this number.
+#'  default to NULL, in which case top 5 genes from each cell type will be
+#'  selected
 #' @param ncores number of cores
 #'
 #' @return a matrix of samples x features
@@ -293,7 +309,11 @@ run_gene_prop_celltype <- function(data,
 #' @importFrom dplyr %>%
 #'
 #' @export
-run_gene_cor_celltype <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL, ncores = 1) {
+run_gene_cor_celltype <- function(data,
+                                  type = "scrna",
+                                  genes = NULL,
+                                  num_top_gene = NULL,
+                                  ncores = 1) {
   check_data(data, type)
 
   if (type %in% c("scrna", "spatial_p")) {
@@ -318,14 +338,21 @@ run_gene_cor_celltype <- function(data, type = "scrna", genes = NULL, num_top_ge
 
 #' generate pathway score using gene set enrichement analysis
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
-#' @param method type of pathway analysis method, currently support `ssgsea` and `aucell`
-#' @param geneset By default (when the `geneset` argument is not specified),  we use the 50 hallmark gene set from msigdb.
-#' The users can also provide their geneset of interest in a list format, with each list entry containing a vector of the names of genes in a gene set.
-#' eg, geneset <- list("pathway_a" = c("CAPNS1", "TLCD1"), "pathway_b" = c("PEX6","DPRXP4" ))
-#' @param species whether the species is "Homo sapiens" or "Mus musculus". Default is "Homo sapiens".
+#' @param data input data, a Seurat object containing `celltype` and `sample`
+#'  label
+#' @param method type of pathway analysis method, currently support `ssgsea`
+#'  and `aucell`
+#' @param geneset By default (when the `geneset` argument is not specified),
+#'  we use the 50 hallmark gene set from msigdb.
+#'  The users can also provide their geneset of interest in a list format, with
+#'  each list entry containing a vector of the names of genes in a gene set.
+#'  eg, geneset <- list("pathway_a" = c("CAPN1", ...), "pathway_b" = c("PEX6"))
+#' @param species whether the species is "Homo sapiens" or "Mus musculus".
+#'  Default is "Homo sapiens".
 #' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param subsample whether to subsample, either T or F. For larger datasets (eg, over 30,000 cells), the subsample function can be used to increase speed.
+#' @param subsample whether to subsample, either T or F. For larger datasets
+#'  (eg, over 30,000 cells), the subsample function can be used to increase
+#'  speed.
 #' @param ncores number of cores
 #'
 #' @return a matrix of samples x features
@@ -400,11 +427,15 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 
 #' generate pathway score using expression level
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
-#' @param geneset By default (when the `geneset` argument is not specified),  we use the 50 hallmark gene set from msigdb.
-#' The users can also provide their geneset of interest in a list format, with each list entry containing a vector of the names of genes in a gene set.
-#' eg, geneset <- list("pathway_a" = c("CAPNS1", "TLCD1"), "pathway_b" = c("PEX6","DPRXP4" ))
-#' @param species whether the species is "Homo sapiens" or "Mus musculus". Default is "Homo sapiens".
+#' @param data input data, a Seurat object containing `celltype` and `sample`
+#'  label
+#' @param geneset By default (when the `geneset` argument is not specified),
+#'  we use the 50 hallmark gene set from msigdb.
+#'  The users can also provide their geneset of interest in a list format, with
+#'  each list entry containing a vector of the names of genes in a gene set.
+#'  eg, geneset <- list("pathway_a" = c("CANS1", ...), "pathway_b" = c("PEX6"))
+#' @param species whether the species is "Homo sapiens" or "Mus musculus".
+#'  Default is "Homo sapiens".
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param ncores number of cores
 #'
@@ -467,11 +498,15 @@ run_pathway_mean <- function(data, geneset = NULL,
 
 #' generate pathway score using proportion of expression
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
-#' @param geneset By default (when the `geneset` argument is not specified),  we use the 50 hallmark gene set from msigdb.
-#' The users can also provide their geneset of interest in a list format, with each list entry containing a vector of the names of genes in a gene set.
-#' eg, geneset <- list("pathway_a" = c("CAPNS1", "TLCD1"), "pathway_b" = c("PEX6","DPRXP4" ))
-#' @param species whether the species is "Homo sapiens" or "Mus musculus". Default is "Homo sapiens".
+#' @param data input data, a Seurat object containing `celltype` and `sample`
+#'  label
+#' @param geneset By default (when the `geneset` argument is not specified),
+#'  we use the 50 hallmark gene set from msigdb.
+#'  The users can also provide their geneset of interest in a list format, with
+#'  each list entry containing a vector of the names of genes in a gene set.
+#'  eg, geneset <- list("pathway_a" = c("CANS1", ...), "pathway_b" = c("PEX6"))
+#' @param species whether the species is "Homo sapiens" or "Mus musculus".
+#'  Default is "Homo sapiens".
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param ncores number of cores
 #'
@@ -540,22 +575,31 @@ run_pathway_prop <- function(data, geneset = NULL,
 
 #' generate overall aggregated mean expression
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param data input data, a Seurat object containing `celltype` and `sample`
+#'  label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param genes default to NULL, in which case the top variable genes will be used
-#' If provided by user, need to be in the format of a list containing the genes of interest,
-#' eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )
-#' @param num_top_gene when the genes is not provided by the user, the top variable genes will be used
-#' The number of genes is set by this number.
-#' default to NULL, in which case top 1500 variable genes will be selected
+#' @param genes default to NULL, in which case the top variable genes will be
+#'  used
+#'  If provided by user, need to be in the format of a list containing the
+#'  genes of interest,
+#'  eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )
+#' @param num_top_gene when the genes is not provided by the user, the top
+#'  variable genes will be used
+#'  The number of genes is set by this number.
+#'  default to NULL, in which case top 1500 variable genes will be selected
 #' @param ncores number of cores
 #'
 #' @return a matrix of samples x features
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' feature_gene_mean <- run_gene_mean(data, type = "scrna", num_top_gene = 1500, ncores = 1)
+#' data <- readRDS(
+#'   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' )
+#' feature_gene_mean <- run_gene_mean(
+#'   data,
+#'   type = "scrna", num_top_gene = 1500, ncores = 1
+#' )
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowMeans2
@@ -565,7 +609,11 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' @importFrom dplyr %>%
 #'
 #' @export
-run_gene_mean <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL, ncores = 1) {
+run_gene_mean <- function(data,
+                          type = "scrna",
+                          genes = NULL,
+                          num_top_gene = NULL,
+                          ncores = 1) {
   check_data(data, type)
 
   if (type %in% c("scrna", "spatial_p", "spatial_t")) {
@@ -665,7 +713,8 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 
 #' generate L stats
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param data input data, a Seurat object containing `celltype` and `sample`
+#'  label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param ncores number of cores
 #'
@@ -673,7 +722,10 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
+#' data <- readRDS(system.file(
+#'   "extdata", "example_spatial_proteomics.rds",
+#'   package = "scFeatures"
+#' ))
 #' feature_L_function <- run_L_function(data, type = "spatial_p", ncores = 1)
 #'
 #' @importFrom spatstat.geom ppp pairdist
@@ -710,7 +762,8 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 
 #' generate cell type interaction
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param data input data, a Seurat object containing `celltype` and `sample`
+#'  label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param ncores number of cores
 #'
@@ -718,8 +771,14 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
-#' feature_celltype_interaction <- run_celltype_interaction(data, type = "spatial_p", ncores = 1)
+#' data <- readRDS(system.file(
+#'   "extdata", "example_spatial_proteomics.rds",
+#'   package = "scFeatures"
+#' ))
+#' feature_celltype_interaction <- run_celltype_interaction(
+#'   data,
+#'   type = "spatial_p", ncores = 1
+#' )
 #'
 #' @importFrom spatstat.geom ppp pairdist
 #' @importFrom BiocParallel SerialParam bplapply
@@ -758,7 +817,8 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 
 #' generate Moran's I
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param data input data, a Seurat object containing `celltype` and `sample`
+#'  label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param ncores number of cores
 #'
@@ -766,7 +826,10 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
+#' data <- readRDS(system.file(
+#'   "extdata", "example_spatial_proteomics.rds",
+#'   package = "scFeatures"
+#' ))
 #' feature_Morans_I <- run_Morans_I(data, type = "spatial_p", ncores = 1)
 #'
 #' @importFrom spatstat.geom ppp pairdist
@@ -803,7 +866,8 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 
 #' generate nearest neighbour correlation
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param data input data, a Seurat object containing `celltype` and `sample`
+#'  label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param ncores number of cores
 #'
@@ -811,8 +875,14 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
-#' feature_nn_correlation <- run_nn_correlation(data, type = "spatial_p", ncores = 1)
+#' data <- readRDS(system.file(
+#'   "extdata", "example_spatial_proteomics.rds",
+#'   package = "scFeatures"
+#' ))
+#' feature_nn_correlation <- run_nn_correlation(
+#'   data,
+#'   type = "spatial_p", ncores = 1
+#' )
 #'
 #' @importFrom spatstat.geom ppp pairdist
 #' @importFrom BiocParallel SerialParam bplapply

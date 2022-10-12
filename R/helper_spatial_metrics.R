@@ -68,7 +68,9 @@ helper_celltype_interaction_sp <- function(data, ncores = 1) {
         if (is.null(temp)) {
           temp <- a
         } else {
-          temp <- suppressWarnings(merge(temp, a, by = "nn_list_cellTypes", all = TRUE))
+          temp <- suppressWarnings(
+            merge(temp, a, by = "nn_list_cellTypes", all = TRUE)
+          )
         }
       },
       silent = TRUE
@@ -78,7 +80,9 @@ helper_celltype_interaction_sp <- function(data, ncores = 1) {
     if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$nn_list_cellTypes <- temp$nn_list_cellTypes
-      temp <- suppressWarnings(merge(temp, a, by = "nn_list_cellTypes", all = TRUE))
+      temp <- suppressWarnings(
+        merge(temp, a, by = "nn_list_cellTypes", all = TRUE)
+      )
     }
 
     colnames(temp) <- make.names(colnames(temp), unique = TRUE)
@@ -175,8 +179,8 @@ individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
   i <- 1
 
 
-  gap_x <- (max(thissample$x_cord) - min(thissample$x_cord)) / length(thissample$x_cord) / 2
-  gap_y <- (max(thissample$y_cord) - min(thissample$y_cord)) / length(thissample$y_cord) / 2
+  gap_x <- (max(x_c <- thissample$x_cord) - min(x_c)) / length(x_c) / 2
+  gap_y <- (max(y_c <- thissample$y_cord) - min(y_c)) / length(y_c) / 2
 
 
   for (i in seq_len(ncol(thissample))) {
@@ -188,10 +192,18 @@ individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
     this_gap_x <- gap_x / total_num_cell
     this_gap_y <- gap_y / total_num_cell
 
-    x <- c(x, seq(thissample$x_cord[i], by = this_gap_x, length.out = total_num_cell))
-    y <- c(y, seq(thissample$y_cord[i], by = this_gap_y, length.out = total_num_cell))
+    x <- c(
+      x,
+      seq(thissample$x_cord[i], by = this_gap_x, length.out = total_num_cell)
+    )
+    y <- c(
+      y,
+      seq(thissample$y_cord[i], by = this_gap_y, length.out = total_num_cell)
+    )
 
-    celltype <- c(celltype, rep(rownames(this_num_cell_per_spot), thisspot_num_cell))
+    celltype <- c(
+      celltype, rep(rownames(this_num_cell_per_spot), thisspot_num_cell)
+    )
   }
 
 

@@ -1,6 +1,7 @@
 #' run cross-validated classification
 #'
-#' This function takes a feature matrix in the form of samples by features and performs cross-validated classification.
+#' This function takes a feature matrix in the form of samples by features and
+#' performs cross-validated classification.
 #'
 #' @param X A data matrix (i.e., observations by features)
 #' @param y A character vector or factor containing the outcomes.
