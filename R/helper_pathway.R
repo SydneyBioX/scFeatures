@@ -136,6 +136,8 @@ helper_pathway_mean <- function(data, geneset, ncores = 1) {
 #'
 #' @param data Data to run the calculation on.
 #' @param this_geneset geneset to run analysis on
+#' @return a data frame containing the proportion a gene is expressed in each
+#'         cell type in a sample
 #'
 #' @importFrom stats quantile
 #' @importFrom DelayedMatrixStats colMeans2

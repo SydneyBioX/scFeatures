@@ -178,29 +178,50 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 
 
 
-#' Format SingleCellExperiment or SpatialExperiment object into Seurat object for scFeatures functions
+#' Format SingleCellExperiment or SpatialExperiment object into Seurat object
+#' for scFeatures functions
 #'
-#' @param data input data, either a SingleCellExperiment or SpatialExperiment object.
-#'  The object needs to contain a column named "sample" and a column named "celltype".
-#'  Alternatively, user can provide the name of the column containing sample and celltype into the `sample` and `celltype` argument.
-#'  When passing as SingleCellExperiment or SpatialExperiment, by default we use the assay stored in "logcount".
+#' @param data input data, either a SingleCellExperiment or SpatialExperiment
+#'  object.
+#'  The object needs to contain a column named "sample" and a column named
+#'  "celltype".
+#'  Alternatively, user can provide the name of the column containing sample
+#'  and celltype into the `sample` and `celltype` argument.
+#'  When passing as SingleCellExperiment or SpatialExperiment, by default we
+#'  use the assay stored in "logcount".
 #'  Alternatively, user can specify the assay to use in the `assay` argument.
-#'  If users want to construct features from the spatial category, by default we need columns called "x_cord" and "y_cord".
-#'  Alternatively, please specify the relevant column in the `spatialCoords` argument.
-#'  For spot-based spatial transcriptomics, we also requires a matrix containing cell type prediction probability of each spot, in the format of celltype x spot
+#'  If users want to construct features from the spatial category, by default
+#'  we need columns called "x_cord" and "y_cord".
+#'  Alternatively, please specify the relevant column in the `spatialCoords`
+#'  argument.
+#'  For spot-based spatial transcriptomics, we also requires a matrix 
+#'  containing cell type prediction probability of each spot, in the format of
+#'  celltype x spot
 #'
-#' @param sample the name of column containing sample identifier. If not provided, we use the column called "sample".
-#' @param celltype the name of column containing sample identifier. If not provided, we use the column called "sample".
-#' @param assay the assay identifier if using a SingleCellExperiment or SpatialExperiment object.
-#' @param spatialCoords the spatialCoords identifiers if users want to construct features from the spatial category.
+#' @param sample the name of column containing sample identifier. If not
+#'  provided, we use the column called "sample".
+#' @param celltype the name of column containing sample identifier. If not
+#'  provided, we use the column called "sample".
+#' @param assay the assay identifier if using a SingleCellExperiment or
+#'  SpatialExperiment object.
+#' @param spatialCoords the spatialCoords identifiers if users want to
+#'  construct features from the spatial category.
 #' If not provided, we use the columns called "x_cord" and "y_cord".
-#' @param spotProbability a matrix in the format of celltype x spot, where each entry is the prediction probability of that cell type for each spot.
+#' @param spotProbability a matrix in the format of celltype x spot, where each
+#'  entry is the prediction probability of that cell type for each spot.
+#' 
+#' @return A `Seurat` dataset obtained by transforming input data
 #'
 #' @importFrom SummarizedExperiment colData
 #' @importFrom SpatialExperiment spatialCoords
 #'
 #' @export
-makeSeurat <- function(data, sample, celltype, assay, spatialCoords, spotProbability = NULL) {
+makeSeurat <- function(data,
+                       sample,
+                       celltype,
+                       assay,
+                       spatialCoords,
+                       spotProbability = NULL) {
   if (is(data, "Seurat")) {
     data$celltype <- data[[celltype]]
     data$sample <- data[[sample]]

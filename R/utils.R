@@ -5,6 +5,7 @@
 #' @param data Dataset to be checked.
 #' @param type Type of dataset (e.g., "scrna", "spatial_t", "spatial_p").
 #'
+#' @return `NULL`
 #' @importFrom methods is
 check_data <- function(data, type = "scrna") {
   if (!is(data, "Seurat")) {
@@ -156,6 +157,15 @@ bulk_sample <- function(data, ncores = 1) {
 #' @return data with the relative number of cells/spot stored in it's metadata
 #' @importFrom BiocGenerics colSums
 #'
+#' @examples
+#' 
+#' data <- readRDS(system.file(
+#'  "extdata", "example_spatial_transcriptomics.rds",
+#'                             package = "scFeatures"
+#' ))
+#' data <- process_data(data, normalise = FALSE)
+#' data <- get_num_cell_per_spot(data)
+#'
 #' @export
 get_num_cell_per_spot <- function(data) {
   readcount <- log2(BiocGenerics::colSums(data))
@@ -236,6 +246,14 @@ L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
 #' @return a matrix of samples x features
 #'
 #' @import Seurat
+#' 
+#' @examples
+#' 
+#' data <- readRDS(system.file(
+#'  "extdata", "example_spatial_transcriptomics.rds",
+#'                             package = "scFeatures"
+#' ))
+#' data <- process_data(data, normalise = FALSE)
 #'
 #' @export
 process_data <- function(data, normalise = TRUE) {
