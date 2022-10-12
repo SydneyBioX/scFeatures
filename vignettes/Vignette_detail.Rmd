@@ -279,9 +279,9 @@ all(rownames(feature_gene_mean_celltype) == unique(data$sample))
 ```
 
 
-The output from the `run_classification` is a list containing importance and performance score. The importance ranks the feature according to feature importance. A smaller rank indicates greater importance. The performance score uses a range of evaluation metric to compare the prediction with the ground truth.   
+We recommend using `ClassifyR` to do cross-validated classification with the extracted feaures. 
 
-```{r eval=FALSE, include=TRUE, fig.height=4, fig.width=7}
+```{r eval=TRUE, include=TRUE, fig.height=4, fig.width=7}
 # X is the feature type generated
 # y is the condition for classification
 X <- feature_gene_mean_celltype
@@ -289,23 +289,13 @@ y <- data@meta.data[!duplicated(data$sample), ]
 y <- y[match(rownames(X), y$sample), ]$condition
 
 # run the classification model using random forest
-feature_performance <- run_classification(
-  X, y, model = "randomforest", ncores = 8
-)
+result <- ClassifyR::crossValidate(
+    X, y,
+    classifier = model, nCores = ncores,
+    nFolds = 3, nRepeats = 20
+  )
 
-# get the feature importance
-feature_performance$importance[1:5, ]
-
-# model performance 
-feature_performance$performance[1:5, ]
-
-# plotting model performance
-library(ggplot2)
-ggplot(feature_performance$performance , aes( y = value, x = class )) +
-  geom_boxplot() + theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
-  ylab("Model performance") + xlab("Performance metric")
-
+ClassifyR::performancePlot(results = result)
 ```
  
 
