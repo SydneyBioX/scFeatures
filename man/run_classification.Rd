@@ -21,5 +21,6 @@ Defaults to 1 core.}
 A matrix of the infile
 }
 \description{
-This function takes a feature matrix in the form of samples by features and performs cross-validated classification.
+This function takes a feature matrix in the form of samples by features and
+performs cross-validated classification.
 }

@@ -13,18 +13,24 @@ run_gene_prop_celltype(
 )
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample}
+label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
-\item{genes}{default to NULL, in which case the top variable genes will be used
-If provided by user, need to be in the format of a dataframe with two columns 'marker' and 'celltype'.
+\item{genes}{default to NULL, in which case the top variable genes will be
+used
+If provided by user, need to be in the format of a dataframe with 2 columns
+'marker' and 'celltype'.
 The marker column contains the genes of interest, eg: S100A11 , CCL4 ,
-the celltype column contains the celltype that the gene expression is to be computed from, eg: CD8, B cells}
+the celltype column contains the celltype that the gene expression is to be
+computed from, eg: CD8, B cells}
 
-\item{num_top_gene}{when the genes is not provided by the user, the top variable genes will be used
+\item{num_top_gene}{when the genes is not provided by the user, the top
+variable genes will be used
 The number of genes is set by this number.
-default to NULL, in which case top 100 genes from each cell type will be selected}
+default to NULL, in which case top 100 genes from each cell type will be
+selected}
 
 \item{ncores}{number of cores}
 }

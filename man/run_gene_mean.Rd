@@ -13,15 +13,19 @@ run_gene_mean(
 )
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample}
+label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
-\item{genes}{default to NULL, in which case the top variable genes will be used
-If provided by user, need to be in the format of a list containing the genes of interest,
+\item{genes}{default to NULL, in which case the top variable genes will be
+used
+If provided by user, need to be in the format of a list containing the
+genes of interest,
 eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )}
 
-\item{num_top_gene}{when the genes is not provided by the user, the top variable genes will be used
+\item{num_top_gene}{when the genes is not provided by the user, the top
+variable genes will be used
 The number of genes is set by this number.
 default to NULL, in which case top 1500 variable genes will be selected}
 
@@ -35,7 +39,12 @@ generate overall aggregated mean expression
 }
 \examples{
 
-data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-feature_gene_mean <- run_gene_mean(data, type = "scrna", num_top_gene = 1500, ncores = 1)
+data <- readRDS(
+  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+)
+feature_gene_mean <- run_gene_mean(
+  data,
+  type = "scrna", num_top_gene = 1500, ncores = 1
+)
 
 }
