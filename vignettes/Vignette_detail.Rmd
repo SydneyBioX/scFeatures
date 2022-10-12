@@ -53,7 +53,7 @@ library(scFeatures)
 
 scFeatures can be run using one line of code `scfeatures_result <- scFeatures(data)`, which generates a list of dataframes containing all feature types in the form of samples x features.    
 
-```{r eval=FALSE, include=TRUE}
+```{r, include=TRUE}
 data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 data <- process_data(data, normalise = TRUE) #  perform normalisation 
 
@@ -64,7 +64,7 @@ scfeatures_result <- scFeatures(data)
 
 The above function uses all default settings and generate all feature types. We provide an example below that describes how to customise each parameter.   
 
-```{r eval=FALSE, include=TRUE}
+```{r, include=TRUE}
 data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
 data <- process_data(data, normalise = FALSE) # here we don't normalise , because the data has already been normalised 
  
@@ -155,7 +155,7 @@ For each sample, we calculate the proportion of each cell type:
   * `Proportion raw` and `Proportion logit`: the features are in the form of celltype a, celltype b, with the number representing proportions.
   * `Proportion ratio`: the features are in the form of celltype a vs celltype b, celltype a vs celltype c, with the number representing the ratio between the two cell types.  
   
-```{r eval=FALSE, include=TRUE}
+```{r, include=TRUE}
 feature_proportion_raw <- run_proportion_raw(data)
 feature_proportion_logit <- run_proportion_logit(data)
 feature_proportion_ratio <- run_proportion_ratio(data)
@@ -183,7 +183,7 @@ Alternatively, users can provide their own gene of interest to the `features` ar
 
 Note that mitochondria and ribosomal genes may not be as interesting to look at. Therefore, users can choose to remove these genes using the function `remove_mito`. This step is optional.  
 
-```{r eval=FALSE, include=TRUE}
+```{r, include=TRUE}
 data_remove_mito <- remove_mito(data)
 
 feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito) 
@@ -223,7 +223,7 @@ This feature category constructs features relating to pathway (gene set) express
 Note that it is necessarily to indicate whether the species is "Homo sapiens" or "Mus musculus". The default is "Homo sapiens".  
 
 
-```{r eval=FALSE, include=TRUE}
+```{r, include=TRUE}
 # This function can take a while. Therefore for larger datasets (eg, over 30,000 cells), we provide a subsample function to increase the speed. 
 feature_pathway_gsva <- run_pathway_gsva(data, geneset = NULL, species = "Homo sapiens", subsample = FALSE)
 feature_pathway_mean <- run_pathway_mean(data)
@@ -243,7 +243,7 @@ The feature types in this category is calculated based on the aggregated express
   * `Gene prop`:  The features are in the form of gene 1, gene 2 ... etc, with the numbers representing the proportion that the gene is expressed across all cells.  
 
 
-```{r eval=FALSE, include=TRUE}
+```{r, include=TRUE}
 feature_gene_mean_aggregated <- run_gene_mean(data)
 
 genes_of_interest <- c("TIGIT", "PDCD1")
@@ -325,7 +325,7 @@ data$x_cord[1:5]
 
 For spatial proteomics, we need to set the `type` to `spatial_p`
 
-```{r eval=FALSE, include=TRUE}
+```{r, include=TRUE}
 feature_proportion_raw <- run_proportion_raw(data, type = "spatial_p")
 feature_proportion_logit <- run_proportion_logit(data, type = "spatial_p")
 feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_p")
@@ -336,7 +336,7 @@ feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_p")
 
 By default, this feature category calculates the gene/protein expression based on the top 100 most variable genes/proteins per cell type. However, because this data only measured 38 proteins, all proteins will be used.  
 
-```{r eval=FALSE, include=TRUE}
+```{r, include=TRUE}
 feature_gene_mean_celltype <- run_gene_mean_celltype(data,  type = "spatial_p")
 feature_gene_prop_celltype <- run_gene_prop_celltype(data, type = "spatial_p")
 feature_gene_cor_celltype <- run_gene_cor_celltype(data, type = "spatial_p")
@@ -347,7 +347,7 @@ feature_gene_cor_celltype <- run_gene_cor_celltype(data, type = "spatial_p")
 
 By default, this feature category calculates the gene/protein expression based on the top 1500 most variable genes/proteins. However, because in this data there are only 38 proteins, we will use all proteins.  
 
-```{r eval=FALSE, include=TRUE}
+```{r, include=TRUE}
 feature_gene_mean_aggregated <- run_gene_mean(data, type = "spatial_p")
 feature_gene_prop_aggregated  <- run_gene_prop(data, type = "spatial_p")
 feature_gene_cor_aggregated  <- run_gene_cor(data, type = "spatial_p")
@@ -369,7 +369,7 @@ This feature category is designed for spatial data and contains feature types co
   * `celltype_interaction`: The features are in the form of protein 1 vs protein 2, protein 1 vs protein 3 ... etc, with the numbers representing the proportion of each interaction pairs in a give sample. 
   * `nn_correlation`:  The features are in the form of protein 1, protein 2 ... etc, with the numbers representing Pearson's correlation.
 
-```{r eval=FALSE, include=TRUE}
+```{r, include=TRUE}
 feature_L_stats <- run_L_function(data, type = "spatial_p")
 feature_morans_I <- run_Morans_I(data, type = "spatial_p")
 feature_celltype_interaction <- run_celltype_interaction( data, type = "spatial_p")
@@ -425,27 +425,30 @@ Additionally, there are two assays needed, the `RNA`, which contains the gene ex
 The `predictions` assay is a matrix in the form of cell types x spot, which stores the cell type probability of each spot. This can be obtained from performing cell type prediction using reference data, for example, using `SCTransform` from Seurat (see https://satijalab.org/seurat/articles/spatial_vignette.html). The purpose of having this cell type probability matrix is due to spatial transcriptomics assay contain multiple cells from multiple cell type populations, and this cell type prediction is necessary for generating cell type specific feature types. 
 
 
-```{r eval=FALSE, include=TRUE}
+```{r, include=TRUE}
 
-data <- readRDS(system.file("extdata", "example_spatial_transcriptomics.rds", 
+data <- readRDS(system.file("extdata", "example_spatial_transcriptomics.rds",
                                    package = "scFeatures"))
 data <- process_data(data, normalise = FALSE) # data already normalised
 
-# for spatial transcriptomics, we need to estimate the number of cells in each spot
+# for spatial transcriptomics, we need to estimate the number of cells in each
+# spot
 data <- get_num_cell_per_spot(data)
 
-# how the prediction assay look like 
+# how the prediction assay look like
 # the rows contain the predicted cell type probability of each spot
-data@assays$predictions[, 1] 
+data@assays$predictions[, 1]
 
-# confirm the data include samples  
+# confirm the data include samples
 unique(data$sample)[1:5]
 
 # conditions in this data
 unique(data$condition)
 
-# format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features 
-data$sample <- paste0( data$sample  , "_cond_", data$condition)
+# format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is
+# so that we can retrieve the sample ID and the corresponding condition when
+# running downstream analysis on the generated features
+data$sample <- paste0(data$sample, "_cond_", data$condition)
 ```
 
  
