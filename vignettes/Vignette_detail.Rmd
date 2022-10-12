@@ -281,7 +281,7 @@ all(rownames(feature_gene_mean_celltype) == unique(data$sample))
 
 The output from the `run_classification` is a list containing importance and performance score. The importance ranks the feature according to feature importance. A smaller rank indicates greater importance. The performance score uses a range of evaluation metric to compare the prediction with the ground truth.   
 
-```{r eval=TRUE, include=TRUE, fig.height=4, fig.width=7}
+```{r eval=FALSE, include=TRUE, fig.height=4, fig.width=7}
 # X is the feature type generated
 # y is the condition for classification
 X <- feature_gene_mean_celltype
