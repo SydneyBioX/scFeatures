@@ -89,7 +89,7 @@ scfeatures_result <- scFeatures(data,
       #  If users want to construct features from the spatial metrics category, by default we look for the "x_cord" and "y_cord" column 
              spatialCoords = c("x", "y"), 
       # When passing as SingleCellExperiment or SpatialExperiment and the data is spot-based spatial transcriptomics, we also requires a matrix containing cell type prediction probability of each spot 
-             spotProbability = predicted_matrix
+             spotProbability = predicted_matrix,
              # by default uses single core 
              ncores = 8  )
 
