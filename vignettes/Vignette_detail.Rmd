@@ -64,7 +64,7 @@ scfeatures_result <- scFeatures(data)
 
 The above function uses all default settings and generate all feature types. We provide an example below that describes how to customise each parameter.   
 
-```{r, include=TRUE}
+```{r eval=FALSE, include=TRUE}
 data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
 data <- process_data(data, normalise = FALSE) # here we don't normalise , because the data has already been normalised 
  
@@ -84,15 +84,12 @@ scfeatures_result <- scFeatures(data,
              # When passing as SingleCellExperiment or SpatialExperiment, by default we use the assay stored in "logcount" 
              assay = "norm",
             # By default we look for the sample info in "sample" column and the celltype info in "celltype" column
-             sample = "imageID", 
+             sample = "imageID",
              celltype = "cellType",
       #  If users want to construct features from the spatial metrics category, by default we look for the "x_cord" and "y_cord" column 
-             spatialCoords = c("x", "y"), 
-      # When passing as SingleCellExperiment or SpatialExperiment and the data is spot-based spatial transcriptomics, we also requires a matrix containing cell type prediction probability of each spot 
-             spotProbability = predicted_matrix,
-             # by default uses single core 
-             ncores = 8  )
-
+             spatialCoords = c("x", "y"),
+             # by default uses single core
+             ncores = 8)
 ```
 
 
@@ -191,7 +188,10 @@ feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito)
 # we can provide our own sets of genes 
 genes_of_interest <- data.frame( marker = c("S100A11" , "GZMB" ,  "DUSP1" ) , 
                                 celltype = c( "CD8, T Effector Memory" , "CD8, T Effector Memory"  ,  "Naive T Cells") ) 
-feature_gene_prop_celltype <- run_gene_prop_celltype(data_remove_mito, features = genes_of_interest)
+feature_gene_prop_celltype <- run_gene_prop_celltype(
+  data_remove_mito, 
+  genes = genes_of_interest
+)
 
 # we can change the number to pick ~10 top variables genes per cell type
 feature_gene_cor_celltype <- run_gene_cor_celltype(data_remove_mito, num_top_gene = 10)
@@ -247,7 +247,10 @@ The feature types in this category is calculated based on the aggregated express
 feature_gene_mean_aggregated <- run_gene_mean(data)
 
 genes_of_interest <- c("TIGIT", "PDCD1")
-feature_gene_cor_aggregated  <- run_gene_cor(data, features = genes_of_interest)
+feature_gene_cor_aggregated  <- run_gene_cor(
+  data, 
+  genes = genes_of_interest
+)
 # we can change this number to pick 100 top variable genes 
 feature_gene_prop_aggregated  <- run_gene_prop(data, num_top_gene = 100)
 ```
@@ -291,7 +294,7 @@ y <- y[match(rownames(X), y$sample), ]$condition
 # run the classification model using random forest
 result <- ClassifyR::crossValidate(
     X, y,
-    classifier = model, nCores = ncores,
+    classifier = "randomForest", nCores = 8,
     nFolds = 3, nRepeats = 20
   )
 
