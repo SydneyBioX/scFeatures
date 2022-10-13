@@ -19,7 +19,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 biocViews: CellBasedAssays, SingleCell, Spatial, Software
 Imports:
-    ClassifyR,
     DelayedArray,
     DelayedMatrixStats,
     EnsDb.Hsapiens.v79,
@@ -27,7 +26,6 @@ Imports:
     GSVA,
     Seurat,
     ape,
-    caret,
     glue,
     dplyr,
     ensembldb,
@@ -49,5 +47,9 @@ Imports:
 Suggests: 
     knitr,
     inline,
+    ClassifyR,
+    S4Vectors,
+    survival,
+    survminer,
     RhpcBLASctl
 VignetteBuilder: knitr
