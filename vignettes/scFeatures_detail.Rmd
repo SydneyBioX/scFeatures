@@ -101,17 +101,9 @@ For demonstration purpose, we provide a subsampled version of the melanoma pre-t
 scFeatures takes in data as a Seurat object, with the gene expression stored in the assay `RNA`. The required metadata is the `celltype` and `sample` label. The `condition` label is optional, and is only required if users wish to learn the difference of disease condition using the generated features. 
 
 
-Also below is an example of how to construct a Seurat object from a count matrix and the corresponding label file.  
-
 ```{r}
-data_matrix <- readRDS(system.file("extdata", "example_scrnaseq_matrix.rds", 
-                                   package = "scFeatures"))
-data_meta <- readRDS(system.file("extdata", "example_scrnaseq_label.rds", 
-                                 package = "scFeatures"))
-data <- Seurat::CreateSeuratObject(data_matrix, meta.data = data_meta)
-```
+data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 
-```{r}
 data <- process_data(data) # some pre-processing, including normalisation 
  
 # confirm the data contain cell types 
