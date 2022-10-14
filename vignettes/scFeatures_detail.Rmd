@@ -172,7 +172,7 @@ Alternatively, users can provide their own gene of interest to the `features` ar
 
 Note that mitochondria and ribosomal genes may not be as interesting to look at. Therefore, users can choose to remove these genes using the function `remove_mito`. This step is optional.  
 
-```{r, include=TRUE}
+```{r eval=FALSE, include=TRUE}
 data_remove_mito <- remove_mito(data)
 
 feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito) 
@@ -235,7 +235,7 @@ The feature types in this category is calculated based on the aggregated express
   * `Gene prop`:  The features are in the form of gene 1, gene 2 ... etc, with the numbers representing the proportion that the gene is expressed across all cells.  
 
 
-```{r, include=TRUE}
+```{r eval=FALSE, include=TRUE}
 feature_gene_mean_aggregated <- run_gene_mean(data)
 
 genes_of_interest <- c("TIGIT", "PDCD1")
@@ -276,7 +276,7 @@ all(rownames(feature_gene_mean_celltype) == unique(data$sample))
 
 We recommend using `ClassifyR` to do cross-validated classification with the extracted feaures. 
 
-```{r eval=TRUE, include=TRUE, fig.height=4, fig.width=7}
+```{r eval=FALSE, include=TRUE, fig.height=4, fig.width=7}
 # X is the feature type generated
 # y is the condition for classification
 X <- feature_gene_mean_celltype
