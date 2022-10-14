@@ -4,7 +4,7 @@
 \alias{process_data}
 \title{perform pre-processing}
 \usage{
-process_data(data, normalise = T)
+process_data(data, normalise = TRUE)
 }
 \arguments{
 \item{data}{input data}
@@ -18,4 +18,13 @@ a matrix of samples x features
 }
 \description{
 perform pre-processing
+}
+\examples{
+
+data <- readRDS(system.file(
+  "extdata", "example_spatial_transcriptomics.rds",
+  package = "scFeatures"
+))
+data <- process_data(data, normalise = FALSE)
+
 }

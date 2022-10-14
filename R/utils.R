@@ -1,15 +1,16 @@
 
 
 #' check that all metadata are in the data
-#' 
+#'
 #' @param data Dataset to be checked.
 #' @param type Type of dataset (e.g., "scrna", "spatial_t", "spatial_p").
 #'
+#' @return `NULL`
 #' @importFrom methods is
 check_data <- function(data, type = "scrna") {
   if (!is(data, "Seurat")) {
     # TODO: Should this be a warning/error?
-    print("please make sure the data is in a Seurat object")
+    warning("please make sure the data is in a Seurat object")
   }
 
   if (!"sample" %in% names(data@meta.data)) {
@@ -51,11 +52,13 @@ generateBPParam <- function(cores = 1) {
     # set BPparam RNGseed if the user ran set.seed(someNumber) themselves.
     if (Sys.info()["sysname"] == "Windows") { # Only SnowParam suits Windows.
       BPparam <- BiocParallel::SnowParam(
-        min(cores, BiocParallel::snowWorkers("SOCK")), RNGseed = seed
+        min(cores, BiocParallel::snowWorkers("SOCK")),
+        RNGseed = seed
       )
     } else if (Sys.info()["sysname"] %in% c("MacOS", "Linux")) {
       BPparam <- BiocParallel::MulticoreParam(
-        min(cores, BiocParallel::multicoreWorkers()), RNGseed = seed
+        min(cores, BiocParallel::multicoreWorkers()),
+        RNGseed = seed
       ) # Multicore is faster than SNOW, but it doesn't work on Windows.
     } else { # Something weird.
       BPparam <- BiocParallel::bpparam() # BiocParallel will figure it out.
@@ -152,11 +155,20 @@ bulk_sample <- function(data, ncores = 1) {
 #' @param data input data
 #'
 #' @return data with the relative number of cells/spot stored in it's metadata
+#' @importFrom BiocGenerics colSums
 #'
+#' @examples
+#'
+#' data <- readRDS(system.file(
+#'   "extdata", "example_spatial_transcriptomics.rds",
+#'   package = "scFeatures"
+#' ))
+#' data <- process_data(data, normalise = FALSE)
+#' data <- get_num_cell_per_spot(data)
 #'
 #' @export
 get_num_cell_per_spot <- function(data) {
-  readcount <- log2(colSums(data))
+  readcount <- log2(BiocGenerics::colSums(data))
 
   linMap <- function(x, from, to) {
     (x - min(x)) / max(x - min(x)) * (to - from) + from
@@ -235,8 +247,16 @@ L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
 #'
 #' @import Seurat
 #'
+#' @examples
+#'
+#' data <- readRDS(system.file(
+#'   "extdata", "example_spatial_transcriptomics.rds",
+#'   package = "scFeatures"
+#' ))
+#' data <- process_data(data, normalise = FALSE)
+#'
 #' @export
-process_data <- function(data, normalise = T) {
+process_data <- function(data, normalise = TRUE) {
   if (!is.null(data@meta.data$celltype)) {
     data$celltype <- gsub("\\+", "plus", data$celltype)
     data$celltype <- gsub("\\-", "minus", data$celltype)
@@ -263,7 +283,7 @@ process_data <- function(data, normalise = T) {
   }
 
 
-  if (normalise == T) {
+  if (normalise) {
     data <- Seurat::NormalizeData(data)
   }
 

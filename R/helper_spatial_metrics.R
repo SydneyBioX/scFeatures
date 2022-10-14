@@ -58,7 +58,7 @@ helper_celltype_interaction_sp <- function(data, ncores = 1) {
 
   temp <- NULL
 
-  for (i in c(1:length(nn_list_cellTypes))) {
+  for (i in seq_along(nn_list_cellTypes)) {
     err <- try(
       {
         a <- nn_list_cellTypes[[i]]
@@ -68,20 +68,24 @@ helper_celltype_interaction_sp <- function(data, ncores = 1) {
         if (is.null(temp)) {
           temp <- a
         } else {
-          temp <- suppressWarnings(merge(temp, a, by = "nn_list_cellTypes", all = T))
+          temp <- suppressWarnings(
+            merge(temp, a, by = "nn_list_cellTypes", all = TRUE)
+          )
         }
       },
-      silent = T
+      silent = TRUE
     )
 
 
     if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$nn_list_cellTypes <- temp$nn_list_cellTypes
-      temp <- suppressWarnings(merge(temp, a, by = "nn_list_cellTypes", all = T))
+      temp <- suppressWarnings(
+        merge(temp, a, by = "nn_list_cellTypes", all = TRUE)
+      )
     }
 
-    colnames(temp) <- make.names(colnames(temp), unique = T)
+    colnames(temp) <- make.names(colnames(temp), unique = TRUE)
   }
 
 
@@ -106,7 +110,7 @@ helper_celltype_interaction_sp <- function(data, ncores = 1) {
 
 individual_celltype_interaction_st <- function(thisprob) {
   x <- 1
-  temp <- lapply(1:ncol(thisprob), function(x) {
+  temp <- lapply(seq_len(ncol(thisprob)), function(x) {
     thisspot <- thisprob[, x]
     thisspot <- thisspot %*% t(thisspot)
     rownames(thisspot) <- colnames(thisspot)
@@ -175,11 +179,11 @@ individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
   i <- 1
 
 
-  gap_x <- (max(thissample$x_cord) - min(thissample$x_cord)) / length(thissample$x_cord) / 2
-  gap_y <- (max(thissample$y_cord) - min(thissample$y_cord)) / length(thissample$y_cord) / 2
+  gap_x <- (max(x_c <- thissample$x_cord) - min(x_c)) / length(x_c) / 2
+  gap_y <- (max(y_c <- thissample$y_cord) - min(y_c)) / length(y_c) / 2
 
 
-  for (i in 1:ncol(thissample)) {
+  for (i in seq_len(ncol(thissample))) {
     thisspot <- thissample[, i]
     thisspot_num_cell <- this_num_cell_per_spot[, i]
 
@@ -188,10 +192,18 @@ individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
     this_gap_x <- gap_x / total_num_cell
     this_gap_y <- gap_y / total_num_cell
 
-    x <- c(x, seq(thissample$x_cord[i], by = this_gap_x, length.out = total_num_cell))
-    y <- c(y, seq(thissample$y_cord[i], by = this_gap_y, length.out = total_num_cell))
+    x <- c(
+      x,
+      seq(thissample$x_cord[i], by = this_gap_x, length.out = total_num_cell)
+    )
+    y <- c(
+      y,
+      seq(thissample$y_cord[i], by = this_gap_y, length.out = total_num_cell)
+    )
 
-    celltype <- c(celltype, rep(rownames(this_num_cell_per_spot), thisspot_num_cell))
+    celltype <- c(
+      celltype, rep(rownames(this_num_cell_per_spot), thisspot_num_cell)
+    )
   }
 
 
@@ -218,7 +230,7 @@ individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
 
 
 
-  L_patient <- lapply(1:nrow(cellTypes_pair), function(i) {
+  L_patient <- lapply(seq_len(nrow(cellTypes_pair)), function(i) {
     L_stats(cell_points_threecelltype,
       from = cellTypes_pair[i, 1],
       to = cellTypes_pair[i, 2],
@@ -255,7 +267,7 @@ helper_L_stat_st <- function(data, ncores = 1) {
 
   temp <- NULL
 
-  for (i in c(1:length(L_stats))) {
+  for (i in seq_along(L_stats)) {
     err <- try(
       {
         a <- L_stats[[i]]
@@ -265,20 +277,20 @@ helper_L_stat_st <- function(data, ncores = 1) {
         if (is.null(temp)) {
           temp <- a
         } else {
-          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
         }
       },
-      silent = T
+      silent = TRUE
     )
 
 
     if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$rowname <- temp$rowname
-      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
     }
 
-    colnames(temp) <- make.names(colnames(temp), unique = T)
+    colnames(temp) <- make.names(colnames(temp), unique = TRUE)
   }
 
 
@@ -318,7 +330,7 @@ individual_L_stat_sp <- function(this_sample) {
 
 
   L_patient <- list()
-  for (i in 1:nrow(cellTypes_pair)) {
+  for (i in seq_len(nrow(cellTypes_pair))) {
     L_patient[[i]] <- L_stats(cell_points,
       from = cellTypes_pair[i, 1],
       to = cellTypes_pair[i, 2],
@@ -351,7 +363,7 @@ helper_L_stat_sp <- function(data, ncores = 1) {
 
   temp <- NULL
 
-  for (i in c(1:length(L_stats_result))) {
+  for (i in seq_along(L_stats_result)) {
     err <- try(
       {
         a <- L_stats_result[[i]]
@@ -361,20 +373,20 @@ helper_L_stat_sp <- function(data, ncores = 1) {
         if (is.null(temp)) {
           temp <- a
         } else {
-          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
         }
       },
-      silent = T
+      silent = TRUE
     )
 
 
     if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$rowname <- temp$rowname
-      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
     }
 
-    colnames(temp) <- make.names(colnames(temp), unique = T)
+    colnames(temp) <- make.names(colnames(temp), unique = TRUE)
   }
 
 
@@ -420,7 +432,7 @@ individual_nncorr_protein <- function(thissample) {
     {
       nncorr_protein <- spatstat.core::nncorr(cell_points_cts)["correlation", ]
     },
-    silent = T
+    silent = TRUE
   )
   if (is(err, "try-error")) {
     nncorr_protein <- NA
@@ -442,7 +454,7 @@ helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
 
   top_gene <- find_var_gene(data,
     num_top_gene = num_top_gene,
-    ncores = ncores, celltype = F
+    ncores = ncores, celltype = FALSE
   )
 
   data@assays$RNA@data <- data@assays$RNA@data[rownames(data@assays$RNA@data) %in% top_gene, ]
@@ -458,7 +470,7 @@ helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
 
   temp <- NULL
 
-  for (i in c(1:length(nncorr_protein))) {
+  for (i in seq_along(nncorr_protein)) {
     err <- try(
       {
         a <- nncorr_protein[[i]]
@@ -468,20 +480,20 @@ helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
         if (is.null(temp)) {
           temp <- a
         } else {
-          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
         }
       },
-      silent = T
+      silent = TRUE
     )
 
 
     if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$rowname <- temp$rowname
-      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
     }
 
-    colnames(temp) <- make.names(colnames(temp), unique = T)
+    colnames(temp) <- make.names(colnames(temp), unique = TRUE)
   }
 
 
@@ -527,7 +539,7 @@ individual_moran_cor <- function(thissample) {
   w <- 1 / d
 
 
-  moran_cor <- lapply(1:nrow(exprsMat), function(x) {
+  moran_cor <- lapply(seq_len(nrow(exprsMat)), function(x) {
     err <- try(val <- ape::Moran.I(exprsMat[x, ], w)$observed, silent = TRUE)
     if (is(err, "try-error")) {
       NA
@@ -555,10 +567,12 @@ helper_moran <- function(data, num_top_gene = NULL, ncores = 1) {
 
   top_gene <- find_var_gene(data,
     num_top_gene = num_top_gene,
-    ncores = ncores, celltype = F
+    ncores = ncores, celltype = FALSE
   )
 
-  data@assays$RNA@data <- data@assays$RNA@data[rownames(data@assays$RNA@data) %in% top_gene, ]
+  data@assays$RNA@data <- data@assays$RNA@data[
+    rownames(data@assays$RNA@data) %in% top_gene,
+  ]
 
 
   s <- unique(data$sample)[1]
@@ -570,7 +584,7 @@ helper_moran <- function(data, num_top_gene = NULL, ncores = 1) {
 
   temp <- NULL
 
-  for (i in c(1:length(moran_cor))) {
+  for (i in seq_along(moran_cor)) {
     err <- try(
       {
         a <- moran_cor[[i]]
@@ -580,20 +594,20 @@ helper_moran <- function(data, num_top_gene = NULL, ncores = 1) {
         if (is.null(temp)) {
           temp <- a
         } else {
-          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+          temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
         }
       },
-      silent = T
+      silent = TRUE
     )
 
 
     if (is(err, "try-error")) {
       a <- data.frame(rep(0, nrow(temp)))
       a$rowname <- temp$rowname
-      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = T))
+      temp <- suppressWarnings(merge(temp, a, by = "rowname", all = TRUE))
     }
 
-    colnames(temp) <- make.names(colnames(temp), unique = T)
+    colnames(temp) <- make.names(colnames(temp), unique = TRUE)
   }
 
 

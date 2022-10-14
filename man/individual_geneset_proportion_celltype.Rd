@@ -7,6 +7,15 @@ cell type in a sample}
 \usage{
 individual_geneset_proportion_celltype(data, this_geneset)
 }
+\arguments{
+\item{data}{Data to run the calculation on.}
+
+\item{this_geneset}{geneset to run analysis on}
+}
+\value{
+a data frame containing the proportion a gene is expressed in each
+cell type in a sample
+}
 \description{
 helper function to calculate proportion that a gene is expressed in each
 cell type in a sample

@@ -8,7 +8,7 @@
 get_geneset <- function(species = "Homo sapiens") {
   m_df <- msigdbr::msigdbr(species = species, category = "H")
   m_t2g <- m_df %>%
-    dplyr::select(gs_name, entrez_gene) %>%
+    dplyr::select("gs_name", "entrez_gene") %>%
     as.data.frame()
   geneset <- split(x = m_t2g$entrez_gene, f = m_t2g$gs_name)
 
@@ -51,19 +51,19 @@ helper_pathway_gsva <- function(data, method = "ssgsea", geneset, ncores = 1) {
         start <- index[i - 1]
         finish <- index[i] - 1
 
-        print(paste0("calculating ", start, " to ", finish, " cells"))
+        message("calculating ", start, " to ", finish, " cells")
         thesecell <- as.matrix(data@assays$RNA@data[, start:finish])
         temp_topMatrixGSVA <- GSVA::gsva(thesecell, geneset,
           method = "ssgsea",
-          min.sz = 10, max.sz = 999999, abs.ranking = F, verbose = T,
+          min.sz = 10, max.sz = 999999, abs.ranking = FALSE, verbose = TRUE,
           parallel.sz = ncores
         )
         topMatrixGSVA <- cbind(topMatrixGSVA, temp_topMatrixGSVA)
       }
-    } else { # if less than 30000, can directly be used as input into the GSVA function
+    } else { # if <30000, can directly be used as input into the GSVA function
       topMatrixGSVA <- GSVA::gsva(as.matrix(data@assays$RNA@data), geneset,
         method = "ssgsea",
-        min.sz = 10, max.sz = 999999, abs.ranking = F, verbose = T,
+        min.sz = 10, max.sz = 999999, abs.ranking = FALSE, verbose = TRUE,
         parallel.sz = ncores
       )
     }
@@ -73,7 +73,10 @@ helper_pathway_gsva <- function(data, method = "ssgsea", geneset, ncores = 1) {
   }
 
   if (method == "aucell") {
-    cells_rankings <- AUCell::AUCell_buildRankings(data@assays$RNA@data, nCores = ncores, plotStats = F)
+    cells_rankings <- AUCell::AUCell_buildRankings(
+      data@assays$RNA@data,
+      nCores = ncores, plotStats = FALSE
+    )
 
 
     # geneSets <- GSEABase::GeneSet(genes, setName="geneSet1") # alternative
@@ -102,8 +105,11 @@ helper_pathway_mean <- function(data, geneset, ncores = 1) {
   geneset_score_all <- BiocParallel::bplapply(geneset, function(x) {
     exprsMat_geneset <- data[rownames(data) %in% x, ]
 
-    geneset <- DelayedMatrixStats::colMeans2(DelayedArray::DelayedArray(exprsMat_geneset@assays$RNA@data)) -
-      DelayedMatrixStats::colMeans2(DelayedArray::DelayedArray(data@assays$RNA@data))
+    geneset <- DelayedMatrixStats::colMeans2(
+      DelayedArray::DelayedArray(exprsMat_geneset@assays$RNA@data)
+    ) - DelayedMatrixStats::colMeans2(
+      DelayedArray::DelayedArray(data@assays$RNA@data)
+    )
     geneset <- as.matrix(geneset)
 
     geneset_score <- data.frame(geneset = geneset)
@@ -127,8 +133,15 @@ helper_pathway_mean <- function(data, geneset, ncores = 1) {
 
 #' helper function to calculate proportion that a gene is expressed in each
 #' cell type in a sample
-#' 
+#'
+#' @param data Data to run the calculation on.
+#' @param this_geneset geneset to run analysis on
+#' @return a data frame containing the proportion a gene is expressed in each
+#'         cell type in a sample
+#'
 #' @importFrom stats quantile
+#' @importFrom DelayedMatrixStats colMeans2
+#' @importFrom DelayedArray DelayedArray
 individual_geneset_proportion_celltype <- function(data, this_geneset) {
 
   # first find the average expression of the genes across cells
@@ -148,8 +161,11 @@ individual_geneset_proportion_celltype <- function(data, this_geneset) {
   for (this_sample_name in unique(data$sample)) {
     this_sample <- data@meta.data[data$sample == this_sample_name, ]
 
-    # for each cell type, find the proportion of cells that this gene is expressed
-    this_geneset_prop <- table(this_sample$celltype, this_sample$expression_high)
+    # for each cell type, find the proportion of cells expressing this geneset
+    this_geneset_prop <- table(
+      this_sample$celltype,
+      this_sample$expression_high
+    )
     this_geneset_prop <- this_geneset_prop / rowSums(this_geneset_prop)
     this_geneset_prop <- as.data.frame(this_geneset_prop)
     this_geneset_prop <- this_geneset_prop[this_geneset_prop$Var2 == 1, ]
@@ -163,21 +179,32 @@ individual_geneset_proportion_celltype <- function(data, this_geneset) {
     } else {
       this_geneset_prop <- this_geneset_prop[, c(1, 3)]
       this_geneset_prop$sample <- this_sample_name
-      colnames(this_geneset_prop) <- c("celltype", "proportion_expressed", "sample")
+      colnames(this_geneset_prop) <- c(
+        "celltype", "proportion_expressed", "sample"
+      )
     }
 
     # check if any cell type in this patient is missing
-    missing_celltype <- setdiff(unique(data$celltype), unique(this_geneset_prop$celltype))
+    missing_celltype <- setdiff(
+      unique(data$celltype), unique(this_geneset_prop$celltype)
+    )
 
     if (length(missing_celltype) > 0) {
       for (this_missing_celltype in missing_celltype) {
         this_geneset_prop <- rbind(
           this_geneset_prop,
-          data.frame(celltype = this_missing_celltype, proportion_expressed = 0, sample = this_sample_name)
+          data.frame(
+            celltype = this_missing_celltype,
+            proportion_expressed = 0,
+            sample = this_sample_name
+          )
         )
       }
     }
-    this_geneset_prop <- this_geneset_prop[match(unique(data$celltype), this_geneset_prop$celltype), ]
+    this_geneset_prop <- this_geneset_prop[match(
+      unique(data$celltype),
+      this_geneset_prop$celltype
+    ), ]
 
     geneset_prop <- rbind(geneset_prop, this_geneset_prop)
   }
@@ -191,19 +218,30 @@ individual_geneset_proportion_celltype <- function(data, this_geneset) {
 helper_pathway_prop <- function(data, geneset, ncores = 1) {
   BPparam <- generateBPParam(ncores)
 
-  geneset_prop_df <- BiocParallel::bplapply(c(1:length(geneset)), function(i) {
+  geneset_prop_df <- BiocParallel::bplapply(seq_along(geneset), function(i) {
     this_geneset <- geneset[[i]]
     geneset_prop <- individual_geneset_proportion_celltype(data, this_geneset)
-    geneset_prop$condition <- data$condition[match(geneset_prop$sample, data$sample)]
+    geneset_prop$condition <- data$condition[match(
+      geneset_prop$sample,
+      data$sample
+    )]
     geneset_prop$geneset <- names(geneset)[i]
     geneset_prop
   }, BPPARAM = BPparam)
 
 
   geneset_prop_df <- do.call(rbind, geneset_prop_df)
-  geneset_prop_df$celltype <- paste0(geneset_prop_df$geneset, "--", geneset_prop_df$celltype)
-  geneset_prop_df <- geneset_prop_df[, c("sample", "celltype", "proportion_expressed")]
-  geneset_prop_df <- geneset_prop_df %>% pivot_wider(names_from = celltype, values_from = proportion_expressed)
+  geneset_prop_df$celltype <- paste0(
+    geneset_prop_df$geneset,
+    "--",
+    geneset_prop_df$celltype
+  )
+  geneset_prop_df <- geneset_prop_df[, c(
+    "sample", "celltype",
+    "proportion_expressed"
+  )]
+  geneset_prop_df <- geneset_prop_df %>%
+    pivot_wider(names_from = "celltype", values_from = "proportion_expressed")
 
   geneset_prop_df <- as.data.frame(geneset_prop_df)
   rownames(geneset_prop_df) <- geneset_prop_df$sample
@@ -220,21 +258,26 @@ helper_pathway_prop <- function(data, geneset, ncores = 1) {
 
 # The output from GSVA and geneset mean is in the form of pathway score x cell
 # Need to convert to patient x pathway features
-format_pathway <- function(data, topMatrixGSVA = geneset_score_all, ncores) {
+format_pathway <- function(data, topMatrixGSVA, ncores) {
 
-  # first need to aggregate the pathway score of each cell type
+  # aggregate the pathway score of each cell type
   topMatrixGSVA <- CreateSeuratObject(topMatrixGSVA)
   topMatrixGSVA$celltype <- data$celltype
   topMatrixGSVA$sample <- data$sample
   topMatrixGSVA$condition <- data$condition
   bulk_data <- bulk_sample_celltype(topMatrixGSVA, ncores)
 
-  # then convert to patient x (pathway a -- cell type a , pathway a -- cell type b)
+  # convert to patient x (pathway a -- cell type a , pathway a -- cell type b)
   bulk_data <- reshape2::melt(t(as.data.frame(bulk_data@assays$RNA@data)))
-  celltype <- unlist(lapply(strsplit(as.character(bulk_data$Var1), "--"), `[`, 2))
+  celltype <- unlist(
+    lapply(strsplit(as.character(bulk_data$Var1), "--"), `[`, 2)
+  )
   bulk_data$Var2 <- paste0(bulk_data$Var2, "--", celltype)
-  bulk_data$Var1 <- unlist(lapply(strsplit(as.character(bulk_data$Var1), "--"), `[`, 1))
-  bulk_data <- bulk_data %>% pivot_wider(names_from = Var2, values_from = value)
+  bulk_data$Var1 <- unlist(
+    lapply(strsplit(as.character(bulk_data$Var1), "--"), `[`, 1)
+  )
+  bulk_data <- bulk_data %>%
+    pivot_wider(names_from = "Var2", values_from = "value")
   bulk_data[is.na(bulk_data)] <- 0
 
   bulk_data <- as.data.frame(bulk_data)
@@ -268,7 +311,7 @@ helper_pathway_mean_st <- function(data, geneset, ncores = 1) {
 
   x <- 3
 
-  allgeneset <- BiocParallel::bplapply(1:length(geneset), function(x) {
+  allgeneset <- BiocParallel::bplapply(seq_along(geneset), function(x) {
     thisgeneset <- geneset[[x]]
 
     s <- unique(data$sample)[1]
@@ -286,7 +329,7 @@ helper_pathway_mean_st <- function(data, geneset, ncores = 1) {
       result_coef <- NULL
 
       i <- 1
-      for (i in c(1:nrow(gene_count))) {
+      for (i in c(seq_len(nrow(gene_count)))) {
         thisgene <- data.frame(count = gene_count[i, ])
         thisgene <- cbind(thisgene, t(thisprob))
 

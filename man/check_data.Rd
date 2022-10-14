@@ -11,6 +11,9 @@ check_data(data, type = "scrna")
 
 \item{type}{Type of dataset (e.g., "scrna", "spatial_t", "spatial_p").}
 }
+\value{
+\code{NULL}
+}
 \description{
 check that all metadata are in the data
 }

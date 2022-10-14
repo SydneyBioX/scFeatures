@@ -7,7 +7,8 @@
 run_nn_correlation(data, type = "spatial_p", ncores = 1)
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
+\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample}
+label}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
@@ -21,7 +22,13 @@ generate nearest neighbour correlation
 }
 \examples{
 
-data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
-feature_nn_correlation <- run_nn_correlation(data, type = "spatial_p", ncores = 1)
+data <- readRDS(system.file(
+  "extdata", "example_spatial_proteomics.rds",
+  package = "scFeatures"
+))
+feature_nn_correlation <- run_nn_correlation(
+  data,
+  type = "spatial_p", ncores = 1
+)
 
 }

@@ -53,7 +53,7 @@ scFeatures can be run using one line of code `scfeatures_result <- scFeatures(da
 
 ```{r eval=FALSE, include=TRUE}
 data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-data <- process_data(data, normalise = T) #  perform normalisation 
+data <- process_data(data, normalise = TRUE) #  perform normalisation 
 
 scfeatures_result <- scFeatures(data)
 ```
@@ -75,7 +75,7 @@ For SingleCellExperiment or SpatialExperiment object, we provide a function `mak
 # read in data 
 #---------------------------------------------------------------------------
 data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-data <- process_data(data, normalise = T) #  perform normalisation 
+data <- process_data(data, normalise = TRUE) #  perform normalisation 
 
 # format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running downstream analysis on the generated features 
 data$sample <- paste0( data$sample  , "_cond_", data$condition)
@@ -134,17 +134,6 @@ feature_gene_cor_bulk <- run_gene_cor(data ,  num_top_gene = 5 )
 genes_of_interest <- c("TIGIT", "PDCD1")
 feature_gene_prop_bulk <- run_gene_prop(data, genes = genes_of_interest )
 # by default, pick 1500 most variable genes, can change this number through the num_top_gene argument 
-
-
-#---------------------------------------------------------------------------
-# run classification model on the generated features 
-#---------------------------------------------------------------------------
-X <- feature_gene_mean_celltype
-y <- data@meta.data[!duplicated(data$sample),  ]
-y <- y[ match(rownames(X), y$sample), ]$condition
-feature_performance <- run_classification( X, y, model = "randomforest", 
-                                           ncores = 8  )
-
 ```
 
 
@@ -163,7 +152,7 @@ Note that, as spatial proteomics contain few genes, the feature categories of pa
 # read in data 
 #---------------------------------------------------------------------------
 data <- readRDS(system.file("extdata", "example_spatial_proteomics.rds", package = "scFeatures"))
-data <- process_data(data, normalise = F) # here we don't normalise , because the data has already been normalised 
+data <- process_data(data, normalise = FALSE) # here we don't normalise , because the data has already been normalised 
  
 
 #---------------------------------------------------------------------------
@@ -263,3 +252,9 @@ feature_celltype_interaction <- run_celltype_interaction( data, type = "spatial_
 feature_nn_correlation <- run_nn_correlation( data, type = "spatial_t" )
 ```
 
+
+# sessionInfo()
+
+```{r}
+sessionInfo()
+```

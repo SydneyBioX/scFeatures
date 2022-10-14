@@ -9,7 +9,7 @@ helper_gene_mean <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1
   if (is.null(genes)) {
     gene <- find_var_gene(data,
       num_top_gene = num_top_gene,
-      ncores = ncores, celltype = F
+      ncores = ncores, celltype = FALSE
     )
   } else {
     gene <- genes
@@ -46,7 +46,7 @@ helper_gene_prop <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1
   if (is.null(genes)) {
     gene <- find_var_gene(data,
       num_top_gene = num_top_gene,
-      ncores = ncores, celltype = F
+      ncores = ncores, celltype = FALSE
     )
   } else {
     gene <- genes
@@ -92,7 +92,7 @@ helper_gene_cor <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1)
   if (is.null(genes)) {
     gene <- find_var_gene(data,
       num_top_gene = num_top_gene,
-      ncores = ncores, celltype = F
+      ncores = ncores, celltype = FALSE
     )
   } else {
     gene <- genes
