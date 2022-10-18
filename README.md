@@ -1,4 +1,4 @@
-## scFeatures: Multi-view representations of single-cell and spatial data for disease outcome prediction
+# scFeatures: Multi-view representations of single-cell and spatial data for disease outcome prediction
 
 <img src="inst/sticker.png" align="right" width="120">
 
