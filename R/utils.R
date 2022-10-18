@@ -43,7 +43,6 @@ check_data <- function(data, type = "scrna") {
 
 
 generateBPParam <- function(cores = 1) {
-  set.seed(1)
   seed <- .Random.seed[1]
 
   if (cores == 1) {
