@@ -1,7 +1,10 @@
 
 
 #  gene mean bulk, default to 1500 variable genes per sample
-helper_gene_mean <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1) {
+helper_gene_mean <- function(data, 
+                             genes = NULL,
+                             num_top_gene = NULL,
+                             ncores = 1) {
     if (is.null(num_top_gene)) {
         num_top_gene <- min(nrow(data), 1500)
     }
@@ -34,8 +37,12 @@ helper_gene_mean <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1
 
 # gene prop bulk
 # use the proportion expression as the prediction feature
-# for each variable genes,  calcalate the proportion that it is expressed in each patient
-helper_gene_prop <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1) {
+# for each variable genes, calcalate the proportion that it is expressed in each
+# patient
+helper_gene_prop <- function(data,
+                             genes = NULL,
+                             num_top_gene = NULL,
+                             ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
     if (is.null(num_top_gene)) {
@@ -56,11 +63,14 @@ helper_gene_prop <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1
     data <- data[gene, ]
 
     # thispatient  <- unique( data$sample )[1]
-    gene_prop <- BiocParallel::bplapply(unique(data$sample), function(thispatient) {
+    gene_prop <- BiocParallel::bplapply(
+        unique(data$sample), function(thispatient) {
         this_patient_data <- data[, data$sample == thispatient]
         this_patient_data <- this_patient_data@assays$RNA@data
         this_patient_data <- +(this_patient_data > 1)
-        this_patient_prop <- DelayedMatrixStats::rowMeans2(DelayedArray::DelayedArray(this_patient_data))
+        this_patient_prop <- DelayedMatrixStats::rowMeans2(
+            DelayedArray::DelayedArray(this_patient_data)
+        )
     }, BPPARAM = BPparam)
 
     gene_prop <- do.call(cbind, gene_prop)
@@ -81,7 +91,11 @@ helper_gene_prop <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1
 
 
 # gene correlation bulk
-helper_gene_cor <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1) {
+helper_gene_cor <- function(data,
+                            genes = NULL,
+                            num_top_gene = NULL,
+                            ncores = 1) {
+
     BPparam <- generateBPParam(ncores)
 
     if (is.null(num_top_gene)) {
@@ -107,7 +121,10 @@ helper_gene_cor <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1)
     cor_data <- BiocParallel::bplapply(unique(data$sample), function(x) {
         thisdata <- data[, data$sample == x]
 
-        cor_data <- proxyC::simil(thisdata@assays$RNA@data, method = "correlation")
+        cor_data <- proxyC::simil(
+            thisdata@assays$RNA@data,
+            method = "correlation"
+        )
         cor_data <- as.matrix(cor_data)
 
         cor_data[is.na(cor_data)] <- 0
