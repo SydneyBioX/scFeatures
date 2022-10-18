@@ -42,4 +42,5 @@ We provide a function `run_association_study_report(scfeatures_result, output_fo
 
 
 ## Reference
-Cao, Y., Lin, Y., Patrick, E., Yang, P., & Yang, J. Y. H. (2022). scFeatures: Multi-view representations of single-cell and spatial data for disease outcome prediction. bioRxiv.
+
+Cao, Y., Lin, Y., Patrick, E., Yang, P., & Yang, J. Y. H. (2022). scFeatures: multi-view representations of single-cell and spatial data for disease outcome prediction. In O. Vitek (Ed.), Bioinformatics (Vol. 38, Issue 20, pp. 4745–4753). Oxford University Press (OUP). https://doi.org/10.1093/bioinformatics/btac590 
