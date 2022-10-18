@@ -40,140 +40,140 @@
 scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
                        species = "Homo sapiens", celltype_genes = NULL, aggregated_genes = NULL, geneset = NULL,
                        sample = "sample", celltype = "celltype", assay = "logcounts", spatialCoords = NULL) {
-  data <- makeSeurat(data, sample, celltype, assay, spatialCoords)
+    data <- makeSeurat(data, sample, celltype, assay, spatialCoords)
 
-  return_list <- list()
+    return_list <- list()
 
-  # if null, generate everything
-  if (is.null(feature_types)) {
-    feature_types <- c(
-      "proportion_raw", "proportion_logit", "proportion_ratio",
-      "gene_mean_celltype", "gene_prop_celltype", "gene_cor_celltype",
-      "pathway_gsva", "pathway_mean", "pathway_prop",
-      "gene_mean_aggregated", "gene_prop_aggregated", "gene_cor_aggregated",
-      "L_stats", "celltype_interaction", "morans_I", "nn_correlation"
-    )
-  }
-
-
-  for (thisfeature in feature_types) {
-    try({
-      if (thisfeature == "proportion_raw") {
-        message("generating proportion raw features")
-        return_list[["proportion_raw"]] <- run_proportion_raw(data = data, type = type, ncores = ncores)
-      }
-
-      if (thisfeature == "proportion_logit") {
-        message("generating proportion logit features")
-        return_list[["proportion_logit"]] <- run_proportion_logit(data = data, type = type, ncores = ncores)
-      }
-
-      if (thisfeature == "proportion_ratio") {
-        message("generating proportion ratio features")
-        return_list[["proportion_ratio"]] <- run_proportion_ratio(data = data, type = type, ncores = ncores)
-      }
-
-
-      data_remove_mito <- remove_mito(data)
-
-      if (thisfeature == "gene_mean_celltype") {
-        message("generating gene mean celltype features")
-        return_list[["gene_mean_celltype"]] <- run_gene_mean_celltype(
-          data = data_remove_mito, type = type, ncores = ncores,
-          genes = celltype_genes
+    # if null, generate everything
+    if (is.null(feature_types)) {
+        feature_types <- c(
+            "proportion_raw", "proportion_logit", "proportion_ratio",
+            "gene_mean_celltype", "gene_prop_celltype", "gene_cor_celltype",
+            "pathway_gsva", "pathway_mean", "pathway_prop",
+            "gene_mean_aggregated", "gene_prop_aggregated", "gene_cor_aggregated",
+            "L_stats", "celltype_interaction", "morans_I", "nn_correlation"
         )
-      }
+    }
 
 
-      if (thisfeature == "gene_prop_celltype") {
-        message("generating gene prop celltype features")
-        return_list[["gene_prop_celltype"]] <- run_gene_prop_celltype(data_remove_mito,
-          type = type, ncores = ncores,
-          genes = celltype_genes
-        )
-      }
+    for (thisfeature in feature_types) {
+        try({
+            if (thisfeature == "proportion_raw") {
+                message("generating proportion raw features")
+                return_list[["proportion_raw"]] <- run_proportion_raw(data = data, type = type, ncores = ncores)
+            }
 
-      if (thisfeature == "gene_cor_celltype") {
-        message("generating gene cor celltype features")
-        return_list[["gene_cor_celltype"]] <- run_gene_cor_celltype(data_remove_mito,
-          type = type, ncores = ncores,
-          genes = celltype_genes
-        )
-      }
+            if (thisfeature == "proportion_logit") {
+                message("generating proportion logit features")
+                return_list[["proportion_logit"]] <- run_proportion_logit(data = data, type = type, ncores = ncores)
+            }
 
-      if (thisfeature == "pathway_gsva") {
-        message("generating pathway GSVA features")
-        return_list[["pathway_gsva"]] <- run_pathway_gsva(data,
-          type = type, ncores = ncores,
-          species = species, geneset = geneset
-        )
-      }
-
-      if (thisfeature == "pathway_mean") {
-        message("generating pathway mean features")
-        return_list[["pathway_mean"]] <- run_pathway_mean(data,
-          type = type, ncores = ncores,
-          species = species, geneset = geneset
-        )
-      }
-
-      if (thisfeature == "pathway_prop") {
-        message("generating pathway prop features")
-        return_list[["pathway_prop"]] <- run_pathway_prop(data,
-          type = type, ncores = ncores,
-          species = species, geneset = geneset
-        )
-      }
+            if (thisfeature == "proportion_ratio") {
+                message("generating proportion ratio features")
+                return_list[["proportion_ratio"]] <- run_proportion_ratio(data = data, type = type, ncores = ncores)
+            }
 
 
-      if (thisfeature == "gene_mean_aggregated") {
-        message("generating gene mean aggregated features")
-        return_list[["gene_mean_bulk"]] <- run_gene_mean(data,
-          type = type, ncores = ncores,
-          genes = aggregated_genes
-        )
-      }
+            data_remove_mito <- remove_mito(data)
 
-      if (thisfeature == "gene_prop_aggregated") {
-        message("generating gene prop aggregated features")
-        return_list[["gene_prop_bulk"]] <- run_gene_prop(data,
-          type = type, ncores = ncores,
-          genes = aggregated_genes
-        )
-      }
+            if (thisfeature == "gene_mean_celltype") {
+                message("generating gene mean celltype features")
+                return_list[["gene_mean_celltype"]] <- run_gene_mean_celltype(
+                    data = data_remove_mito, type = type, ncores = ncores,
+                    genes = celltype_genes
+                )
+            }
 
-      if (thisfeature == "gene_cor_aggregated") {
-        message("generating gene cor aggregated features")
-        return_list[["gene_cor_bulk"]] <- run_gene_cor(data,
-          type = type, ncores = ncores,
-          genes = aggregated_genes
-        )
-      }
 
-      if (thisfeature == "L_stats") {
-        message("generating L function features")
-        return_list[["L_stats"]] <- run_L_function(data, type = type, ncores = ncores)
-      }
+            if (thisfeature == "gene_prop_celltype") {
+                message("generating gene prop celltype features")
+                return_list[["gene_prop_celltype"]] <- run_gene_prop_celltype(data_remove_mito,
+                    type = type, ncores = ncores,
+                    genes = celltype_genes
+                )
+            }
 
-      if (thisfeature == "celltype_interaction") {
-        message("generating cell type interaction features")
-        return_list[["celltype_interaction"]] <- run_celltype_interaction(data, type = type, ncores = ncores)
-      }
+            if (thisfeature == "gene_cor_celltype") {
+                message("generating gene cor celltype features")
+                return_list[["gene_cor_celltype"]] <- run_gene_cor_celltype(data_remove_mito,
+                    type = type, ncores = ncores,
+                    genes = celltype_genes
+                )
+            }
 
-      if (thisfeature == "morans_I") {
-        message("generating Moran's I features")
-        return_list[["morans_I"]] <- run_Morans_I(data, type = type, ncores = ncores)
-      }
+            if (thisfeature == "pathway_gsva") {
+                message("generating pathway GSVA features")
+                return_list[["pathway_gsva"]] <- run_pathway_gsva(data,
+                    type = type, ncores = ncores,
+                    species = species, geneset = geneset
+                )
+            }
 
-      if (thisfeature == "nn_correlation") {
-        message("generating nearest neighbour correlation features")
-        return_list[["nn_correlation"]] <- run_nn_correlation(data, type = type, ncores = ncores)
-      }
-    })
-  }
+            if (thisfeature == "pathway_mean") {
+                message("generating pathway mean features")
+                return_list[["pathway_mean"]] <- run_pathway_mean(data,
+                    type = type, ncores = ncores,
+                    species = species, geneset = geneset
+                )
+            }
 
-  lapply(return_list, as.data.frame)
-  # return (return_list)
+            if (thisfeature == "pathway_prop") {
+                message("generating pathway prop features")
+                return_list[["pathway_prop"]] <- run_pathway_prop(data,
+                    type = type, ncores = ncores,
+                    species = species, geneset = geneset
+                )
+            }
+
+
+            if (thisfeature == "gene_mean_aggregated") {
+                message("generating gene mean aggregated features")
+                return_list[["gene_mean_bulk"]] <- run_gene_mean(data,
+                    type = type, ncores = ncores,
+                    genes = aggregated_genes
+                )
+            }
+
+            if (thisfeature == "gene_prop_aggregated") {
+                message("generating gene prop aggregated features")
+                return_list[["gene_prop_bulk"]] <- run_gene_prop(data,
+                    type = type, ncores = ncores,
+                    genes = aggregated_genes
+                )
+            }
+
+            if (thisfeature == "gene_cor_aggregated") {
+                message("generating gene cor aggregated features")
+                return_list[["gene_cor_bulk"]] <- run_gene_cor(data,
+                    type = type, ncores = ncores,
+                    genes = aggregated_genes
+                )
+            }
+
+            if (thisfeature == "L_stats") {
+                message("generating L function features")
+                return_list[["L_stats"]] <- run_L_function(data, type = type, ncores = ncores)
+            }
+
+            if (thisfeature == "celltype_interaction") {
+                message("generating cell type interaction features")
+                return_list[["celltype_interaction"]] <- run_celltype_interaction(data, type = type, ncores = ncores)
+            }
+
+            if (thisfeature == "morans_I") {
+                message("generating Moran's I features")
+                return_list[["morans_I"]] <- run_Morans_I(data, type = type, ncores = ncores)
+            }
+
+            if (thisfeature == "nn_correlation") {
+                message("generating nearest neighbour correlation features")
+                return_list[["nn_correlation"]] <- run_nn_correlation(data, type = type, ncores = ncores)
+            }
+        })
+    }
+
+    lapply(return_list, as.data.frame)
+    # return (return_list)
 }
 
 
@@ -222,53 +222,53 @@ makeSeurat <- function(data,
                        assay,
                        spatialCoords,
                        spotProbability = NULL) {
-  if (is(data, "Seurat")) {
-    data$celltype <- data[[celltype]]
-    data$sample <- data[[sample]]
-    if (!is.null(spatialCoords)) {
-      data$x_cord <- data[[spatialCoords[1]]]
-      data$y_cord <- data[[spatialCoords[2]]]
-    }
-    if (!is.null(spotProbability)) {
-      data[["predictions"]] <- data[["RNA"]]
-      data@assays$predictions@data <- spotProbability
-    }
-    return(data)
-  }
-
-  if (is(data, "SingleCellExperiment")) {
-    df <- data
-    df$celltype <- SummarizedExperiment::colData(df)[, celltype]
-    df$sample <- SummarizedExperiment::colData(df)[, sample]
-    if (!is.null(spatialCoords)) {
-      df$x_cord <- SummarizedExperiment::colData(df)[, spatialCoords[1]]
-      df$y_cord <- SummarizedExperiment::colData(df)[, spatialCoords[2]]
-    }
-    data <- Seurat::as.Seurat(df, data = assay)
-    data@assays$RNA <- data@assays$originalexp
-
-    if (!is.null(spotProbability)) {
-      data@assays$predictions <- spotProbability
-    }
-    return(data)
-  }
-
-
-  if (is(data, "SpatialExperiment")) {
-    df <- data
-    df$celltype <- SummarizedExperiment::colData(df)[, celltype]
-    df$sample <- SummarizedExperiment::colData(df)[, sample]
-    df$x_cord <- SpatialExperiment::spatialCoords(df)[, 1]
-    df$y_cord <- SpatialExperiment::spatialCoords(df)[, 2]
-    data <- Seurat::as.Seurat(df, data = assay)
-    data@assays$RNA <- data@assays$originalexp
-
-    if (!is.null(spotProbability)) {
-      data@assays$predictions <- spotProbability
+    if (is(data, "Seurat")) {
+        data$celltype <- data[[celltype]]
+        data$sample <- data[[sample]]
+        if (!is.null(spatialCoords)) {
+            data$x_cord <- data[[spatialCoords[1]]]
+            data$y_cord <- data[[spatialCoords[2]]]
+        }
+        if (!is.null(spotProbability)) {
+            data[["predictions"]] <- data[["RNA"]]
+            data@assays$predictions@data <- spotProbability
+        }
+        return(data)
     }
 
-    return(data)
-  }
+    if (is(data, "SingleCellExperiment")) {
+        df <- data
+        df$celltype <- SummarizedExperiment::colData(df)[, celltype]
+        df$sample <- SummarizedExperiment::colData(df)[, sample]
+        if (!is.null(spatialCoords)) {
+            df$x_cord <- SummarizedExperiment::colData(df)[, spatialCoords[1]]
+            df$y_cord <- SummarizedExperiment::colData(df)[, spatialCoords[2]]
+        }
+        data <- Seurat::as.Seurat(df, data = assay)
+        data@assays$RNA <- data@assays$originalexp
 
-  data
+        if (!is.null(spotProbability)) {
+            data@assays$predictions <- spotProbability
+        }
+        return(data)
+    }
+
+
+    if (is(data, "SpatialExperiment")) {
+        df <- data
+        df$celltype <- SummarizedExperiment::colData(df)[, celltype]
+        df$sample <- SummarizedExperiment::colData(df)[, sample]
+        df$x_cord <- SpatialExperiment::spatialCoords(df)[, 1]
+        df$y_cord <- SpatialExperiment::spatialCoords(df)[, 2]
+        data <- Seurat::as.Seurat(df, data = assay)
+        data@assays$RNA <- data@assays$originalexp
+
+        if (!is.null(spotProbability)) {
+            data@assays$predictions <- spotProbability
+        }
+
+        return(data)
+    }
+
+    data
 }
