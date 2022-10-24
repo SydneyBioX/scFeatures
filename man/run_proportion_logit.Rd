@@ -23,11 +23,11 @@ generate cell type proportion raw and cell type proportion logit transformed
 \examples{
 
 data <- readRDS(
-  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 )
 feature_proportion_logit <- run_proportion_logit(
-  data,
-  type = "scrna", ncores = 1
+    data,
+    type = "scrna", ncores = 1
 )
 
 }

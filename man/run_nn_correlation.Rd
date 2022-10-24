@@ -23,12 +23,12 @@ generate nearest neighbour correlation
 \examples{
 
 data <- readRDS(system.file(
-  "extdata", "example_spatial_proteomics.rds",
-  package = "scFeatures"
+    "extdata", "example_spatial_proteomics.rds",
+    package = "scFeatures"
 ))
 feature_nn_correlation <- run_nn_correlation(
-  data,
-  type = "spatial_p", ncores = 1
+    data,
+    type = "spatial_p", ncores = 1
 )
 
 }

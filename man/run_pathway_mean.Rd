@@ -38,12 +38,12 @@ generate pathway score using expression level
 \examples{
 
 data <- readRDS(
-  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 )
 feature_pathway_mean <- run_pathway_mean(
-  data,
-  geneset = NULL, species = "Homo sapiens",
-  type = "scrna", ncores = 1
+    data,
+    geneset = NULL, species = "Homo sapiens",
+    type = "scrna", ncores = 1
 )
 
 }

@@ -7,8 +7,8 @@
 # get hallmark geneset if the user does not provide one
 get_geneset <- function(species = "Homo sapiens") {
     m_df <- msigdbr::msigdbr(species = species, category = "H")
-    m_t2g <- m_df %>%
-        dplyr::select("gs_name", "entrez_gene") %>%
+    m_t2g <- m_df |>
+        dplyr::select("gs_name", "entrez_gene") |>
         as.data.frame()
     geneset <- split(x = m_t2g$entrez_gene, f = m_t2g$gs_name)
 
@@ -240,7 +240,7 @@ helper_pathway_prop <- function(data, geneset, ncores = 1) {
         "sample", "celltype",
         "proportion_expressed"
     )]
-    geneset_prop_df <- geneset_prop_df %>%
+    geneset_prop_df <- geneset_prop_df |>
         pivot_wider(names_from = "celltype", values_from = "proportion_expressed")
 
     geneset_prop_df <- as.data.frame(geneset_prop_df)
@@ -276,7 +276,7 @@ format_pathway <- function(data, topMatrixGSVA, ncores) {
     bulk_data$Var1 <- unlist(
         lapply(strsplit(as.character(bulk_data$Var1), "--"), `[`, 1)
     )
-    bulk_data <- bulk_data %>%
+    bulk_data <- bulk_data |>
         pivot_wider(names_from = "Var2", values_from = "value")
     bulk_data[is.na(bulk_data)] <- 0
 

@@ -23,8 +23,8 @@ generate Moran's I
 \examples{
 
 data <- readRDS(system.file(
-  "extdata", "example_spatial_proteomics.rds",
-  package = "scFeatures"
+    "extdata", "example_spatial_proteomics.rds",
+    package = "scFeatures"
 ))
 feature_Morans_I <- run_Morans_I(data, type = "spatial_p", ncores = 1)
 

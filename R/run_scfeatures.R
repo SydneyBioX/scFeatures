@@ -24,7 +24,6 @@
 #' @importFrom gtools logit
 #' @importFrom tidyr pivot_wider
 #' @importFrom BiocParallel SerialParam bplapply
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
@@ -68,7 +67,6 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #' @importFrom gtools logit
 #' @importFrom tidyr pivot_wider
 #' @importFrom BiocParallel SerialParam bplapply
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
@@ -111,7 +109,6 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #'
 #' @importFrom tidyr pivot_wider
 #' @importFrom BiocParallel SerialParam bplapply
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
@@ -175,7 +172,6 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_gene_mean_celltype <- function(data,
@@ -238,7 +234,6 @@ run_gene_mean_celltype <- function(data,
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_gene_prop_celltype <- function(data,
@@ -306,7 +301,6 @@ run_gene_prop_celltype <- function(data,
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_gene_cor_celltype <- function(data,
@@ -374,7 +368,7 @@ run_gene_cor_celltype <- function(data,
 #' @importFrom AUCell AUCell_buildRankings AUCell_calcAUC getAUC
 #' @import EnsDb.Hsapiens.v79
 #' @import EnsDb.Mmusculus.v79
-#' @importFrom dplyr select %>%
+#' @importFrom dplyr select
 #' @importFrom reshape2 melt
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
@@ -458,7 +452,7 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #' @importFrom AUCell AUCell_buildRankings AUCell_calcAUC getAUC
 #' @import EnsDb.Hsapiens.v79
 #' @import EnsDb.Mmusculus.v79
-#' @importFrom dplyr select %>%
+#' @importFrom dplyr select
 #' @importFrom reshape2 melt
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
@@ -529,7 +523,7 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' @importFrom AUCell AUCell_buildRankings AUCell_calcAUC getAUC
 #' @import EnsDb.Hsapiens.v79
 #' @import EnsDb.Mmusculus.v79
-#' @importFrom dplyr select %>%
+#' @importFrom dplyr select
 #' @importFrom reshape2 melt
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
@@ -606,7 +600,6 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' @importFrom DelayedArray DelayedArray
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom reshape2 melt
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_gene_mean <- function(data,
@@ -652,7 +645,6 @@ run_gene_mean <- function(data,
 #' @importFrom DelayedArray DelayedArray
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom reshape2 melt
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL, ncores = 1) {
@@ -694,7 +686,6 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 #' @importFrom DelayedArray DelayedArray
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom reshape2 melt
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL, ncores = 1) {
@@ -733,7 +724,6 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #' @importFrom reshape2 melt
 #' @importFrom ape Moran.I
 #' @importFrom spatstat.core nncorr
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_L_function <- function(data, type = "spatial_p", ncores = 1) {
@@ -785,7 +775,6 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #' @importFrom reshape2 melt
 #' @importFrom ape Moran.I
 #' @importFrom spatstat.core nncorr
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
@@ -837,7 +826,6 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #' @importFrom reshape2 melt
 #' @importFrom ape Moran.I
 #' @importFrom spatstat.core nncorr
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
@@ -889,7 +877,6 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #' @importFrom reshape2 melt
 #' @importFrom ape Moran.I
 #' @importFrom spatstat.core nncorr
-#' @importFrom dplyr %>%
 #'
 #' @export
 run_nn_correlation <- function(data, type = "spatial_p", ncores = 1) {

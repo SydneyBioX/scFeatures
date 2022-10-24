@@ -600,7 +600,7 @@ if ("proportion_raw" %in% names(scfeatures_result)){
 if ("proportion_raw" %in% names(scfeatures_result)){
   data <- scfeatures_result$proportion_raw
   p <- plot_boxplot(data ) 
-   ggplotly(p) %>% layout(boxmode = "group") 
+   ggplotly(p) |> layout(boxmode = "group") 
 } 
 ```
 
@@ -867,7 +867,7 @@ if ("pathway_gsva" %in% names(scfeatures_result)){
       
   p <- plot_boxplot(t(data) )
   
-  ggplotly(p)  %>% layout(boxmode = "group") 
+  ggplotly(p)  |>layout(boxmode = "group") 
 
 }
 ```
@@ -1055,7 +1055,7 @@ if ("CCI" %in% names(scfeatures_result)){
    
   p <- plot_boxplot(t(data))  
   
-  ggplotly(p)  %>% layout(boxmode = "group") 
+  ggplotly(p)  |>layout(boxmode = "group") 
 
 }
 ```
@@ -1202,7 +1202,7 @@ if ("morans_I" %in% names(scfeatures_result)){
 ```{r}
 if ("morans_I" %in% names(scfeatures_result)){ 
    p <- plot_boxplot( t(data)  )  
-  ggplotly(p) %>% layout(boxmode = "group") 
+  ggplotly(p) |>layout(boxmode = "group") 
 }
 ```
 
