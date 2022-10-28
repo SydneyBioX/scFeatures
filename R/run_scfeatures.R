@@ -24,18 +24,27 @@
 #' @importFrom gtools logit
 #' @importFrom tidyr pivot_wider
 #' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom cli cli_abort cli_warn
 #'
 #' @export
 run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
     check_data(data, type)
 
     if (type %in% c("scrna", "spatial_p")) {
+        if (ncores > 1) {
+            cli::cli_warn(
+                "{type} does not currently support parallel computation ",
+                "for feature `proportion_raw`"
+            )
+        }
         X <- helper_proportion_raw(data, logit = FALSE)
-    }
-
-
-    if (type == "spatial_t") {
+    } else if (type == "spatial_t") {
         X <- helper_proportion_raw_st(data, logit = FALSE, ncores)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
@@ -67,18 +76,27 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #' @importFrom gtools logit
 #' @importFrom tidyr pivot_wider
 #' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom cli cli_abort cli_warn
 #'
 #' @export
 run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
     check_data(data, type)
 
     if (type %in% c("scrna", "spatial_p")) {
+        if (ncores > 1) {
+            cli::cli_warn(
+                "{type} does not currently support parallel computation ",
+                "for feature proportion_logit."
+            )
+        }
         X <- helper_proportion_raw(data, logit = TRUE)
-    }
-
-
-    if (type == "spatial_t") {
+    } else if (type == "spatial_t") {
         X <- helper_proportion_raw_st(data, logit = TRUE, ncores)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
 
@@ -109,6 +127,7 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #'
 #' @importFrom tidyr pivot_wider
 #' @importFrom BiocParallel SerialParam bplapply
+#' @importFrom cli cli_abort
 #'
 #' @export
 run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
@@ -116,11 +135,13 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 
     if (type %in% c("scrna", "spatial_p")) {
         X <- helper_proportion_ratio(data, ncores)
-    }
-
-
-    if (type == "spatial_t") {
+    } else if (type == "spatial_t") {
         X <- helper_proportion_ratio_st(data, ncores)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
@@ -172,7 +193,7 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
-#' @importFrom cli cli_abort
+#' @importFrom cli cli_abort cli_warn
 #'
 #' @export
 run_gene_mean_celltype <- function(data,
@@ -186,7 +207,7 @@ run_gene_mean_celltype <- function(data,
         X <- helper_gene_mean_celltype(data, genes, num_top_gene, ncores)
     } else if (type == "spatial_t") {
         if (!is.null(genes) || !is.null(num_top_gene) || ncores > 1) {
-            cli::cli_alert_warning(c(
+            cli::cli_warn(c(
                 "{.var gene}, {.var num_top_gene} and {.var ncores} are not ",
                 "implemented for {type} data.\n",
                 "i" = "Defaults will be used instead."
@@ -245,6 +266,7 @@ run_gene_mean_celltype <- function(data,
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
+#' @importFrom cli cli_abort cli_warn
 #'
 #' @export
 run_gene_prop_celltype <- function(data,
@@ -256,14 +278,16 @@ run_gene_prop_celltype <- function(data,
 
     if (type %in% c("scrna", "spatial_p")) {
         X <- helper_gene_prop_celltype(data, genes, num_top_gene, ncores)
-    }
-
-
-    if (type == "spatial_t") {
-        warning(
-            "This feature class currently does not support spatial transcriptomics"
-        )
+    } else if (type == "spatial_t") {
+        cli::cli_warn(c(
+            "`gene_prop_celltype` currently does not support spatial transcriptomics"
+        ))
         return(NULL)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
@@ -312,6 +336,7 @@ run_gene_prop_celltype <- function(data,
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
+#' @importFrom cli cli_abort cli_warn
 #'
 #' @export
 run_gene_cor_celltype <- function(data,
@@ -323,13 +348,16 @@ run_gene_cor_celltype <- function(data,
 
     if (type %in% c("scrna", "spatial_p")) {
         X <- helper_gene_cor_celltype(data, genes, num_top_gene, ncores)
-    }
-
-    if (type == "spatial_t") {
-        warning(
-            "This feature class currently does not support spatial transcriptomics"
-        )
+    } else if (type == "spatial_t") {
+        cli::cli_warn(c(
+            "`gene_cor_celltype` currently does not support spatial transcriptomics"
+        ))
         return(NULL)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
@@ -384,6 +412,7 @@ run_gene_cor_celltype <- function(data,
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
 #' @importFrom DelayedMatrixStats colMeans2
+#' @importFrom cli cli_abort cli_warn
 #'
 #' @export
 run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
@@ -400,25 +429,26 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
     }
 
     if (type == "scrna") {
-        # if the user does not provide geneset, need to get the geneset from msigdb
+        # TODO: if the user does not provide geneset, need to get the geneset from msigdb
         X <- helper_pathway_gsva(
             data,
             method = method, geneset = geneset, ncores = ncores
         )
-    }
-
-    if (type == "spatial_p") {
-        warning(
-            "This feature class currently does not support spatial proteomics"
-        )
+    } else if (type == "spatial_p") {
+        cli::cli_warn(c(
+            "Pathway GSVA currently does not support spatial proteomics"
+        ))
         return(NULL)
-    }
-
-    if (type == "spatial_t") {
-        warning(
-            "This feature class currently does not support spatial transcriptomics"
-        )
+    } else if (type == "spatial_t") {
+        cli::cli_warn(c(
+            "Pathway GSVA currently does not support spatial transcriptiomics"
+        ))
         return(NULL)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
@@ -468,6 +498,7 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
 #' @importFrom DelayedMatrixStats colMeans2
+#' @importFrom cli cli_abort cli_warn
 #'
 #' @export
 run_pathway_mean <- function(data, geneset = NULL,
@@ -482,15 +513,18 @@ run_pathway_mean <- function(data, geneset = NULL,
 
     if (type == "scrna") {
         X <- helper_pathway_mean(data, geneset = geneset, ncores = ncores)
-    }
-
-    if (type == "spatial_p") {
-        warning("This feature class currently does not support spatial proteomics")
+    } else if (type == "spatial_p") {
+        cli::cli_warn(c(
+            "`pathway_mean` currently does not support spatial proteomics"
+        ))
         return(NULL)
-    }
-
-    if (type == "spatial_t") {
+    } else if (type == "spatial_t") {
         X <- helper_pathway_mean_st(data, geneset = geneset, ncores = ncores)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
@@ -539,6 +573,7 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
 #' @importFrom DelayedMatrixStats colMeans2
+#' @importFrom cli cli_abort cli_warn
 #'
 #' @export
 run_pathway_prop <- function(data, geneset = NULL,
@@ -553,18 +588,21 @@ run_pathway_prop <- function(data, geneset = NULL,
 
     if (type == "scrna") {
         X <- helper_pathway_prop(data, geneset = geneset, ncores = ncores)
-    }
-
-    if (type == "spatial_p") {
-        warning("This feature class currently does not support spatial proteomics")
+    } else if (type == "spatial_p") {
+        cli::cli_warn(c(
+            "`pathway_prop` currently does not support spatial proteomics"
+        ))
         return(NULL)
-    }
-
-    if (type == "spatial_t") {
-        warning(
-            "This feature class currently does not support spatial transcriptomics"
-        )
+    } else if (type == "spatial_t") {
+        cli::cli_warn(c(
+            "`pathway_prop` currently does not support spatial transcriptomics"
+        ))
         return(NULL)
+    }  else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
@@ -611,6 +649,7 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' @importFrom DelayedArray DelayedArray
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom reshape2 melt
+#' @importFrom cli cli_abort
 #'
 #' @export
 run_gene_mean <- function(data,
@@ -622,6 +661,11 @@ run_gene_mean <- function(data,
 
     if (type %in% c("scrna", "spatial_p", "spatial_t")) {
         X <- helper_gene_mean(data, genes, num_top_gene, ncores)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
@@ -656,6 +700,7 @@ run_gene_mean <- function(data,
 #' @importFrom DelayedArray DelayedArray
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom reshape2 melt
+#' @importFrom cli cli_abort
 #'
 #' @export
 run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL, ncores = 1) {
@@ -663,6 +708,11 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 
     if (type %in% c("scrna", "spatial_p", "spatial_t")) {
         X <- helper_gene_prop(data, genes, num_top_gene, ncores)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
@@ -697,6 +747,7 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 #' @importFrom DelayedArray DelayedArray
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom reshape2 melt
+#' @importFrom cli cli_abort
 #'
 #' @export
 run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL, ncores = 1) {
@@ -704,6 +755,11 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 
     if (type %in% c("scrna", "spatial_p", "spatial_t")) {
         X <- helper_gene_cor(data, genes, num_top_gene, ncores)
+    }  else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
@@ -735,22 +791,26 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #' @importFrom reshape2 melt
 #' @importFrom ape Moran.I
 #' @importFrom spatstat.core nncorr
+#' @importFrom cli cli_abort cli_warn
 #'
 #' @export
 run_L_function <- function(data, type = "spatial_p", ncores = 1) {
     check_data(data, type)
 
     if (type == "scrna") {
-        warning("This feature class currently does not support scRNA-seq")
+        cli::cli_warn(c(
+            "`L_function` currently does not support 'scrna'"
+        ))
         return(NULL)
-    }
-
-    if (type == "spatial_p") {
+    } else if (type == "spatial_p") {
         X <- helper_L_stat_sp(data)
-    }
-
-    if (type == "spatial_t") {
+    } else if (type == "spatial_t") {
         X <- helper_L_stat_st(data)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
@@ -786,21 +846,20 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #' @importFrom reshape2 melt
 #' @importFrom ape Moran.I
 #' @importFrom spatstat.core nncorr
+#' @importFrom cli cli_abort cli_warn
 #'
 #' @export
 run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
     check_data(data, type)
 
     if (type == "scrna") {
-        warning("This feature class currently does not support scRNA-seq")
+        cli::cli_warn(c(
+            "`celltype_interaction` currently does not support 'scrna'"
+        ))
         return(NULL)
-    }
-
-    if (type == "spatial_p") {
+    } else if (type == "spatial_p") {
         X <- helper_celltype_interaction_sp(data)
-    }
-
-    if (type == "spatial_t") {
+    } else if (type == "spatial_t") {
         X <- helper_celltype_interaction_st(data)
     }
 
@@ -837,18 +896,24 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #' @importFrom reshape2 melt
 #' @importFrom ape Moran.I
 #' @importFrom spatstat.core nncorr
+#' @importFrom cli cli_abort cli_warn
 #'
 #' @export
 run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
     check_data(data, type)
 
     if (type == "scrna") {
-        warning("This feature class currently does not support scRNA-seq")
+        cli::cli_warn(c(
+            "`Morans_I` currently does not support 'scrna'"
+        ))
         return(NULL)
-    }
-
-    if (type %in% c("spatial_p", "spatial_t")) {
+    } else if (type %in% c("spatial_p", "spatial_t")) {
         X <- helper_moran(data, num_top_gene = NULL, ncores = 1)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
@@ -888,18 +953,24 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #' @importFrom reshape2 melt
 #' @importFrom ape Moran.I
 #' @importFrom spatstat.core nncorr
+#' @importFrom cli cli_abort cli_warn
 #'
 #' @export
 run_nn_correlation <- function(data, type = "spatial_p", ncores = 1) {
     check_data(data, type)
 
     if (type == "scrna") {
-        warning("This feature class currently does not support scRNA-seq")
+        cli::cli_warn(c(
+            "`nn_correlation` currently does not support 'scrna'"
+        ))
         return(NULL)
-    }
-
-    if (type %in% c("spatial_p", "spatial_t")) {
+    } else if (type %in% c("spatial_p", "spatial_t")) {
         X <- helper_nncorr_protein(data, num_top_gene = NULL, ncores = ncores)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)
