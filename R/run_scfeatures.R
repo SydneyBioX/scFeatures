@@ -172,6 +172,7 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom DelayedArray DelayedArray
+#' @importFrom cli cli_abort
 #'
 #' @export
 run_gene_mean_celltype <- function(data,
@@ -179,14 +180,24 @@ run_gene_mean_celltype <- function(data,
                                    genes = NULL,
                                    num_top_gene = NULL,
                                    ncores = 1) {
-    check_data(data, type)
+    # check_data(data, type)
 
     if (type %in% c("scrna", "spatial_p")) {
         X <- helper_gene_mean_celltype(data, genes, num_top_gene, ncores)
-    }
-
-    if (type == "spatial_t") {
+    } else if (type == "spatial_t") {
+        if (!is.null(genes) || !is.null(num_top_gene) || ncores > 1) {
+            cli::cli_alert_warning(c(
+                "{.var gene}, {.var num_top_gene} and {.var ncores} are not ",
+                "implemented for {type} data.\n",
+                "i" = "Defaults will be used instead."
+            ))
+        }
         X <- helper_gene_mean_celltype_st(data)
+    } else {
+        cli::cli_abort(c(
+            "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
+            "x" = "'{type}' is not a valid input data type"
+        ))
     }
 
     X <- as.data.frame(X)

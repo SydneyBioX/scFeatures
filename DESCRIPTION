@@ -46,7 +46,8 @@ Imports:
     rmarkdown,
     methods,
     stats,
-    BiocGenerics
+    BiocGenerics,
+    cli
 Suggests: 
     knitr,
     inline,
