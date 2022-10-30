@@ -45,7 +45,9 @@ remove_mito <- function(data) {
         )
 
         gene_corMat_max <- apply(gene_corMat, 2, max, na.rm = TRUE)
-        exclude_genes <- c(bad_genes, names(gene_corMat_max)[gene_corMat_max > 0.7])
+        exclude_genes <- c(
+            bad_genes, names(gene_corMat_max)[gene_corMat_max > 0.7]
+        )
 
         data <- data[-c(which(rownames(data) %in% exclude_genes)), ]
     }
@@ -99,7 +101,9 @@ find_var_gene <- function(data,
                         gene_var <- DelayedMatrixStats::rowVars(
                             DelayedArray::DelayedArray(this@assays$RNA@data)
                         )
-                        top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
+                        top_gene <- order(
+                            gene_var,
+                            decreasing = TRUE)[1:num_top_gene]
                         temp <- rownames(data)[top_gene]
                         thisgene <- c(thisgene, temp)
                     }
@@ -107,7 +111,7 @@ find_var_gene <- function(data,
 
                 thisgene <- unique(thisgene)
 
-                # add the HVG  across all cells to this HVG within each cell type
+                # add the HVG across all cells to this HVG within each cell type
                 thisgene <- unique(c(thisgene, hvg_across_all_cells))
 
                 thisgene
@@ -134,14 +138,15 @@ find_var_gene <- function(data,
 
         gene <- all_marker
     } else {
-        gene <- BiocParallel::bplapply(unique(data$sample), function(thissample) {
-            this <- data[, data$sample == thissample]
-            gene_var <- DelayedMatrixStats::rowVars(
-                DelayedArray::DelayedArray(this@assays$RNA@data)
-            )
-            top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
-            thisgene <- rownames(data)[top_gene]
-        }, BPPARAM = BPparam)
+        gene <- BiocParallel::bplapply(
+            unique(data$sample), function(thissample) {
+                this <- data[, data$sample == thissample]
+                gene_var <- DelayedMatrixStats::rowVars(
+                    DelayedArray::DelayedArray(this@assays$RNA@data)
+                )
+                top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
+                thisgene <- rownames(data)[top_gene]
+            }, BPPARAM = BPparam)
 
         gene <- unique(unlist(gene))
     }
