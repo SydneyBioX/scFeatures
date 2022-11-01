@@ -259,7 +259,7 @@ helper_gene_mean_celltype_v2 <- function(data,
     matrix <- do.call("rbind", BiocParallel::bplapply(
         lookup_ids,
         function(ids) {
-            rowMeans2(data@assays$RNA@data[ ,ids])
+            MatrixGenerics::rowMeans2(data@assays$RNA@data[ ,ids])
         },
         BPPARAM = BPparam
     ))
@@ -269,14 +269,16 @@ helper_gene_mean_celltype_v2 <- function(data,
     )
     matrix <- matrix |>
         tidyr::as_tibble() |>
-        pivot_wider(
+        tidyr:: pivot_wider(
             id_cols = sample,
             names_from = celltype,
             values_from = -c('sample', 'celltype'),
             names_glue = "{celltype}--{.value}"
         ) |>
         as.matrix()
-    #TODO: set sample as rownames of matrix
+
+    rownames(matrix) <- matrix[,'sample']
+    matrix <- matrix[,colnames(matrix) != 'sample']
 }
 
 
