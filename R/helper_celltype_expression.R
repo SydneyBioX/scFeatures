@@ -64,8 +64,10 @@ remove_mito <- function(data) {
 find_var_gene <- function(data,
                           num_top_gene = 1500,
                           ncores = 1,
-                          celltype = TRUE) {
-    BPparam <- generateBPParam(ncores)
+                          celltype = TRUE,
+                          BPparam = NULL) {
+    # BPparam <- ifelse(is.null(BPparam), generateBPParam(ncores), BPparam)
+    BPparam <-generateBPParam(ncores)
 
     if (celltype) {
 
@@ -165,16 +167,18 @@ find_var_gene <- function(data,
 # sample
 helper_gene_mean_celltype <- function(data,
                                       genes = NULL,
+                                      find_variable_genes = FALSE,
                                       num_top_gene = NULL,
                                       ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
-
+    # choose number of top genes if it wasn't one of the parameters
     if (is.null(num_top_gene)) {
         num_top_gene <- min(nrow(data), 100)
     }
 
-
+    # find variable genes per sample
+    # genes with highest variance over samples
     if (is.null(genes)) {
         all_marker <- find_var_gene(data,
             num_top_gene = num_top_gene,
@@ -184,11 +188,13 @@ helper_gene_mean_celltype <- function(data,
         all_marker <- genes
     }
 
-    # j <- unique(data$celltype)[15]
+    # lapply over unique celltypes with variable genes
     final_matrix <- BiocParallel::bplapply(
         unique(all_marker$celltype), function(j) {
+            # get genes in selected cell types
             gene <- all_marker[all_marker$celltype == j, ]$marker
 
+            # lapply over unique samples in dataset
             X_this_celltype <- lapply(unique(data$sample), function(i) {
                 index <- intersect(
                     which(data$celltype == j),
@@ -226,15 +232,52 @@ helper_gene_mean_celltype <- function(data,
     colnames(final_matrix) <- unique(data$sample)
 
     final_matrix <- t(final_matrix)
-    # a <- CreateSeuratObject(  final_matrix)
-    # a$sample <- unique(data$sample)
-    # a$condition <- data[ , match( a$sample, data$sample)]$condition
-
 
     return(final_matrix)
+} 
+
+
+helper_gene_mean_celltype_v2 <- function(data,
+                                         genes = NULL,
+                                         find_variable_genes = FALSE,
+                                         num_top_gene = NULL,
+                                         ncores = 1) {
+    BPparam <- generateBPParam(ncores)
+
+    lookup_table <- data@meta.data  |>
+        dplyr::select(sample, celltype) |>
+        tibble::rownames_to_column(var = "cell_id") |>
+        dplyr::group_by(sample, celltype) |>
+        dplyr::summarise(
+            "n" = dplyr::n(),
+            "ids" = paste(cell_id, collapse = ",")
+        ) |>
+        dplyr::ungroup()
+
+    lookup_ids <- strsplit(lookup_table$ids, ",")
+
+    matrix <- do.call("rbind", BiocParallel::bplapply(
+        lookup_ids,
+        function(ids) {
+            rowMeans2(data@assays$RNA@data[ ,ids])
+        },
+        BPPARAM = BPparam
+    ))
+    colnames(matrix) <- rownames(data)
+    matrix <- cbind(
+        sample = lookup_table$sample, celltype = lookup_table$celltype, matrix
+    )
+    matrix <- matrix |>
+        tidyr::as_tibble() |>
+        pivot_wider(
+            id_cols = sample,
+            names_from = celltype,
+            values_from = -c('sample', 'celltype'),
+            names_glue = "{celltype}--{.value}"
+        ) |>
+        as.matrix()
+    #TODO: set sample as rownames of matrix
 }
-
-
 
 
 
