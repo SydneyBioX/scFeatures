@@ -270,7 +270,11 @@ helper_gene_mean_celltype_v2 <- function(data,
     matrix <- do.call("rbind", BiocParallel::bplapply(
         lookup_ids,
         function(ids) {
-            MatrixGenerics::rowMeans2(data@assays$RNA@data[ ,ids])
+            if (length(ids) == 1) {
+                as.numeric(data@assays$RNA@data[ ,ids])
+            } else {
+                MatrixGenerics::rowMeans2(data@assays$RNA@data[ ,ids])
+            }
         },
         BPPARAM = BPparam
     ))
@@ -290,6 +294,7 @@ helper_gene_mean_celltype_v2 <- function(data,
 
     rownames(matrix) <- matrix[,'sample']
     matrix <- matrix[,colnames(matrix) != 'sample']
+    return(matrix)
 }
 
 
