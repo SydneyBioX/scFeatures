@@ -167,7 +167,7 @@ find_var_gene <- function(data,
 # sample
 helper_gene_mean_celltype <- function(data,
                                       genes = NULL,
-                                      find_variable_genes = FALSE,
+                                      find_variable_genes = TRUE,
                                       num_top_gene = NULL,
                                       ncores = 1) {
     BPparam <- generateBPParam(ncores)
@@ -179,13 +179,24 @@ helper_gene_mean_celltype <- function(data,
 
     # find variable genes per sample
     # genes with highest variance over samples
-    if (is.null(genes)) {
+    if (!is.null(genes)) {
+        all_marker <- genes
+    } else if (is.null(genes) && find_variable_genes) {
         all_marker <- find_var_gene(data,
             num_top_gene = num_top_gene,
             ncores = ncores, celltype = TRUE
         )
     } else {
-        all_marker <- genes
+        all_marker <- list()
+        i <- 1
+        n <- length(rownames(data))
+        for (celltype in unique(data$celltype)) {
+            all_marker[[i]] <- data.frame(
+                "marker" = rownames(data), "celltype" = rep(celltype, n
+            ))
+            i <- i + 1
+        }
+        all_marker <- do.call(rbind, all_marker)
     }
 
     # lapply over unique celltypes with variable genes
