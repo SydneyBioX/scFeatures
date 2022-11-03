@@ -270,14 +270,16 @@ helper_gene_mean_celltype_v2 <- function(data,
     matrix <- do.call("rbind", BiocParallel::bplapply(
         lookup_ids,
         function(ids) {
+            # return object as numeric if only one id is present
             if (length(ids) == 1) {
-                as.numeric(data@assays$RNA@data[ ,ids])
+                as.numeric(GetAssayData(data)[ ,ids])
             } else {
-                MatrixGenerics::rowMeans2(data@assays$RNA@data[ ,ids])
+                MatrixGenerics::rowMeans2(GetAssayData(data)[ ,ids])
             }
         },
         BPPARAM = BPparam
     ))
+
     colnames(matrix) <- rownames(data)
     matrix <- cbind(
         sample = lookup_table$sample, celltype = lookup_table$celltype, matrix
