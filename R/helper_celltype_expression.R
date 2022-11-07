@@ -297,7 +297,13 @@ helper_gene_mean_celltype_v2 <- function(data,
     rownames(matrix) <- matrix[,'sample']
     matrix <- matrix[,colnames(matrix) != 'sample']
     return(matrix)
-} %refactor% {
+} 
+
+helper_gene_mean_celltype_v3 <- function(data,
+                                         genes = NULL,
+                                         find_variable_genes = FALSE,
+                                         num_top_gene = NULL,
+                                         ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
     # an iterator function for bpiterate
@@ -334,7 +340,7 @@ helper_gene_mean_celltype_v2 <- function(data,
 
     ITER <- list_iter(lookup_ids)
 
-    matrix <- BiocParallel::bpiterate(
+    feature_matrix <- BiocParallel::bpiterate(
         ITER,
         function(ids) {
             # return object as numeric if only one id is present
@@ -348,23 +354,23 @@ helper_gene_mean_celltype_v2 <- function(data,
         REDUCE = rbind
     )
 
-    colnames(matrix) <- rownames(data)
-    matrix <- cbind(
-        sample = lookup_table$sample, celltype = lookup_table$celltype, matrix
+    colnames(feature_matrix) <- rownames(data)
+    feature_matrix <- cbind(
+        sample = lookup_table$sample, celltype = lookup_table$celltype, feature_matrix
     )
-    matrix <- matrix |>
+    feature_matrix <- feature_matrix |>
         tidyr::as_tibble() |>
         tidyr:: pivot_wider(
-            id_cols = sample,
-            names_from = celltype,
+            id_cols = "sample",
+            names_from = "celltype",
             values_from = -c('sample', 'celltype'),
             names_glue = "{celltype}--{.value}"
         ) |>
         as.matrix()
 
-    rownames(matrix) <- matrix[,'sample']
-    matrix <- matrix[,colnames(matrix) != 'sample']
-    return(matrix)
+    rownames(feature_matrix) <- feature_matrix[,'sample']
+    feature_matrix <- feature_matrix[,colnames(feature_matrix) != 'sample']
+    return(feature_matrix)
 }
 
 
