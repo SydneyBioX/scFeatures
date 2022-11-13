@@ -430,7 +430,7 @@ individual_nncorr_protein <- function(thissample) {
     )
     err <- try(
         {
-            nncorr_protein <- spatstat.core::nncorr(cell_points_cts)["correlation", ]
+            nncorr_protein <- spatstat.explore::nncorr(cell_points_cts)["correlation", ]
         },
         silent = TRUE
     )

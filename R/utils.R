@@ -217,7 +217,7 @@ get_num_cell_per_celltype <- function(data) {
 
 
 L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
-    L <- spatstat.core::Lcross(ppp_obj,
+    L <- spatstat.explore::Lcross(ppp_obj,
         from = from, to = to,
         verbose = FALSE,
         correction = "best"

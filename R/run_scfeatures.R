@@ -790,7 +790,7 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom reshape2 melt
 #' @importFrom ape Moran.I
-#' @importFrom spatstat.core nncorr
+#' @importFrom spatstat.explore nncorr
 #' @importFrom cli cli_abort cli_warn
 #'
 #' @export
@@ -845,7 +845,7 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom reshape2 melt
 #' @importFrom ape Moran.I
-#' @importFrom spatstat.core nncorr
+#' @importFrom spatstat.explore nncorr
 #' @importFrom cli cli_abort cli_warn
 #'
 #' @export
@@ -895,7 +895,7 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom reshape2 melt
 #' @importFrom ape Moran.I
-#' @importFrom spatstat.core nncorr
+#' @importFrom spatstat.explore nncorr
 #' @importFrom cli cli_abort cli_warn
 #'
 #' @export
@@ -952,7 +952,7 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #' @importFrom BiocParallel SerialParam bplapply
 #' @importFrom reshape2 melt
 #' @importFrom ape Moran.I
-#' @importFrom spatstat.core nncorr
+#' @importFrom spatstat.explore nncorr
 #' @importFrom cli cli_abort cli_warn
 #'
 #' @export
