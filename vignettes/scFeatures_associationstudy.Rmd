@@ -1,8 +1,8 @@
 ---
-title: "Vignette - association study of features with conditions"
+title: "An association study of features with conditions with scFeatures"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette_associationstudy}
+  %\VignetteIndexEntry{scFeatures_associationstudy}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -1,8 +1,8 @@
 ---
-title: "Vignette - summary of scFeatures functions"
+title: "A summary of scFeatures functions"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette_summary}
+  %\VignetteIndexEntry{scFeatures_summary}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
