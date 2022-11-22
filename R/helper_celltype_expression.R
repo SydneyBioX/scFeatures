@@ -167,9 +167,9 @@ find_var_gene <- function(data,
 # sample
 helper_gene_mean_celltype <- function(data,
                                       genes = NULL,
-                                      find_variable_genes = TRUE,
                                       num_top_gene = NULL,
-                                      ncores = 1) {
+                                      ncores = 1,
+                                      find_variable_genes = TRUE) {
     BPparam <- generateBPParam(ncores)
 
     # choose number of top genes if it wasn't one of the parameters
