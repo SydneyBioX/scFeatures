@@ -277,6 +277,10 @@ all(rownames(feature_gene_mean_celltype) == unique(data$sample))
 We recommend using `ClassifyR` to do cross-validated classification with the extracted feaures. 
 
 ```{r eval=FALSE, include=TRUE, fig.height=4, fig.width=7}
+if (!require("ClassifyR", quietly = TRUE)) {
+  BiocManager::install("ClassifyR")
+}
+
 # X is the feature type generated
 # y is the condition for classification
 X <- feature_gene_mean_celltype

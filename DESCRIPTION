@@ -51,7 +51,6 @@ Imports:
 Suggests: 
     knitr,
     inline,
-    ClassifyR,
     S4Vectors,
     survival,
     survminer,
