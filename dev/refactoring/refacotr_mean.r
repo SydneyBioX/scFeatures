@@ -127,6 +127,18 @@ res <- microbenchmark(
     times = 5
 )
 
+# compare find_var_genes version with all_genes version
+res <- microbenchmark(
+    cores_16 = {
+        helper_gene_mean_celltype(
+            data, ncores = 16, find_variable_genes = FALSE
+    )},
+    var_genes_cores_16 = {
+        helper_gene_mean_celltype(
+            data, ncores = 16, find_variable_genes = TRUE
+    )},
+    times = 5
+)
 
 library(refactor)
 devtools::load_all()
