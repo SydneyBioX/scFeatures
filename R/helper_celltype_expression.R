@@ -62,15 +62,14 @@ remove_mito <- function(data) {
 # for celltype specific method, find the variable genes per celltype per sample
 
 find_var_gene <- function(data,
-                          num_top_gene = 1500,
-                          ncores = 1,
-                          celltype = TRUE,
-                          BPparam = NULL) {
+    num_top_gene = 1500,
+    ncores = 1,
+    celltype = TRUE,
+    BPparam = NULL) {
     # BPparam <- ifelse(is.null(BPparam), generateBPParam(ncores), BPparam)
-    BPparam <-generateBPParam(ncores)
+    BPparam <- generateBPParam(ncores)
 
     if (celltype) {
-
         # here calculates the HVG across all cells across all cell types
         hvg_across_all_cells <- BiocParallel::bplapply(
             unique(data$sample), function(thissample) {
@@ -105,7 +104,8 @@ find_var_gene <- function(data,
                         )
                         top_gene <- order(
                             gene_var,
-                            decreasing = TRUE)[1:num_top_gene]
+                            decreasing = TRUE
+                        )[1:num_top_gene]
                         temp <- rownames(data)[top_gene]
                         thisgene <- c(thisgene, temp)
                     }
@@ -148,7 +148,9 @@ find_var_gene <- function(data,
                 )
                 top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
                 thisgene <- rownames(data)[top_gene]
-            }, BPPARAM = BPparam)
+            },
+            BPPARAM = BPparam
+        )
 
         gene <- unique(unlist(gene))
     }
@@ -166,10 +168,10 @@ find_var_gene <- function(data,
 # cell type specific gene mean, set to top 100 variable genes per cell type per
 # sample
 helper_gene_mean_celltype <- function(data,
-                                      genes = NULL,
-                                      num_top_gene = NULL,
-                                      ncores = 1,
-                                      find_variable_genes = TRUE) {
+    genes = NULL,
+    num_top_gene = NULL,
+    ncores = 1,
+    find_variable_genes = TRUE) {
     BPparam <- generateBPParam(ncores)
 
     # choose number of top genes if it wasn't one of the parameters
@@ -192,8 +194,8 @@ helper_gene_mean_celltype <- function(data,
         n <- length(rownames(data))
         for (celltype in unique(data$celltype)) {
             all_marker[[i]] <- data.frame(
-                "marker" = rownames(data), "celltype" = rep(celltype, n
-            ))
+                "marker" = rownames(data), "celltype" = rep(celltype, n)
+            )
             i <- i + 1
         }
         all_marker <- do.call(rbind, all_marker)
@@ -245,16 +247,16 @@ helper_gene_mean_celltype <- function(data,
     final_matrix <- t(final_matrix)
 
     return(final_matrix)
-} 
+}
 
 
 
 
 # cell type specific gene prop
 helper_gene_prop_celltype <- function(data,
-                                      genes = NULL,
-                                      num_top_gene = NULL,
-                                      ncores = 1) {
+    genes = NULL,
+    num_top_gene = NULL,
+    ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
     if (is.null(num_top_gene)) {
@@ -326,9 +328,9 @@ helper_gene_prop_celltype <- function(data,
 # set to just top 5 genes per cell type per sample, because otherwise creates
 # too many features
 helper_gene_cor_celltype <- function(data,
-                                     genes = NULL,
-                                     num_top_gene = NULL,
-                                     ncores = 1) {
+    genes = NULL,
+    num_top_gene = NULL,
+    ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
     if (is.null(num_top_gene)) {
@@ -419,8 +421,8 @@ helper_gene_cor_celltype <- function(data,
 #' @importFrom glue glue
 #' @importFrom stats lm
 helper_gene_mean_celltype_st <- function(data,
-                                         num_top_gene = NULL,
-                                         ncores = 1) {
+    num_top_gene = NULL,
+    ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
     if (is.null(num_top_gene)) {

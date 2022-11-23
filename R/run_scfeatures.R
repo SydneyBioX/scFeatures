@@ -197,10 +197,10 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #'
 #' @export
 run_gene_mean_celltype <- function(data,
-                                   type = "scrna",
-                                   genes = NULL,
-                                   num_top_gene = NULL,
-                                   ncores = 1) {
+    type = "scrna",
+    genes = NULL,
+    num_top_gene = NULL,
+    ncores = 1) {
     # check_data(data, type)
 
     if (type %in% c("scrna", "spatial_p")) {
@@ -270,10 +270,10 @@ run_gene_mean_celltype <- function(data,
 #'
 #' @export
 run_gene_prop_celltype <- function(data,
-                                   type = "scrna",
-                                   genes = NULL,
-                                   num_top_gene = NULL,
-                                   ncores = 1) {
+    type = "scrna",
+    genes = NULL,
+    num_top_gene = NULL,
+    ncores = 1) {
     check_data(data, type)
 
     if (type %in% c("scrna", "spatial_p")) {
@@ -340,10 +340,10 @@ run_gene_prop_celltype <- function(data,
 #'
 #' @export
 run_gene_cor_celltype <- function(data,
-                                  type = "scrna",
-                                  genes = NULL,
-                                  num_top_gene = NULL,
-                                  ncores = 1) {
+    type = "scrna",
+    genes = NULL,
+    num_top_gene = NULL,
+    ncores = 1) {
     check_data(data, type)
 
     if (type %in% c("scrna", "spatial_p")) {
@@ -416,8 +416,8 @@ run_gene_cor_celltype <- function(data,
 #'
 #' @export
 run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
-                             species = "Homo sapiens",
-                             type = "scrna", subsample = TRUE, ncores = 1) {
+    species = "Homo sapiens",
+    type = "scrna", subsample = TRUE, ncores = 1) {
     check_data(data, type)
 
     if (is.null(geneset)) {
@@ -502,9 +502,9 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #'
 #' @export
 run_pathway_mean <- function(data, geneset = NULL,
-                             species = "Homo sapiens",
-                             type = "scrna",
-                             ncores = 1) {
+    species = "Homo sapiens",
+    type = "scrna",
+    ncores = 1) {
     check_data(data, type)
 
     if (is.null(geneset)) {
@@ -577,9 +577,9 @@ run_pathway_mean <- function(data, geneset = NULL,
 #'
 #' @export
 run_pathway_prop <- function(data, geneset = NULL,
-                             species = "Homo sapiens",
-                             type = "scrna",
-                             ncores = 1) {
+    species = "Homo sapiens",
+    type = "scrna",
+    ncores = 1) {
     check_data(data, type)
 
     if (is.null(geneset)) {
@@ -598,7 +598,7 @@ run_pathway_prop <- function(data, geneset = NULL,
             "`pathway_prop` currently does not support spatial transcriptomics"
         ))
         return(NULL)
-    }  else {
+    } else {
         cli::cli_abort(c(
             "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
             "x" = "'{type}' is not a valid input data type"
@@ -653,10 +653,10 @@ run_pathway_prop <- function(data, geneset = NULL,
 #'
 #' @export
 run_gene_mean <- function(data,
-                          type = "scrna",
-                          genes = NULL,
-                          num_top_gene = NULL,
-                          ncores = 1) {
+    type = "scrna",
+    genes = NULL,
+    num_top_gene = NULL,
+    ncores = 1) {
     check_data(data, type)
 
     if (type %in% c("scrna", "spatial_p", "spatial_t")) {
@@ -755,7 +755,7 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 
     if (type %in% c("scrna", "spatial_p", "spatial_t")) {
         X <- helper_gene_cor(data, genes, num_top_gene, ncores)
-    }  else {
+    } else {
         cli::cli_abort(c(
             "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
             "x" = "'{type}' is not a valid input data type"

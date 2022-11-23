@@ -168,8 +168,6 @@ helper_celltype_interaction_st <- function(data, ncores = 1) {
 
 
 individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
-
-
     # expand each spot into its number of cells
     x <- c()
     y <- c()

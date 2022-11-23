@@ -77,7 +77,6 @@ bulk_sample_celltype <- function(data, ncores = 1) {
 
     # x <- unique( data$sample)[1]
     bulk <- BiocParallel::bplapply(unique(data$sample), function(x) {
-
         # for this patient
         this_sample <- data[, data$sample == x]
 

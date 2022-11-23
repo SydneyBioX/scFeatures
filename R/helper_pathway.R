@@ -38,7 +38,6 @@ get_geneset <- function(species = "Homo sapiens") {
 # helper function to run the pathway gsva
 helper_pathway_gsva <- function(data, method = "ssgsea", geneset, ncores = 1) {
     if (method == "ssgsea") {
-
         # if the dataset has greater than 30000 cells
         #  then it is actually too large to be computed in one go in gsva
         #  split into multiple set
@@ -143,7 +142,6 @@ helper_pathway_mean <- function(data, geneset, ncores = 1) {
 #' @importFrom DelayedMatrixStats colMeans2
 #' @importFrom DelayedArray DelayedArray
 individual_geneset_proportion_celltype <- function(data, this_geneset) {
-
     # first find the average expression of the genes across cells
     expression_level <- DelayedMatrixStats::colMeans2(DelayedArray::DelayedArray(
         data[rownames(data) %in% this_geneset, ]@assays$RNA@data
@@ -259,7 +257,6 @@ helper_pathway_prop <- function(data, geneset, ncores = 1) {
 # The output from GSVA and geneset mean is in the form of pathway score x cell
 # Need to convert to patient x pathway features
 format_pathway <- function(data, topMatrixGSVA, ncores) {
-
     # aggregate the pathway score of each cell type
     topMatrixGSVA <- CreateSeuratObject(topMatrixGSVA)
     topMatrixGSVA$celltype <- data$celltype

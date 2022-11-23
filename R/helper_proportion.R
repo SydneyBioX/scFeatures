@@ -44,7 +44,6 @@ helper_proportion_ratio <- function(data, ncores = 1) {
 
     #  x = "Pre_P1"
     df <- BiocParallel::bplapply(unique(data$sample), function(x) {
-
         # loop through each sample
         this_sample <- data@meta.data[data$sample == x, ]
 
@@ -172,7 +171,6 @@ helper_proportion_ratio_st <- function(data, ncores = 1) {
 
     x <- unique(data$sample)[1]
     df <- BiocParallel::bplapply(unique(data$sample), function(x) {
-
         # loop through each sample
 
         index <- which(data$sample == x)
@@ -220,7 +218,7 @@ helper_proportion_ratio_st <- function(data, ncores = 1) {
 
     colnames(tab) <- c("sample", "celltype", "ratio")
 
-    tab <- tab |>tidyr::pivot_wider(names_from = "celltype", values_from = "ratio")
+    tab <- tab |> tidyr::pivot_wider(names_from = "celltype", values_from = "ratio")
     tab <- as.data.frame(tab)
     rownames(tab) <- tab$sample
     tab <- tab[, -1]
