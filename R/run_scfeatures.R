@@ -402,7 +402,6 @@ run_gene_cor_celltype <- function(data,
 #' )
 #'
 #' @importFrom msigdbr msigdbr
-#' @importFrom ensembldb select
 #' @importFrom GSVA gsva
 #' @importFrom AUCell AUCell_buildRankings AUCell_calcAUC getAUC
 #' @import EnsDb.Hsapiens.v79
@@ -488,7 +487,6 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #' )
 #'
 #' @importFrom msigdbr msigdbr
-#' @importFrom ensembldb select
 #' @importFrom GSVA gsva
 #' @importFrom AUCell AUCell_buildRankings AUCell_calcAUC getAUC
 #' @import EnsDb.Hsapiens.v79
@@ -563,7 +561,6 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' )
 #'
 #' @importFrom msigdbr msigdbr
-#' @importFrom ensembldb select
 #' @importFrom GSVA gsva
 #' @importFrom AUCell AUCell_buildRankings AUCell_calcAUC getAUC
 #' @import EnsDb.Hsapiens.v79
