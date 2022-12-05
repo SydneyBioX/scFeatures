@@ -144,3 +144,8 @@ In normalizePath(path, winslash = winslash, mustWork = mustWork) :
 - [ ] Consider adding a package-level man page (see https://contributions.bioconductor.org/docs.html#package-level-documentation).
 - [ ] It's strongly recommended to avoid direct slot access with `@` or `slot()` of S4 objects. Instead, use accessor functions. That said, my understanding is that **Seurat** authors have not followed this advice, so it's unavoidable when interacting with **Seurat** objects, but please ensure you are doing this when interacting with Bioconductor objects.
 - [ ] Why does `remove_mito()` remove more than just mitochondrial genes? I strongly recommend choosing a more precise name for the function or split the functionality up into `remove_mito()`, `remove_ribo()`, etc.
+
+
+# Work Done
+
+- Nick: Down-sample data to 550 samples in order to create a dataset <3MB
