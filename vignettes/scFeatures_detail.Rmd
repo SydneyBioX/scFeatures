@@ -1,6 +1,6 @@
 ---
 title: "A detailed explanation of scFeatures' features"
-output: rmarkdown::html_vignette
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{scFeatures_detail}
   %\VignetteEngine{knitr::rmarkdown}
@@ -251,7 +251,7 @@ feature_gene_prop_aggregated  <- run_gene_prop(data, num_top_gene = 100)
 
 ## Classification of conditions using the generated features
 
-scFeatures provides a wrapper around the classification function in ClassifyR (https://www.bioconductor.org/packages/release/bioc/html/ClassifyR.html) to build disease prediction model from the generated features. 
+To build disease prediction model from the generated features use utilise [`ClassifyR`](https://www.bioconductor.org/packages/release/bioc/html/ClassifyR.html). 
 
 
 The output from scFeatures is a matrix of sample x feature, ie, the row corresponds to each sample, the column corresponds to the feature, and can be directly used as the `X`. The order of the rows is in the order of unique(data$sample). 
@@ -274,12 +274,10 @@ all(rownames(feature_gene_mean_celltype) == unique(data$sample))
 ```
 
 
-We recommend using `ClassifyR` to do cross-validated classification with the extracted feaures. 
+We recommend using `ClassifyR::crossValidate` to do cross-validated classification with the extracted feaures. 
 
 ```{r eval=FALSE, include=TRUE, fig.height=4, fig.width=7}
-if (!require("ClassifyR", quietly = TRUE)) {
-  BiocManager::install("ClassifyR")
-}
+library(ClassifyR)
 
 # X is the feature type generated
 # y is the condition for classification

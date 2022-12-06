@@ -1,6 +1,6 @@
 ---
 title: "An association study of features with conditions with scFeatures"
-output: rmarkdown::html_vignette
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{scFeatures_associationstudy}
   %\VignetteEngine{knitr::rmarkdown}

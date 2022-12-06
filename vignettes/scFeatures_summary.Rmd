@@ -1,6 +1,6 @@
 ---
 title: "A summary of scFeatures functions"
-output: rmarkdown::html_vignette
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{scFeatures_summary}
   %\VignetteEngine{knitr::rmarkdown}

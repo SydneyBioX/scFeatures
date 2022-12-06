@@ -80,7 +80,8 @@ Error: Cannot find 'cellType' in this Seurat object
 - [ ] The 'Value' section of many man pages is incorrect. E.g., `run_proportion_raw()` returns a _data.frame_ but is documented to return 'a _matrix_ of samples x features'. These details matter when it comes to documenting package code.
 - [ ] The 'Introduction' of the each vignette, especially the first or main vignette (which I take to be `scFeatures_summary`) should read like an abstract; see https://contributions.bioconductor.org/docs.html#vignette-introduction
 - [ ] Please give the vignettes informative titles and filenames; see https://contributions.bioconductor.org/docs.html#vignettes
-- [ ] Please use [BiocStyle](https://www.bioconductor.org/packages/release/bioc/html/BiocStyle.html) for vignette formatting.
+- [x] Please use [BiocStyle](https://www.bioconductor.org/packages/release/bioc/html/BiocStyle.html) for vignette formatting.
+  - All vigettes now use `BiocStyle`.
 - [ ] Simply removing **ClassifyR** from `DESCRIPTION` is insufficient because the `scFeatures_detail` vignette still uses it to demonstrate the utility of **scFeatures**. Now that **ClassifyR** is passing builds again, please re-add **ClassifyR** to the `DESCRIPTION` if using it in the vignettes or elsewhere in **scFeatures**.
 - [ ] **RhpcBLASctl** should not be needed or used in a package. Why is it needed (and hidden) in the vignette?
 - [ ] Why is **inline** needed in the vignettes?
