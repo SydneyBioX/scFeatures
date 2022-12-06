@@ -120,6 +120,8 @@ In normalizePath(path, winslash = winslash, mustWork = mustWork) :
 - [ ] Please add a table of contents to each vignette.
 - [ ] All man pages should have runnable examples (see https://contributions.bioconductor.org/docs.html#examples)
 - [ ] What are the `dev` and `docs` folders? Please justify or remove them from the main branch of the git repo (Bioconductor requests that \"Any files or directories for other applications (Github Actions, devtools, etc.) should ideally be in a different branch and not submitted to the Bioconductor version of the package.\" (see https://contributions.bioconductor.org/general.html?q=unnec#undesirable-files)
+  - [x] Remove `docs` folder.
+  - [ ] Rremove `dev` folder.
 
 ## Recommended
 
