@@ -225,7 +225,7 @@ Here we provide a brief overview of the association study result, including the 
 
 
 ```{r}
-scfeatures_result <- readRDS("/dskh/nobackup/yuec/scfeatures/scfeatures_package/scFeatures/inst/extdata/scfeatures_result.rds")
+scfeatures_result <- readRDS(system.file("extdata", "scfeatures_result.rds", package = "scFeatures"))
 ```
 
 
