@@ -8,7 +8,7 @@ vignette: >
 ---
 
 
-```{r setup, include=FALSE}
+```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -28,7 +28,7 @@ library(scFeatures)
 
 
 
-```{r eval=FALSE, include=TRUE}
+```{r eval=TRUE, include=TRUE}
 # here we use the demo data from the package 
 scfeatures_result <- readRDS( system.file("extdata", "scfeatures_result.rds",   
                             package = "scFeatures"))
@@ -52,7 +52,7 @@ When creating the list, the name of the list must use the same name as shown bel
 Not all feature types need to be provided. If a feature type is missing, the section in the html for the feature type will just be left blank. 
 
 
-```{r eval=FALSE, include=TRUE}
+```{r eval=T, include=TRUE}
 # example of creating the feature list using the correct naming conventions
 scfeatures_result <- list( 
    proportion_raw = proportion_raw,

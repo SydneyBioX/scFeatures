@@ -55,5 +55,6 @@ Suggests:
     survminer,
     BiocStyle,
     rmarkdown,
-    ClassifyR
+    ClassifyR,
+    org.Hs.eg.db
 VignetteBuilder: knitr
