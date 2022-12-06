@@ -33,6 +33,8 @@ Error in run_CCI(data, species = \"Homo sapiens\") :
   could not find function \"run_CCI\"
 ```
 
+  - **Fixed this: use to include cell-cell interaction via CellChat, but it is not on CRAN/BioC, so it was removed.** 
+
 ```r
 genes_of_interest <- c(\"TIGIT\", \"PDCD1\")
 feature_gene_prop_bulk <- run_gene_prop(data, genes = genes_of_interest )
