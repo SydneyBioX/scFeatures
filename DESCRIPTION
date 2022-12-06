@@ -54,5 +54,8 @@ Suggests:
     S4Vectors,
     survival,
     survminer,
-    RhpcBLASctl
+    RhpcBLASctl,
+    BiocStyle,
+    rmarkdown,
+    ClassifyR
 VignetteBuilder: knitr

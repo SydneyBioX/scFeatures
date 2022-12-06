@@ -82,7 +82,8 @@ Error: Cannot find 'cellType' in this Seurat object
 - [ ] Please give the vignettes informative titles and filenames; see https://contributions.bioconductor.org/docs.html#vignettes
 - [x] Please use [BiocStyle](https://www.bioconductor.org/packages/release/bioc/html/BiocStyle.html) for vignette formatting.
   - All vigettes now use `BiocStyle`.
-- [ ] Simply removing **ClassifyR** from `DESCRIPTION` is insufficient because the `scFeatures_detail` vignette still uses it to demonstrate the utility of **scFeatures**. Now that **ClassifyR** is passing builds again, please re-add **ClassifyR** to the `DESCRIPTION` if using it in the vignettes or elsewhere in **scFeatures**.
+- [x] Simply removing **ClassifyR** from `DESCRIPTION` is insufficient because the `scFeatures_detail` vignette still uses it to demonstrate the utility of **scFeatures**. Now that **ClassifyR** is passing builds again, please re-add **ClassifyR** to the `DESCRIPTION` if using it in the vignettes or elsewhere in **scFeatures**.
+  - Re-added `ClassifyR`.
 - [ ] **RhpcBLASctl** should not be needed or used in a package. Why is it needed (and hidden) in the vignette?
 - [ ] Why is **inline** needed in the vignettes?
 - [ ] The formatting in the `scFeatures_detail` vignette is a bit messy because it includes lots of verbose output (progress bars). Please revise.
