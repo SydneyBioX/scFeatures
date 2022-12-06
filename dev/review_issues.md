@@ -84,7 +84,8 @@ Error: Cannot find 'cellType' in this Seurat object
   - All vigettes now use `BiocStyle`.
 - [x] Simply removing **ClassifyR** from `DESCRIPTION` is insufficient because the `scFeatures_detail` vignette still uses it to demonstrate the utility of **scFeatures**. Now that **ClassifyR** is passing builds again, please re-add **ClassifyR** to the `DESCRIPTION` if using it in the vignettes or elsewhere in **scFeatures**.
   - Re-added `ClassifyR`.
-- [ ] **RhpcBLASctl** should not be needed or used in a package. Why is it needed (and hidden) in the vignette?
+- [x] **RhpcBLASctl** should not be needed or used in a package. Why is it needed (and hidden) in the vignette?
+  - It was added to fix a bug that is now forgotten, I removed all references.
 - [ ] Why is **inline** needed in the vignettes?
 - [ ] The formatting in the `scFeatures_detail` vignette is a bit messy because it includes lots of verbose output (progress bars). Please revise.
 - [ ] In the `scFeatures_detail` vignette you are subsetting a vector outside its bounds; please fix:

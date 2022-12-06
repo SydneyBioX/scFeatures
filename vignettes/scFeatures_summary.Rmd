@@ -18,12 +18,7 @@ knitr::opts_chunk$set(
 
 
 ```{r include=FALSE, paged.print=TRUE}
-
 library(inline)
-library(RhpcBLASctl)
-
-blas_set_num_threads(1)
-
 ```
 
 
