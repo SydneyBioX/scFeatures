@@ -17,7 +17,6 @@ knitr::opts_chunk$set(
 
 
 ```{r eval=TRUE, include=FALSE, paged.print=TRUE}
-library(inline)
 library(S4Vectors)
 ```
 
