@@ -148,11 +148,20 @@ bulk_sample <- function(data, ncores = 1) {
 
 
 
-#' estimate a relative number of cells per spot
+#' Estimate a relative number of cells per spot for
+#' spatial transcriptomics data
 #'
-#' @param data input data
+#' This function takes a spatial transcriptomics data as input 
+#' and estimates the relative number of cells per spot in the data. 
+#' The number of cells is estimated as the library size scaled to 
+#' the range [1, 100]. 
+#' This value stored in the `number_cells` attribute.
+#' 
+#' @param data spatial transcriptomics data in Seurat object. 
 #'
-#' @return data with the relative number of cells/spot stored in it's metadata
+#' @return the object with the relative number of cells/spot stored
+#' in the `number_cells` attribute. 
+#' 
 #' @importFrom BiocGenerics colSums
 #'
 #' @examples
