@@ -7,7 +7,7 @@
 #' @description 
 #' This function calculates the proportions of cells belonging to each cell type. 
 #' The input data must contain `sample` and `celltype` metadata column. 
-#' The function supports scRNA-seq, spatial proteomics, and spatial transcriptomics data.
+#' The function supports scRNA-seq and spatial proteomics.
 #' The function returns a matrix with samples as rows and cell types as columns.
 #' 
 #' @param data A a Seurat object containing `celltype` and `sample` label
@@ -64,7 +64,7 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #' This function calculates the proportions of cells belonging to each cell type,
 #' and applies a logit transformation to the proportions. 
 #' The input data must contain `sample` and `celltype` metadata column. 
-#' The function supports scRNA-seq, spatial proteomics, and spatial transcriptomics data.
+#' The function supports scRNA-seq and spatial proteomics.
 #' The function returns a matrix with samples as rows and cell types as columns.
 #' 
 #' @param data A a Seurat object containing `celltype` and `sample` label
@@ -115,12 +115,18 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 
 
 
-#' generate cell type proportion ratio
-#'
-#' @param data input data, a Seurat object containing `celltype` and
-#'             `sample` label
-#' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param ncores number of cores
+#' Generate cell type proportion ratio
+#' 
+#' @description
+#' This function calculates pairwise cell type proportion ratio for each sample. 
+#' and applies a logit transformation to the proportions. 
+#' The input data must contain `sample` and `celltype` metadata column. 
+#' The function supports scRNA-seq, spatial proteomics, and spatial transcriptomics data.
+#' The function returns a matrix with samples as rows and cell types as columns.
+#' 
+#' @param data A a Seurat object containing `celltype` and `sample` label
+#' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
+#' @param ncores Number of cores for parallel processing.
 #'
 #' @return a matrix of samples x features
 #'
