@@ -71,7 +71,19 @@ generateBPParam <- function(cores = 1) {
 
 
 
-# create pseudo-bulk for each cell type of each sample
+#' Create pseudo-bulk for each cell type of each sample in a Seurat object
+#'
+#' This function takes a Seurat object as input and creates a pseudo-bulk 
+#' for each cell type of each sample in the object. This is computed by
+#' taking the row means of the expression for each cell type of each sample 
+#' If a cell type does not exist in a sample, the expression values for that 
+#' cell type will be 0 for all genes.
+#'
+#' @param data A Seurat object containing expression. 
+#' @param ncores Number of cores for parallel computation.
+#' @return A Seurat object containing the pseudo-bulks for each cell type
+#'  of each sample. 
+#' 
 bulk_sample_celltype <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
@@ -125,15 +137,15 @@ bulk_sample_celltype <- function(data, ncores = 1) {
 
 #' Create pseudo-bulk for each sample in a Seurat object
 #'
-#' @description 
+#' @description  
 #' This function takes a Seurat object as input and creates 
 #' a pseudo-bulk for each sample in the object. This is calculated by
 #' taking row means of the expression for each sample. 
 #'
 #' @param data A Seurat object containing expression. 
-#' @param ncores Number of cores for parallel computation.
+#' @param ncores Number of cores for parallel computation. 
 #' @return A Seurat object containing the pseudo-bulks for each sample 
-#' in the input data.
+#' in the input data. 
 #' 
 bulk_sample <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
