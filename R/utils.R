@@ -123,7 +123,18 @@ bulk_sample_celltype <- function(data, ncores = 1) {
 
 
 
-# create pseudo-bulk for each sample
+#' Create pseudo-bulk for each sample in a Seurat object
+#'
+#' @description 
+#' This function takes a Seurat object as input and creates 
+#' a pseudo-bulk for each sample in the object. This is calculated by
+#' taking row means of the expression for each sample. 
+#'
+#' @param data A Seurat object containing expression. 
+#' @param ncores Number of cores for parallel computation.
+#' @return A Seurat object containing the pseudo-bulks for each sample 
+#' in the input data.
+#' 
 bulk_sample <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
