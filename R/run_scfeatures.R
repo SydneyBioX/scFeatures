@@ -826,12 +826,15 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 
 
 
-#' generate L stats
-#'
-#' @param data input data, a Seurat object containing `celltype` and `sample`
-#'  label
-#' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param ncores number of cores
+#' Generate L stats
+#' 
+#' @description
+#' This function calculates L-statistics to measure spatial autocorrelation.
+#' The function supports  spatial proteomics and spatial transcriptomics.
+#' 
+#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
+#' @param ncores Number of cores for parallel processing.
 #'
 #' @return a matrix of samples x features
 #'
