@@ -234,19 +234,24 @@ L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
 
 
 
-#' perform pre-processing
+#' data pre-processing
+#' 
+#' @description This function takes a Seurat object as input and does data
+#' cleaning and pre-processing. For example, it replaces the "+" and "-" 
+#' signs in the `celltype` column with "plus" and "minus", respectively.
+#' It also removes patients that have less than 10 cells across all cell types.
+#' If the `normalise` argument is set to `TRUE`, the function will normalize 
+#' the data using the `Seurat::NormalizeData` function.
 #'
-#' @param data input data
-#' @param normalise whether to normalise the data. Note if the data has already
-#'                  been normalised (eg, log2CPM), there is no need to normalise
-#'                  again.
+#' @param data input data, a Seurat object. 
+#' @param normalise a logical value indicating whether to normalize the data 
+#' or not. Default value is `TRUE`.
 #'
-#' @return a matrix of samples x features
+#' @return a Seurat object
 #'
 #' @import Seurat
 #'
 #' @examples
-#'
 #' data <- readRDS(system.file(
 #'     "extdata", "example_spatial_transcriptomics.rds",
 #'     package = "scFeatures"
