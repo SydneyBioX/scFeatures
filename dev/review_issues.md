@@ -15,7 +15,7 @@ Pete
 
 ## Required
 
-- [ ] Most of the code in the vignettes is unevaluated and so is untested by `R CMD check`. Bioconductor expects that vignettes contain non-trivial evaluated code chunks and static vignettes are generally not acceptable.
+- [x] Most of the code in the vignettes is unevaluated and so is untested by `R CMD check`. Bioconductor expects that vignettes contain non-trivial evaluated code chunks and static vignettes are generally not acceptable.
   - When I tried running the vignette code line-by-line (like a new user would) there were several examples that returned an error. Such errors would be caught by `R CMD check` if the vignette code was evaluated. Some examples of where I encountered errors when running the vignette code:
 
 ```r
@@ -67,6 +67,7 @@ scfeatures_result <- scFeatures(data,
              ncores = 8)
 Error: Cannot find 'cellType' in this Seurat object
 ```
+ - **Fixed**: Code was not evaluated because of very long runtimes, but this has been changed and broken chunks have been fixed.
 
 - [ ] The man pages (documentation) is too terse and imprecise.
   - Each man page should include well-written:
