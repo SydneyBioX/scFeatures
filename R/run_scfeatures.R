@@ -242,39 +242,41 @@ run_gene_mean_celltype <- function(data,
 
 # TODO: Several warnings below should probably be errors.
 
-
-#' generate cell type specific gene proportion expression
+#' Generate cell type specific gene proportion expression
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample`
-#'  label
-#' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param genes default to NULL, in which case the top variable genes will be
-#'  used
-#'  If provided by user, need to be in the format of a dataframe with 2 columns
-#'  'marker' and 'celltype'.
-#'  The marker column contains the genes of interest, eg: S100A11 , CCL4 ,
-#'  the celltype column contains the celltype that the gene expression is to be
-#'  computed from, eg: CD8, B cells
-#' @param num_top_gene when the genes is not provided by the user, the top
-#'  variable genes will be used
-#'  The number of genes is set by this number.
-#'  default to NULL, in which case top 100 genes from each cell type will be
-#'  selected
-#' @param ncores number of cores
+#' This function computes the proportion of expression of a set of genes 
+#' for each cell type in the input data. The input data can be of three types: 
+#' 'scrna', 'spatial_p' or 'spatial_t'. If the genes parameter is not provided 
+#' by the user, the top variable genes will be selected based on the 
+#' num_top_gene parameter (defaults to 100). 
+#' 
+#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
+#' @param genes Optional dataframe with 2 columns: 'marker' and 'celltype'.
+#' The 'marker' column should contain the genes of interest (e.g. 'S100A11', 'CCL4'), 
+#' and the 'celltype' column should contain the celltype that the gene expression 
+#' is to be computed from (e.g. 'CD8', 'B cells').
+#' If not provided, the top variable genes will be used based on the 
+#' num_top_gene parameter.
+#' @param num_top_gene Number of top genes to use when genes is not provided.
+#' Defaults to 100.
+#' @param ncores Number of cores for parallel processing.
 #'
 #' @return a matrix of samples x features
 #'
 #' @examples
 #'
-#' data <- readRDS(
+#' \dontrun{
+#'  data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )
+#'  )
 #' # optional step, if mito and ribo genes are not of interest
 #' data_remove_mito <- remove_mito(data)
-#' feature_gene_prop_celltype <- run_gene_prop_celltype(
+#'  feature_gene_prop_celltype <- run_gene_prop_celltype(
 #'     data_remove_mito,
 #'     type = "scrna", num_top_gene = 100, ncores = 1
-#' )
+#'  )
+#' }
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
