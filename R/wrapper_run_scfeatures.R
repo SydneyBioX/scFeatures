@@ -33,9 +33,11 @@
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' scfeatures_result <- scFeatures(data, type = "scrna")
-#'
+#' \dontrun{
+#'  data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+#'  scfeatures_result <- scFeatures(data, type = "scrna")
+#' }
+#' 
 #' @export
 scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
     species = "Homo sapiens", celltype_genes = NULL, aggregated_genes = NULL, geneset = NULL,

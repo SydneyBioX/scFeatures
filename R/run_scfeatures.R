@@ -179,15 +179,17 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(
+#' \dontrun{
+#'   data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )
-#' # optional step, if mito and ribo genes are not of interest
-#' data_remove_mito <- remove_mito(data)
-#' feature_gene_mean_celltype <- run_gene_mean_celltype(
+#'   )
+#'   # optional step, if mito and ribo genes are not of interest
+#'   data_remove_mito <- remove_mito(data)
+#'   feature_gene_mean_celltype <- run_gene_mean_celltype(
 #'     data_remove_mito,
 #'     type = "scrna", num_top_gene = 100, ncores = 1
-#' )
+#'   )
+#' }
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
@@ -321,16 +323,18 @@ run_gene_prop_celltype <- function(data,
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata",
-#'     "example_scrnaseq.rds",
+#' \dontrun{
+#'  data <- readRDS(system.file("extdata",
+#'    "example_scrnaseq.rds",
 #'     package = "scFeatures"
-#' ))
-#' # optional step, if mito and ribo genes are not of interest
-#' data_remove_mito <- remove_mito(data)
-#' feature_gene_cor_celltype <- run_gene_cor_celltype(
-#'     data_remove_mito,
-#'     type = "scrna", num_top_gene = 100, ncores = 1
-#' )
+#'  ))
+#'  # optional step, if mito and ribo genes are not of interest
+#'  data_remove_mito <- remove_mito(data)
+#'  feature_gene_cor_celltype <- run_gene_cor_celltype(
+#'    data_remove_mito,
+#'    type = "scrna", num_top_gene = 100, ncores = 1
+#'  )
+#' }
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
@@ -736,8 +740,14 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#' feature_gene_cor <- run_gene_cor(data, type = "scrna", num_top_gene = 1500, ncores = 1)
+#' \dontrun{
+#'  data <- readRDS(
+#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#'  )
+#'  feature_gene_cor <- run_gene_cor(
+#'    data, type = "scrna", num_top_gene = 1500, ncores = 1
+#'  )
+#' }
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowMeans2
