@@ -1,12 +1,24 @@
 
 
-#' check that all metadata are in the data
+#' Check if required metadata is in the Seurat object
 #'
-#' @param data Dataset to be checked.
-#' @param type Type of dataset (e.g., "scrna", "spatial_t", "spatial_p").
+#' @description 
+#' This function checks that the Seurat object contains all the 
+#' necessary metadata for functions in scFeatures. 
+#' For scRNA-seq, it must contain `sample` and `celltype`.
+#' For spatial proteomics, it must contain `sample`, `celltype` and 
+#' and spatial proteomics data, it must contain `sample` and `x_cord`
+#' and `y_cord`. 
+#' For spatial transcriptomics data, it must contain `sample`, `x_cord`
+#' `y_cord` and a `predictions` assay.
+#' 
+#' @param data A Seurat object containing expression. 
+#' @param type Type of dataset, either "scrna" (for scRNA-seq), "spatial_t" 
+#' (for spatial transcriptomics) or "spatial_p" (for spatial proteomics). 
 #'
-#' @return `NULL`
+#' @return NULL
 #' @importFrom methods is
+#' 
 check_data <- function(data, type = "scrna") {
     if (!is(data, "Seurat")) {
         # TODO: Should this be a warning/error?
@@ -43,6 +55,7 @@ check_data <- function(data, type = "scrna") {
 
 #' Enable parallel processing
 #'
+#' @description 
 #' This function takes the number of cores to use for parallel processing and
 #' generates a `BiocParallel` object that can be used to control the 
 #' parallelization of functions. 
@@ -52,6 +65,7 @@ check_data <- function(data, type = "scrna") {
 #' @param cores The number of cores to use for parallel processing.
 #' @return A `BiocParallel` object that can be used to control the 
 #' parallelization of functions.
+#' 
 generateBPParam <- function(cores = 1) {
     seed <- .Random.seed[1]
 
@@ -83,6 +97,7 @@ generateBPParam <- function(cores = 1) {
 
 #' Create pseudo-bulk for each cell type of each sample in a Seurat object
 #'
+#' @description 
 #' This function takes a Seurat object as input and creates a pseudo-bulk 
 #' for each cell type of each sample in the object. This is computed by
 #' taking the row means of the expression for each cell type of each sample 
