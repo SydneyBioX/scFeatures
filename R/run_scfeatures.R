@@ -121,7 +121,7 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #' This function calculates pairwise cell type proportion ratio for each sample. 
 #' and applies a logit transformation to the proportions. 
 #' The input data must contain `sample` and `celltype` metadata column. 
-#' The function supports scRNA-seq, spatial proteomics, and spatial transcriptomics data.
+#' The function supports scRNA-seq and spatial proteomics.
 #' The function returns a matrix with samples as rows and cell types as columns.
 #' 
 #' @param data A a Seurat object containing `celltype` and `sample` label
