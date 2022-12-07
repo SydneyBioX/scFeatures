@@ -54,7 +54,6 @@ Suggests:
     survival,
     survminer,
     BiocStyle,
-    rmarkdown,
     ClassifyR,
     org.Hs.eg.db
 VignetteBuilder: knitr
