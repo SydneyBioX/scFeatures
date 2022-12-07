@@ -53,7 +53,7 @@ scfeatures_result <- scFeatures(data)
 
  
 
-The above function uses all default settings and generate all feature types. We provide an example below that describes how to customise each parameter.   
+The above function uses all default settings and generate all feature types. We provide an example below that describes how this can be done with a spatial proteomics dataset.   
 
 ```{r, include=TRUE}
 data <- readRDS(
@@ -91,16 +91,6 @@ scfeatures_result <- scFeatures(data,
     # aggregated gene expression feature category, now set to user
     # defined genes.
     aggregated_genes = c("CD3", "p53"),
-    # When passing as SingleCellExperiment or SpatialExperiment,
-    # by default we use the assay stored in "logcount"
-    assay = "norm",
-    # By default we look for the sample info in "sample" column and the
-    # celltype info in "celltype" column
-    sample = "imageID",
-    celltype = "cellType",
-    #  If users want to construct features from the spatial metrics
-    # category, by default we look for the "x_cord" & "y_cord" column
-    spatialCoords = c("x", "y"),
     # by default uses single core
     ncores = 8
 )
