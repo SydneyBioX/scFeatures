@@ -2,17 +2,21 @@
 
 
 
-#' generate cell type proportion raw
-#'
-#' @param data the input data, a Seurat object containing `celltype` and
-#'             `sample` label
-#' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param ncores number of cores
+#' Generate cell type proportion raw
+#' 
+#' @description 
+#' #' This function calculates the proportions of cells belonging to each cell type. 
+#' The input data must contain `sample` and `celltype` metadata column. 
+#' The function supports scRNA-seq, spatial proteomics, and spatial transcriptomics data.
+#' The function returns a matrix with samples as rows and cell types as columns.
+#' 
+#' @param data A a Seurat object containing `celltype` and `sample` label
+#' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
+#' @param ncores Number of cores for parallel processing.
 #'
 #' @return a matrix of samples x features
 #'
 #' @examples
-#'
 #' data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #' )
