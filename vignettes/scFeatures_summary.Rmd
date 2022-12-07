@@ -1,5 +1,5 @@
 ---
-title: "A summary of scFeatures functions"
+title: "An overview of scFeatures' functions"
 output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{scFeatures_summary}
