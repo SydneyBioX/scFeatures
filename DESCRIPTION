@@ -54,7 +54,7 @@ Suggests:
     survival,
     survminer,
     BiocStyle,
-    rmarkdown,
     ClassifyR,
     org.Hs.eg.db
 VignetteBuilder: knitr
+BugReports: https://github.com/SydneyBioX/scFeatures/issues

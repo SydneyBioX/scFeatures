@@ -26,12 +26,15 @@ Error: BiocParallel errors
   first remote error:
 Error: Under current subsetting parameters, the default assay will be removed. Please adjust subsetting parameters or change default assay.
 ```
-
+  - **Fixed**: The subsetted data included was causing issues.
+    - TODO: Double check this is working properly.
 ```r
 > feature_CCI <- run_CCI(data , species = \"Homo sapiens\" )
 Error in run_CCI(data, species = \"Homo sapiens\") : 
   could not find function \"run_CCI\"
 ```
+
+  - **Fixed**: use to include cell-cell interaction via CellChat, but it is not on CRAN/BioC, so it was removed.
 
 ```r
 genes_of_interest <- c(\"TIGIT\", \"PDCD1\")
@@ -111,14 +114,18 @@ In normalizePath(path, winslash = winslash, mustWork = mustWork) :
   path[1]=\"output_report.Rmd\": No such file or directory
 ```
 
-- [ ] The **org.Hs.eg.db** package is an unspecified dependency used in the report generation demonstrated in `scFeatures_associationstudy`. Please include it as a dependency in the `DESCRIPTION`.
-- [ ] There are hardcoded paths in the report demonstrated in `scFeatures_associationstudy` (https://github.com/SydneyBioX/scFeatures/blob/80034c0ec37c206d63a08198e22dda351126b805/inst/extdata/output_report.Rmd#L228). This means it won't work on anyone else's computer.
-- [ ] Please add a `BugReports` field to the `DESCRIPTION` (usually a link to the Issues page of the GitHub repo).
+- [x] The **org.Hs.eg.db** package is an unspecified dependency used in the report generation demonstrated in `scFeatures_associationstudy`. Please include it as a dependency in the `DESCRIPTION`.
+  - Added `org.Hs.eg.db` to suggests.
+- [x] There are hardcoded paths in the report demonstrated in `scFeatures_associationstudy` (https://github.com/SydneyBioX/scFeatures/blob/80034c0ec37c206d63a08198e22dda351126b805/inst/extdata/output_report.Rmd#L228). This means it won't work on anyone else's computer.
+  - Removed hard-coded path in favour of `system.file` call.
+- [x] Please add a `BugReports` field to the `DESCRIPTION` (usually a link to the Issues page of the GitHub repo).
 - [ ] Bioconductor requires documentation of `.rds`/`.Rdata` files in `inst/extdata` in an `inst/script/ directory`. See [data documentation](https://contributions.bioconductor.org/docs.html#doc-inst-script).
   - [ ] `inst/extdata` is usually used for 'raw' data, so these data might properly belong under `data/` rather than `inst/extdata/`; see https://contributions.bioconductor.org/data.html.
 - [ ] Please add a table of contents to each vignette.
 - [ ] All man pages should have runnable examples (see https://contributions.bioconductor.org/docs.html#examples)
 - [ ] What are the `dev` and `docs` folders? Please justify or remove them from the main branch of the git repo (Bioconductor requests that \"Any files or directories for other applications (Github Actions, devtools, etc.) should ideally be in a different branch and not submitted to the Bioconductor version of the package.\" (see https://contributions.bioconductor.org/general.html?q=unnec#undesirable-files)
+  - [x] Remove `docs` folder.
+  - [ ] Rremove `dev` folder.
 
 ## Recommended
 
