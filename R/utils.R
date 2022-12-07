@@ -211,17 +211,26 @@ get_num_cell_per_celltype <- function(data) {
 
 
 
-
-
-
-
+#' Compute L statistic for a point pattern
+#'
+#' @description
+#' This function computes the L statistic for a given point pattern. 
+#'
+#' @param ppp_obj a point pattern object
+#' @param from define the window of the point pattern to compute
+#' @param to define the window of the point pattern to compute
+#' @param L_dist a numeric value specifying the maximum distance 
+#' at which the L statistic will be computed.
+#'
+#' @return
+#' A numeric value of the L statistic.
+#'
 L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
     L <- spatstat.explore::Lcross(ppp_obj,
         from = from, to = to,
         verbose = FALSE,
         correction = "best"
     )
-
 
     L_theo <- L$theo[L$r <= L_dist]
     L_iso <- L$iso[L$r <= L_dist]
