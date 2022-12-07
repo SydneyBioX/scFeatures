@@ -389,37 +389,45 @@ run_gene_cor_celltype <- function(data,
 
 
 
-#' generate pathway score using gene set enrichement analysis
+#' Generate pathway score using gene set enrichement analysis
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample`
-#'  label
-#' @param method type of pathway analysis method, currently support `ssgsea`
+#' This function calculates pathway scores for a given input 
+#' dataset and gene set using gene set enrichment analysis (GSVA). 
+#' It supports scRNA-seq, spatial proteomics and spatial transcriptomics. 
+#' It currently supports two pathway analysis methods: ssgsea and aucell. 
+#' By default, it uses the 50 hallmark gene sets from msigdb. 
+#' Alternatively, users can provide their own gene sets of interest 
+#' in a list format.
+#' 
+#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
+#' @param method Type of pathway analysis method, currently support `ssgsea`
 #'  and `aucell`
 #' @param geneset By default (when the `geneset` argument is not specified),
 #'  we use the 50 hallmark gene set from msigdb.
 #'  The users can also provide their geneset of interest in a list format, with
 #'  each list entry containing a vector of the names of genes in a gene set.
 #'  eg, geneset <- list("pathway_a" = c("CAPN1", ...), "pathway_b" = c("PEX6"))
-#' @param species whether the species is "Homo sapiens" or "Mus musculus".
+#' @param species Whether the species is "Homo sapiens" or "Mus musculus".
 #'  Default is "Homo sapiens".
-#' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param subsample whether to subsample, either T or F. For larger datasets
+#' @param subsample Whether to subsample, either T or F. For larger datasets
 #'  (eg, over 30,000 cells), the subsample function can be used to increase
 #'  speed.
-#' @param ncores number of cores
+#' @param ncores Number of cores for parallel processing.
 #'
 #' @return a matrix of samples x features
 #'
 #' @examples
-#'
-#' data <- readRDS(
+#' \dontrun{
+#'  data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )
-#' feature_pathway_gsva <- run_pathway_gsva(
+#'  )
+#'  feature_pathway_gsva <- run_pathway_gsva(
 #'     data,
 #'     geneset = NULL, species = "Homo sapiens",
 #'     type = "scrna", subsample = FALSE, ncores = 1
-#' )
+#'  )
+#' }
 #'
 #' @importFrom msigdbr msigdbr
 #' @importFrom GSVA gsva
