@@ -2,25 +2,28 @@
 % Please edit documentation in R/utils.R
 \name{process_data}
 \alias{process_data}
-\title{perform pre-processing}
+\title{data pre-processing}
 \usage{
 process_data(data, normalise = TRUE)
 }
 \arguments{
-\item{data}{input data}
+\item{data}{input data, a Seurat object.}
 
-\item{normalise}{whether to normalise the data. Note if the data has already
-been normalised (eg, log2CPM), there is no need to normalise
-again.}
+\item{normalise}{a logical value indicating whether to normalize the data
+or not. Default value is \code{TRUE}.}
 }
 \value{
-a matrix of samples x features
+a Seurat object
 }
 \description{
-perform pre-processing
+This function takes a Seurat object as input and does data
+cleaning and pre-processing. For example, it replaces the "+" and "-"
+signs in the \code{celltype} column with "plus" and "minus", respectively.
+It also removes patients that have less than 10 cells across all cell types.
+If the \code{normalise} argument is set to \code{TRUE}, the function will normalize
+the data using the \code{Seurat::NormalizeData} function.
 }
 \examples{
-
 data <- readRDS(system.file(
     "extdata", "example_spatial_transcriptomics.rds",
     package = "scFeatures"
