@@ -26,14 +26,15 @@ Error: BiocParallel errors
   first remote error:
 Error: Under current subsetting parameters, the default assay will be removed. Please adjust subsetting parameters or change default assay.
 ```
-
+  - **Fixed**: The subsetted data included was causing issues.
+    - TODO: Double check this is working properly.
 ```r
 > feature_CCI <- run_CCI(data , species = \"Homo sapiens\" )
 Error in run_CCI(data, species = \"Homo sapiens\") : 
   could not find function \"run_CCI\"
 ```
 
-  - **Fixed this: use to include cell-cell interaction via CellChat, but it is not on CRAN/BioC, so it was removed.** 
+  - **Fixed**: use to include cell-cell interaction via CellChat, but it is not on CRAN/BioC, so it was removed.
 
 ```r
 genes_of_interest <- c(\"TIGIT\", \"PDCD1\")
