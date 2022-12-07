@@ -570,32 +570,37 @@ run_pathway_mean <- function(data, geneset = NULL,
 
 
 #' Generate pathway score using proportion of expression
-#'
+#' @description 
+#' #' This function calculates pathway scores for a given input dataset and gene set 
+#' using the proportion of gene expression levels. It supports scRNA-seq, spatial transcriptomics 
+#' and spatial proteomics and spatial transcriptomics). 
+#' By default, it uses the 50 hallmark gene sets from msigdb. 
+#' Alternatively, users can provide their own gene sets of interest in a list format.
 #' 
-#' @param data input data, a Seurat object containing `celltype` and `sample`
-#'  label
+#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param geneset By default (when the `geneset` argument is not specified),
 #'  we use the 50 hallmark gene set from msigdb.
 #'  The users can also provide their geneset of interest in a list format, with
 #'  each list entry containing a vector of the names of genes in a gene set.
 #'  eg, geneset <- list("pathway_a" = c("CANS1", ...), "pathway_b" = c("PEX6"))
-#' @param species whether the species is "Homo sapiens" or "Mus musculus".
+#' @param species Whether the species is "Homo sapiens" or "Mus musculus".
 #'  Default is "Homo sapiens".
-#' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param ncores number of cores
+#' @param ncores Number of cores for parallel processing.
 #'
 #' @return a matrix of samples x features
 #'
 #' @examples
-#'
-#' data <- readRDS(
+#' \dontrun{
+#'  data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )
-#' feature_pathway_prop <- run_pathway_prop(
+#'  )
+#'  feature_pathway_prop <- run_pathway_prop(
 #'     data,
 #'     geneset = NULL, species = "Homo sapiens",
 #'     type = "scrna", ncores = 1
-#' )
+#'  )
+#' }
 #'
 #' @importFrom msigdbr msigdbr
 #' @importFrom GSVA gsva
