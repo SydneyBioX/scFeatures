@@ -570,6 +570,7 @@ run_pathway_mean <- function(data, geneset = NULL,
 
 
 #' Generate pathway score using proportion of expression
+#' 
 #' @description 
 #' #' This function calculates pathway scores for a given input dataset and gene set 
 #' using the proportion of gene expression levels. It supports scRNA-seq, spatial transcriptomics 
@@ -655,21 +656,22 @@ run_pathway_prop <- function(data, geneset = NULL,
 
 
 
-#' generate overall aggregated mean expression
+#' Generate overall aggregated mean expression
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample`
-#'  label
-#' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param genes default to NULL, in which case the top variable genes will be
-#'  used
-#'  If provided by user, need to be in the format of a list containing the
-#'  genes of interest,
-#'  eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )
-#' @param num_top_gene when the genes is not provided by the user, the top
-#'  variable genes will be used
-#'  The number of genes is set by this number.
-#'  default to NULL, in which case top 1500 variable genes will be selected
-#' @param ncores number of cores
+#' @description 
+#' This function computes the mean expression of genes across samples. The user
+#' can specify the genes of interest, or let the function use the top variable
+#' genes by default. The function supports scRNA-seq, spatial proteomics, 
+#' and spatial transcriptomics.
+#'
+#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
+#' @param genes Default to NULL, in which case the top variable genes will be
+#'  used. If provided by user, need to be in the format of a list containing the
+#'  genes of interest, eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )
+#' @param num_top_gene Number of top variable genes to use when genes is not provided.
+#' Defaults to 1500.
+#' @param ncores Number of cores for parallel processing.
 #'
 #' @return a matrix of samples x features
 #'
