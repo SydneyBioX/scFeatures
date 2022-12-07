@@ -41,7 +41,17 @@ check_data <- function(data, type = "scrna") {
 
 
 
-
+#' Enable parallel processing
+#'
+#' This function takes the number of cores to use for parallel processing and
+#' generates a `BiocParallel` object that can be used to control the 
+#' parallelization of functions. 
+#' It automatically determines whether to use the `SnowParam` or 
+#' `MulticoreParam` of the `BiocParallel` package based on the operating system.
+#'
+#' @param cores The number of cores to use for parallel processing.
+#' @return A `BiocParallel` object that can be used to control the 
+#' parallelization of functions.
 generateBPParam <- function(cores = 1) {
     seed <- .Random.seed[1]
 
