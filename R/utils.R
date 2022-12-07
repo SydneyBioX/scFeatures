@@ -186,10 +186,18 @@ rearrange_string <- function(str) {
 
 
 
-# get number of cells in each cell type in each spot
-# calculated by cell type probability in each spot times the relative
-# number of cells in each spot
-# relative number of cells are estimated using library size of each spot
+#' Compute number of cells in each cell type in each spot 
+#' for spatial transcriptomics data
+#' 
+#' @description 
+#' This function computes the number of cells in each cell type by 
+#' multiplying the cell type probability in each spot with the 
+#' relative number of cells in each spot. The relative number of cells
+#' are estimated using library size of each spot
+#' 
+#' @param data a spatial transcriptomics dataset in the form of a Seurat object.
+#' 
+#' @return A matrix with the number of cells per cell type at each spot.
 get_num_cell_per_celltype <- function(data) {
     prob <- data@assays$predictions
     prob <- as.matrix(prob@data)
