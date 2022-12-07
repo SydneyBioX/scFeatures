@@ -769,17 +769,22 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 
 
 
-#' generate overall aggregated gene correlation
+#' Generate overall aggregated gene correlation
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
-#' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param genes default to NULL, in which case the top variable genes will be used
-#' If provided by user, need to be in the format of a list containing the feature of interest,
-#' eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )
-#' @param num_top_gene when the genes is not provided by the user, the top variable genes will be used
-#' The number of genes is set by this number.
-#' default to NULL, in which case top 50 variable genes will be selected
-#' @param ncores number of cores
+#' @description 
+#' This function computes the correlation of gene expression across samples. The user
+#' can specify the genes of interest, or let the function use the top variable
+#' genes by default. The function supports scRNA-seq, spatial proteomics, 
+#' and spatial transcriptomics.
+#'
+#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
+#' @param genes Default to NULL, in which case the top variable genes will be
+#'  used. If provided by user, need to be in the format of a list containing the
+#'  genes of interest, eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )
+#' @param num_top_gene Number of top variable genes to use when genes is not provided.
+#' Defaults to 5.
+#' @param ncores Number of cores for parallel processing.
 #'
 #' @return a matrix of samples x features
 #'
@@ -790,7 +795,7 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 #'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #'  )
 #'  feature_gene_cor <- run_gene_cor(
-#'    data, type = "scrna", num_top_gene = 1500, ncores = 1
+#'    data, type = "scrna", num_top_gene = 5, ncores = 1
 #'  )
 #' }
 #'
