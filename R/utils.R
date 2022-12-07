@@ -179,7 +179,17 @@ get_num_cell_per_spot <- function(data) {
     return(data)
 }
 
-
+#' Rearrange string
+#' 
+#' @description 
+#' This function takes a string as input and rearranges words in the string 
+#' so that they are sorted alphabetically. 
+#'
+#' @param str A character string containing words separated by underscores.
+#' 
+#' @return A character string with the words sorted alphabetically and
+#' separated by underscores.
+#' 
 rearrange_string <- function(str) {
     unlist(lapply(strsplit(str, "_"), function(x) paste(sort(x), collapse = "_")))
 }
@@ -193,7 +203,7 @@ rearrange_string <- function(str) {
 #' This function computes the number of cells in each cell type by 
 #' multiplying the cell type probability in each spot with the 
 #' relative number of cells in each spot. The relative number of cells
-#' are estimated using library size of each spot
+#' are estimated using library size of each spot. See get_num_cell_per_spot().
 #' 
 #' @param data a spatial transcriptomics dataset in the form of a Seurat object.
 #' 
