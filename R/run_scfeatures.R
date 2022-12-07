@@ -511,7 +511,7 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #' @return a matrix of samples x features
 #'
 #' @examples
-#'' \dontrun{
+#' \dontrun{
 #'  data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #'  )

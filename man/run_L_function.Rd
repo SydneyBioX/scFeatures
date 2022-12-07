@@ -2,23 +2,23 @@
 % Please edit documentation in R/run_scfeatures.R
 \name{run_L_function}
 \alias{run_L_function}
-\title{generate L stats}
+\title{Generate L stats}
 \usage{
 run_L_function(data, type = "spatial_p", ncores = 1)
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample}
-label}
+\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
 
-\item{type}{input data type, either scrna, spatial_p, or spatial_t}
+\item{type}{The type of dataset, either "scrna", "spatial_t", or "spatial_p".}
 
-\item{ncores}{number of cores}
+\item{ncores}{Number of cores for parallel processing.}
 }
 \value{
 a matrix of samples x features
 }
 \description{
-generate L stats
+This function calculates L-statistics to measure spatial autocorrelation.
+The function supports  spatial proteomics and spatial transcriptomics.
 }
 \examples{
 

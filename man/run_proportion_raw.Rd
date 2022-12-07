@@ -2,26 +2,27 @@
 % Please edit documentation in R/run_scfeatures.R
 \name{run_proportion_raw}
 \alias{run_proportion_raw}
-\title{generate cell type proportion raw}
+\title{Generate cell type proportion raw}
 \usage{
 run_proportion_raw(data, type = "scrna", ncores = 1)
 }
 \arguments{
-\item{data}{the input data, a Seurat object containing \code{celltype} and
-\code{sample} label}
+\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
 
-\item{type}{input data type, either scrna, spatial_p, or spatial_t}
+\item{type}{The type of dataset, either "scrna", "spatial_t", or "spatial_p".}
 
-\item{ncores}{number of cores}
+\item{ncores}{Number of cores for parallel processing.}
 }
 \value{
 a matrix of samples x features
 }
 \description{
-generate cell type proportion raw
+This function calculates the proportions of cells belonging to each cell type.
+The input data must contain \code{sample} and \code{celltype} metadata column.
+The function supports scRNA-seq and spatial proteomics.
+The function returns a matrix with samples as rows and cell types as columns.
 }
 \examples{
-
 data <- readRDS(
     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 )
