@@ -1,6 +1,11 @@
 
 
-
+#' This function calculates the pairwise distance between cell types
+#' for a sample by using the coordinates and cell types of the cells. 
+#' It keeps the cell types with more than 10 cells and calculates
+#' the pairwise distance between these cell types. The function returns 
+#' a list of the pairwise distances between the cell types.
+#' This function is designed for spatial proteomics. 
 individual_celltype_interaction_sp <- function(this_sample) {
     cell_points <- spatstat.geom::ppp(
         x = this_sample$x_cord,
