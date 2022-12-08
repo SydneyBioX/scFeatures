@@ -519,7 +519,9 @@ helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
 
 
 
-
+#' This function computes the Moran's I for each gene in a sample.
+#' Moran's I is a measure of spatial autocorrelation, which indicates 
+#' how strongly the gene expression values in a sample cluster or disperse. 
 individual_moran_cor <- function(thissample) {
     exprsMat <- thissample@assays$RNA@data
 
