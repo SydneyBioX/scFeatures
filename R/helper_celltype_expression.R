@@ -258,7 +258,11 @@ helper_gene_mean_celltype <- function(data,
 
 
 
-
+#' This function is used to calculate the proportion of gene expression levels in a Seurat object
+#' containing expression values. By default, the function first finds the variable 
+#' genes per cell type using the find_var_gene function, then calculates the gene 
+#' expression levels for these genes in their respective cell type. 
+#' The output is a returns a matrix of samples by features. 
 # cell type specific gene prop
 helper_gene_prop_celltype <- function(data,
     genes = NULL,
