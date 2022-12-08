@@ -168,14 +168,12 @@ find_var_gene <- function(data,
 }
 
 
-
-
-
-
-
-
-# cell type specific gene mean, set to top 100 variable genes per cell type per
-# sample
+ 
+#' This function is used to calculate gene expression levels in a Seurat object
+#' containing expression values. By default, the function first finds the variable 
+#' genes per cell type using the find_var_gene function, then calculates the gene 
+#' expression levels for these genes in their respective cell type. 
+#' The output is a returns a matrix of samples by features. 
 helper_gene_mean_celltype <- function(data,
     genes = NULL,
     num_top_gene = NULL,
