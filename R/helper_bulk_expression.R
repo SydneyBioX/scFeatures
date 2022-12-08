@@ -1,6 +1,10 @@
 
 
 #  gene mean bulk, default to 1500 variable genes per sample
+
+#' This function calculates the mean expression of genes in each sample in 
+#' a Seurat object. If no list of genes is provided, it will use find_var_gene 
+#' function to select the top variable genes. 
 helper_gene_mean <- function(data,
     genes = NULL,
     num_top_gene = NULL,
