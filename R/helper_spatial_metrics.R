@@ -326,7 +326,10 @@ helper_L_stat_st <- function(data, ncores = 1) {
 
 
 
-
+#' This function calculates the L-statistics for a given sample of spatial 
+#' transcriptomics data. It uses spatial coordinates, cell type information 
+#' to calculate the spatial distribution of cells in the sample. 
+#' The output vector represents the L-statistic for a pair of cell types.
 individual_L_stat_sp <- function(this_sample) {
     cell_points <- spatstat.geom::ppp(
         x = this_sample$x_cord,
@@ -361,8 +364,9 @@ individual_L_stat_sp <- function(this_sample) {
     return(L_patient)
 }
 
-
-
+#' Calculates the L-statistics for spatial proteomics.
+#' It applies the individual_L_stat_sp function to each sample,
+#' then merges the results from each sample. 
 helper_L_stat_sp <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
