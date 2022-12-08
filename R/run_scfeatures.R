@@ -999,6 +999,8 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #' @param data A Seurat object containing `celltype` and `sample` label
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
+#' @param num_top_gene Number of top variable genes to use when genes is 
+#' not provided. Defaults to 1500.
 #' 
 #' @return a matrix of samples x features
 #'
@@ -1021,7 +1023,7 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #' @importFrom cli cli_abort cli_warn
 #'
 #' @export
-run_nn_correlation <- function(data, type = "spatial_p", ncores = 1) {
+run_nn_correlation <- function(data, type = "spatial_p", num_top_gene = NULL, ncores = 1) {
     check_data(data, type)
 
     if (type == "scrna") {
@@ -1030,7 +1032,7 @@ run_nn_correlation <- function(data, type = "spatial_p", ncores = 1) {
         ))
         return(NULL)
     } else if (type %in% c("spatial_p", "spatial_t")) {
-        X <- helper_nncorr_protein(data, num_top_gene = NULL, ncores = ncores)
+        X <- helper_nncorr_protein(data, num_top_gene, ncores = ncores)
     } else {
         cli::cli_abort(c(
             "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
