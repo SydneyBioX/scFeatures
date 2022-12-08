@@ -1,7 +1,4 @@
 
-
-#  gene mean bulk, default to 1500 variable genes per sample
-
 #' This function calculates the mean expression of genes in each sample in 
 #' a Seurat object. If no list of genes is provided, it will use find_var_gene 
 #' function to select the top variable genes. 
@@ -33,16 +30,10 @@ helper_gene_mean <- function(data,
     return(X)
 }
 
-
-
-
-
-
-
-# gene prop bulk
-# use the proportion expression as the prediction feature
-# for each variable genes, calcalate the proportion that it is expressed in each
-# patient
+  
+#' This function calculates the proportion of gene expression of genes in 
+#' each sample in a Seurat object. If no list of genes is provided, it will 
+#' use find_var_gene function to select the top variable genes. 
 helper_gene_prop <- function(data,
     genes = NULL,
     num_top_gene = NULL,
