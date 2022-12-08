@@ -430,7 +430,12 @@ helper_gene_cor_celltype <- function(data,
 
 
 
-
+#' This function is used to calculate the expression of genes in each cell type 
+#' in a Seurat object containing expression values for spatial transcriptomics. 
+#' It performs a linear regression on the gene expression and cell type composition 
+#' at each spot to obtain regression coefficients and p-values. The regression 
+#' coefficients is considered as the cell type's contribution to the expression the gene. 
+#' Similar to the bulk deconvolution concept. 
 #' @importFrom glue glue
 #' @importFrom stats lm
 helper_gene_mean_celltype_st <- function(data,
