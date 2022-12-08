@@ -1,0 +1,9 @@
+pandoc: 2.9.2.1
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  scFeatures_associationstudy: scFeatures_associationstudy.html
+  scFeatures_detail: scFeatures_detail.html
+  scFeatures_summary: scFeatures_summary.html
+last_built: 2022-12-08T01:01Z
+
