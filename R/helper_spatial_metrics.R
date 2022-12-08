@@ -179,7 +179,11 @@ helper_celltype_interaction_st <- function(data, ncores = 1) {
 
 
 
-
+#' This function calculates the L-statistics for a given sample for spatial
+#' transcriptomics data using the spatial coordinates, cell type information and 
+#' the number of cells in each spatial location. The L-statistic measures the 
+#' degree of spatial clustering between two objects in a particular area. The output 
+#' vector represents the L-statistic for a pair of cell types.
 individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
     # expand each spot into its number of cells
     x <- c()
