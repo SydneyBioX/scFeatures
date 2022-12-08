@@ -2,12 +2,17 @@
 
 
 
-#' remove mito and ribo genes and genes highly correlated with mito genes
-#' as mitochondria and ribosomal genes may not as interesting to look at
+#' Remove mitochondrial and ribosomal genes, and other highly correlated genes 
+#' 
+#' @description 
+#' This function removes mitochondria and ribosomal genes and genes 
+#' highly correlated with these genes, as mitochondria and ribosomal 
+#' genes are typically not interesting to look at. 
 #'
-#' @param data input data
+#' @param data A Seurat object containing expression data
 #'
-#' @return data with the mito and rib genes removed
+#' @return The Seurat object with the mito and rib genes and other highly 
+#' correlated genes removed
 #'
 #' @importFrom proxyC simil
 #'
