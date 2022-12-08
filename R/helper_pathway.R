@@ -252,9 +252,12 @@ helper_pathway_prop <- function(data, geneset, ncores = 1) {
 
 
 
-
-# The output from GSVA and geneset mean is in the form of pathway score x cell
-# Need to convert to patient x pathway features
+#' This function is used to convert the pathway score output from 
+#' gene set analysis into a matrix of samples x features. It takes 
+#' the object containing the pathway scores (in the format of pathway score x cell), 
+#' aggregates the pathway scores by cell type and converts the data into a matrix of
+#' samples x features, where the features are the pathways and the cell types they 
+#' are associated with. 
 format_pathway <- function(data, topMatrixGSVA, ncores) {
     # aggregate the pathway score of each cell type
     topMatrixGSVA <- CreateSeuratObject(topMatrixGSVA)
