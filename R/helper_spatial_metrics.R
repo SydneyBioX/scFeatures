@@ -261,7 +261,9 @@ individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
 
 
 
-
+#' Calculates the L-statistics for spatial transcriptomic.
+#' It applies the individual_L_stat_st function to each sample,
+#' then merges the results from each sample. 
 helper_L_stat_st <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
