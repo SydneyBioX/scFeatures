@@ -114,8 +114,8 @@ helper_celltype_interaction_sp <- function(data, ncores = 1) {
 
 
 
-#' This function calculates the cell-type interactions in a spatial 
-#' transcriptomics dataset. It takes probabilities of cell-type assignments 
+#' This function calculates the cell-type interactions for spatial 
+#' transcriptomic. It takes probabilities of cell-type assignments 
 #' for each spot and perform matrix multiplication to get the probability of 
 #' cell-type co-occurrences for each spot. The output is a  vector containing 
 #' the co-occurrence probabilities for each cell-type pair.
@@ -140,7 +140,9 @@ individual_celltype_interaction_st <- function(thisprob) {
 
 
 
-
+#' Calculates the cell-type interactions for spatial transcriptomic.
+#' It applies the individual_celltype_interaction_st function to each sample,
+#' then merges the results from each sample. 
 helper_celltype_interaction_st <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
