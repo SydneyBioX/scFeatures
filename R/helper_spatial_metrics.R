@@ -412,8 +412,8 @@ helper_L_stat_sp <- function(data, ncores = 1) {
 #' Calculates the nearest neighbor correlation for a given sample 
 #' using the spatial coordinates and expression values of cells. 
 #' It returns a vector of correlation values for each gene. 
-#' This function is used in as a helper function in run_nn_correlation 
-#' function to generate the final output matrix of samples x features.
+#' This function is used in as a helper function in helper_nncorr_protein 
+#' function to generate the nearest neighbor correlation for all samples.
 individual_nncorr_protein <- function(thissample) {
     exprsMat <- thissample@assays$RNA@data
 
@@ -445,7 +445,10 @@ individual_nncorr_protein <- function(thissample) {
 
 
 
-
+#' Calculates the nearest neighbor correlation all samples 
+#' using the spatial coordinates and expression values of cells. 
+#' It applies the individual_nncorr_protein function to each sample,
+#' then merges the results from each sample. 
 #' @importFrom methods is
 helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
     BPparam <- generateBPParam(ncores)
