@@ -83,7 +83,8 @@ Error: Cannot find 'cellType' in this Seurat object
   - Some of the required documentation detail is in the `scFeatures_detail` vignette, but it properly belongs in the man pages. The vignette should show users how to use the package as a whole and the man pages how to use individual functions.
 - [ ] The 'Value' section of many man pages is incorrect. E.g., `run_proportion_raw()` returns a _data.frame_ but is documented to return 'a _matrix_ of samples x features'. These details matter when it comes to documenting package code.
 - [ ] The 'Introduction' of the each vignette, especially the first or main vignette (which I take to be `scFeatures_summary`) should read like an abstract; see https://contributions.bioconductor.org/docs.html#vignette-introduction
-- [ ] Please give the vignettes informative titles and filenames; see https://contributions.bioconductor.org/docs.html#vignettes
+- [x] Please give the vignettes informative titles and filenames; see https://contributions.bioconductor.org/docs.html#vignettes
+  - The titles and names seems sufficiently informative.
 - [x] Please use [BiocStyle](https://www.bioconductor.org/packages/release/bioc/html/BiocStyle.html) for vignette formatting.
   - All vigettes now use `BiocStyle`.
 - [x] Simply removing **ClassifyR** from `DESCRIPTION` is insufficient because the `scFeatures_detail` vignette still uses it to demonstrate the utility of **scFeatures**. Now that **ClassifyR** is passing builds again, please re-add **ClassifyR** to the `DESCRIPTION` if using it in the vignettes or elsewhere in **scFeatures**.
@@ -93,17 +94,12 @@ Error: Cannot find 'cellType' in this Seurat object
 - [x] Why is **inline** needed in the vignettes?
   - Same as above. It is no longer needed.
 - [ ] The formatting in the `scFeatures_detail` vignette is a bit messy because it includes lots of verbose output (progress bars). Please revise.
-- [ ] In the `scFeatures_detail` vignette you are subsetting a vector outside its bounds; please fix:
+  - Messages and warnings have been removed from the output.
+- [x] In the `scFeatures_detail` vignette you are subsetting a vector outside its bounds; please fix:
+  - This has been fixed by including different data with the package.
 
-```r
-> unique(data$sample)[1:5]
-[1] \"Pre_P7\"  \"Pre_P24\" \"Pre_P28\" \"Pre_P33\" NA
-> unique(data$sample)[1:5]
-[1] \"Pre_P7_cond_Responder\"  \"Pre_P24_cond_Responder\" \"Pre_P28_cond_Responder\"
-[4] \"Pre_P33_cond_Responder\" NA
-```
-
-- [ ] In the `scFeatures_associationstudy` vignette, please use a temporary directory via `tempdir()`, rather than the current working directory, to demonstrate report generation.
+- [x] In the `scFeatures_associationstudy` vignette, please use a temporary directory via `tempdir()`, rather than the current working directory, to demonstrate report generation.
+  - This vignette is not intended to be run as it simulates report generation and should be done with one's own results.
 - [ ] That said, the report generation fails when using `tempdir()` but should work.
 
 ```r
@@ -122,7 +118,7 @@ In normalizePath(path, winslash = winslash, mustWork = mustWork) :
 - [x] Please add a `BugReports` field to the `DESCRIPTION` (usually a link to the Issues page of the GitHub repo).
 - [ ] Bioconductor requires documentation of `.rds`/`.Rdata` files in `inst/extdata` in an `inst/script/ directory`. See [data documentation](https://contributions.bioconductor.org/docs.html#doc-inst-script).
   - [ ] `inst/extdata` is usually used for 'raw' data, so these data might properly belong under `data/` rather than `inst/extdata/`; see https://contributions.bioconductor.org/data.html.
-- [ ] Please add a table of contents to each vignette.
+- [x] Please add a table of contents to each vignette.
 - [ ] All man pages should have runnable examples (see https://contributions.bioconductor.org/docs.html#examples)
 - [ ] What are the `dev` and `docs` folders? Please justify or remove them from the main branch of the git repo (Bioconductor requests that \"Any files or directories for other applications (Github Actions, devtools, etc.) should ideally be in a different branch and not submitted to the Bioconductor version of the package.\" (see https://contributions.bioconductor.org/general.html?q=unnec#undesirable-files)
   - [x] Remove `docs` folder.
@@ -131,7 +127,8 @@ In normalizePath(path, winslash = winslash, mustWork = mustWork) :
 ## Recommended
 
 - [ ] It is strongly recommended to add unit tests. I would suggest starting with the individual `scFeatures::run_*()` functions that underpin the wrapper `scFeatures::scFeatures()` function.
-- [ ] This may be personal preference, but the function outputs feel the wrong way around (with samples as rows and features as columns). This is the opposite of how 'rectangular' data are usually stored in Bioonductor, e.g., *SummarizedExperiment*, where rows are features (e.g., genes) and samples are columns. A side effect, is that this leads to very 'wide' objects that don't display very nicely when printed (at least that was my experience with the example data). I recommend at least documenting why you choose to return the results in this orientation.
+- [x] This may be personal preference, but the function outputs feel the wrong way around (with samples as rows and features as columns). This is the opposite of how 'rectangular' data are usually stored in Bioonductor, e.g., *SummarizedExperiment*, where rows are features (e.g., genes) and samples are columns. A side effect, is that this leads to very 'wide' objects that don't display very nicely when printed (at least that was my experience with the example data). I recommend at least documenting why you choose to return the results in this orientation.
+  - This is one of the reasons why sfFeatures was created.' Rectangular' data are not suitable for statistical modelling, which requires standard sample by feature [design matrices](https://en.wikipedia.org/wiki/Design_matrix). The reason why the output is as such is that the purpose of the features is statisitcal modelling.
 - [ ] `makeSeurat()` also accepts Seurat objects (https://github.com/SydneyBioX/scFeatures/blob/709f075578bf01b1823dc39fe1d5617472c3f888/R/wrapper_run_scfeatures.R#L225-L237), but this isn't documented. Please document when a user would need this functionality.
 - [ ] Please try to cite relevant literature. E.g., in the `scFeatures_detail` vignette you write, \"the L values between the pairs of proteins are calculated using the L function defined in literature\" but no reference is given to the relevant literature.
 - [ ] In  the `scFeatures_detail` vignette is the advice, \"This can be obtained from performing cell type prediction using reference data, for example, using SCTransform from Seurat (see https://satijalab.org/seurat/articles/spatial_vignette.html)\". However, to my understanding, **SCTransform** is a normlization method, not a cell type prediction method, and the link points doesn't point to how to actually do the cell type prediction as best I can tell. Please clarify.
