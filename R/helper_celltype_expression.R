@@ -263,7 +263,6 @@ helper_gene_mean_celltype <- function(data,
 #' genes per cell type using the find_var_gene function, then calculates the gene 
 #' expression levels for these genes in their respective cell type. 
 #' The output is a returns a matrix of samples by features. 
-# cell type specific gene prop
 helper_gene_prop_celltype <- function(data,
     genes = NULL,
     num_top_gene = NULL,
@@ -335,9 +334,12 @@ helper_gene_prop_celltype <- function(data,
 
 
 
-# cell type specific gene correlation bulk
-# set to just top 5 genes per cell type per sample, because otherwise creates
-# too many features
+
+#' This function is used to calculate the gene expression correlation in a Seurat object
+#' containing expression values. By default, the function first finds the variable 
+#' genes per cell type using the find_var_gene function, then calculates the gene 
+#' expression levels for these genes in their respective cell type. 
+#' The output is a returns a matrix of samples by features. 
 helper_gene_cor_celltype <- function(data,
     genes = NULL,
     num_top_gene = NULL,
