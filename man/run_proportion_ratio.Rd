@@ -2,23 +2,26 @@
 % Please edit documentation in R/run_scfeatures.R
 \name{run_proportion_ratio}
 \alias{run_proportion_ratio}
-\title{generate cell type proportion ratio}
+\title{Generate cell type proportion ratio}
 \usage{
 run_proportion_ratio(data, type = "scrna", ncores = 1)
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and
-\code{sample} label}
+\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
 
-\item{type}{input data type, either scrna, spatial_p, or spatial_t}
+\item{type}{The type of dataset, either "scrna", "spatial_t", or "spatial_p".}
 
-\item{ncores}{number of cores}
+\item{ncores}{Number of cores for parallel processing.}
 }
 \value{
 a matrix of samples x features
 }
 \description{
-generate cell type proportion ratio
+This function calculates pairwise cell type proportion ratio for each sample.
+and applies a logit transformation to the proportions.
+The input data must contain \code{sample} and \code{celltype} metadata column.
+The function supports scRNA-seq and spatial proteomics.
+The function returns a matrix with samples as rows and cell types as columns.
 }
 \examples{
 

@@ -2,18 +2,24 @@
 % Please edit documentation in R/utils.R
 \name{get_num_cell_per_spot}
 \alias{get_num_cell_per_spot}
-\title{estimate a relative number of cells per spot}
+\title{Estimate a relative number of cells per spot for
+spatial transcriptomics data}
 \usage{
 get_num_cell_per_spot(data)
 }
 \arguments{
-\item{data}{input data}
+\item{data}{spatial transcriptomics data in Seurat object.}
 }
 \value{
-data with the relative number of cells/spot stored in it's metadata
+the object with the relative number of cells/spot stored
+in the \code{number_cells} attribute.
 }
 \description{
-estimate a relative number of cells per spot
+This function takes a spatial transcriptomics data as input
+and estimates the relative number of cells per spot in the data.
+The number of cells is estimated as the library size scaled to
+the range \link{1, 100}.
+This value stored in the \code{number_cells} attribute.
 }
 \examples{
 

@@ -63,7 +63,9 @@ wrapper function to run all feature types in scFeatures
 }
 \examples{
 
-data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-scfeatures_result <- scFeatures(data, type = "scrna")
+\dontrun{
+ data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+ scfeatures_result <- scFeatures(data, type = "scrna")
+}
 
 }

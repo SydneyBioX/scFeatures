@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_scfeatures.R
 \name{run_gene_mean}
 \alias{run_gene_mean}
-\title{generate overall aggregated mean expression}
+\title{Generate overall aggregated mean expression}
 \usage{
 run_gene_mean(
   data,
@@ -13,29 +13,27 @@ run_gene_mean(
 )
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample}
-label}
+\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
 
-\item{type}{input data type, either scrna, spatial_p, or spatial_t}
+\item{type}{The type of dataset, either "scrna", "spatial_t", or "spatial_p".}
 
-\item{genes}{default to NULL, in which case the top variable genes will be
-used
-If provided by user, need to be in the format of a list containing the
-genes of interest,
-eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )}
+\item{genes}{Default to NULL, in which case the top variable genes will be
+used. If provided by user, need to be in the format of a list containing the
+genes of interest, eg, genes <- c(GZMA", "GZMK", "CCR7", "RPL38" )}
 
-\item{num_top_gene}{when the genes is not provided by the user, the top
-variable genes will be used
-The number of genes is set by this number.
-default to NULL, in which case top 1500 variable genes will be selected}
+\item{num_top_gene}{Number of top variable genes to use when genes is not provided.
+Defaults to 1500.}
 
-\item{ncores}{number of cores}
+\item{ncores}{Number of cores for parallel processing.}
 }
 \value{
 a matrix of samples x features
 }
 \description{
-generate overall aggregated mean expression
+This function computes the mean expression of genes across samples. The user
+can specify the genes of interest, or let the function use the top variable
+genes by default. The function supports scRNA-seq, spatial proteomics,
+and spatial transcriptomics.
 }
 \examples{
 

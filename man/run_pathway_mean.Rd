@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_scfeatures.R
 \name{run_pathway_mean}
 \alias{run_pathway_mean}
-\title{generate pathway score using expression level}
+\title{Generate pathway score using expression level}
 \usage{
 run_pathway_mean(
   data,
@@ -13,8 +13,7 @@ run_pathway_mean(
 )
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample}
-label}
+\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
 
 \item{geneset}{By default (when the \code{geneset} argument is not specified),
 we use the 50 hallmark gene set from msigdb.
@@ -22,28 +21,33 @@ The users can also provide their geneset of interest in a list format, with
 each list entry containing a vector of the names of genes in a gene set.
 eg, geneset <- list("pathway_a" = c("CANS1", ...), "pathway_b" = c("PEX6"))}
 
-\item{species}{whether the species is "Homo sapiens" or "Mus musculus".
+\item{species}{Whether the species is "Homo sapiens" or "Mus musculus".
 Default is "Homo sapiens".}
 
-\item{type}{input data type, either scrna, spatial_p, or spatial_t}
+\item{type}{The type of dataset, either "scrna", "spatial_t", or "spatial_p".}
 
-\item{ncores}{number of cores}
+\item{ncores}{Number of cores for parallel processing.}
 }
 \value{
 a matrix of samples x features
 }
 \description{
-generate pathway score using expression level
+This function calculates pathway scores for a given dataset and gene set
+using gene expression levels. It supports scRNA-seq, spatial transcriptomics
+and spatial proteomics and spatial transcriptomics).
+By default, it uses the 50 hallmark gene sets from msigdb.
+Alternatively, users can provide their own gene sets of interest in a list format.
 }
 \examples{
-
-data <- readRDS(
+\dontrun{
+ data <- readRDS(
     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
-feature_pathway_mean <- run_pathway_mean(
+ )
+ feature_pathway_mean <- run_pathway_mean(
     data,
     geneset = NULL, species = "Homo sapiens",
     type = "scrna", ncores = 1
-)
+ )
+}
 
 }

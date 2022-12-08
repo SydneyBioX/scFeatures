@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_scfeatures.R
 \name{run_pathway_gsva}
 \alias{run_pathway_gsva}
-\title{generate pathway score using gene set enrichement analysis}
+\title{Generate pathway score using gene set enrichement analysis}
 \usage{
 run_pathway_gsva(
   data,
@@ -15,10 +15,9 @@ run_pathway_gsva(
 )
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample}
-label}
+\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
 
-\item{method}{type of pathway analysis method, currently support \code{ssgsea}
+\item{method}{Type of pathway analysis method, currently support \code{ssgsea}
 and \code{aucell}}
 
 \item{geneset}{By default (when the \code{geneset} argument is not specified),
@@ -27,32 +26,39 @@ The users can also provide their geneset of interest in a list format, with
 each list entry containing a vector of the names of genes in a gene set.
 eg, geneset <- list("pathway_a" = c("CAPN1", ...), "pathway_b" = c("PEX6"))}
 
-\item{species}{whether the species is "Homo sapiens" or "Mus musculus".
+\item{species}{Whether the species is "Homo sapiens" or "Mus musculus".
 Default is "Homo sapiens".}
 
-\item{type}{input data type, either scrna, spatial_p, or spatial_t}
+\item{type}{The type of dataset, either "scrna", "spatial_t", or "spatial_p".}
 
-\item{subsample}{whether to subsample, either T or F. For larger datasets
+\item{subsample}{Whether to subsample, either T or F. For larger datasets
 (eg, over 30,000 cells), the subsample function can be used to increase
 speed.}
 
-\item{ncores}{number of cores}
+\item{ncores}{Number of cores for parallel processing.}
 }
 \value{
 a matrix of samples x features
 }
 \description{
-generate pathway score using gene set enrichement analysis
+This function calculates pathway scores for a given input
+dataset and gene set using gene set enrichment analysis (GSVA).
+It supports scRNA-seq, spatial proteomics and spatial transcriptomics.
+It currently supports two pathway analysis methods: ssgsea and aucell.
+By default, it uses the 50 hallmark gene sets from msigdb.
+Alternatively, users can provide their own gene sets of interest
+in a list format.
 }
 \examples{
-
-data <- readRDS(
+\dontrun{
+ data <- readRDS(
     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
-feature_pathway_gsva <- run_pathway_gsva(
+ )
+ feature_pathway_gsva <- run_pathway_gsva(
     data,
     geneset = NULL, species = "Homo sapiens",
     type = "scrna", subsample = FALSE, ncores = 1
-)
+ )
+}
 
 }

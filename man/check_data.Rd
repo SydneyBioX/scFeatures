@@ -2,18 +2,23 @@
 % Please edit documentation in R/utils.R
 \name{check_data}
 \alias{check_data}
-\title{check that all metadata are in the data}
+\title{Check if required metadata is in the Seurat object}
 \usage{
 check_data(data, type = "scrna")
 }
 \arguments{
-\item{data}{Dataset to be checked.}
+\item{data}{A Seurat object containing expression.}
 
-\item{type}{Type of dataset (e.g., "scrna", "spatial_t", "spatial_p").}
-}
-\value{
-\code{NULL}
+\item{type}{Type of dataset, either "scrna" (for scRNA-seq), "spatial_t"
+(for spatial transcriptomics) or "spatial_p" (for spatial proteomics).}
 }
 \description{
-check that all metadata are in the data
+This function checks that the Seurat object contains all the
+necessary metadata for functions in scFeatures.
+For scRNA-seq, it must contain \code{sample} and \code{celltype}.
+For spatial proteomics, it must contain \code{sample}, \code{celltype} and
+and spatial proteomics data, it must contain \code{sample} and \code{x_cord}
+and \code{y_cord}.
+For spatial transcriptomics data, it must contain \code{sample}, \code{x_cord}
+\code{y_cord} and a \code{predictions} assay.
 }
