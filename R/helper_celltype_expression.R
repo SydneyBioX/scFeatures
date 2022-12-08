@@ -7,7 +7,7 @@
 #' @description 
 #' This function removes mitochondria and ribosomal genes and genes 
 #' highly correlated with these genes, as mitochondria and ribosomal 
-#' genes are typically not interesting to look at. 
+#' genes are typically not  interesting to look at. 
 #'
 #' @param data A Seurat object containing expression data
 #'
@@ -63,9 +63,13 @@ remove_mito <- function(data) {
 
 
 
-# find variable genes per sample,  then take the union
-# for celltype specific method, find the variable genes per celltype per sample
 
+#' Identify the highly variable genes (HVGs) in the input data. By default, 
+#' the function calculates the HVG across the cells within each cell type, 
+#' as well across all cells). This is done for each sample separately, then 
+#' taking the union of the HVGs across all samples. The ouput is a daraframe
+#' with two columns: marker and celltype. When celltype is set to FALSE, the 
+#' function only calculates the HVG across all cells and returns a vector of HVGs.
 find_var_gene <- function(data,
     num_top_gene = 1500,
     ncores = 1,
