@@ -988,13 +988,18 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 
 
 
-#' generate nearest neighbour correlation
+#' Generate nearest neighbour correlation
+#' 
+#' @description 
+#' This function calculates the nearest neighbour correlation for each feature 
+#' (eg, proteins) in each sample. This is calculated by taking the correlation 
+#' between each cell and its nearest neighbours cell for a particular feature.  
+#' This function supports spatial proteomics, and spatial transcriptomics.
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample`
-#'  label
-#' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param ncores number of cores
-#'
+#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
+#' @param ncores Number of cores for parallel processing.
+#' 
 #' @return a matrix of samples x features
 #'
 #' @examples
