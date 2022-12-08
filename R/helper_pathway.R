@@ -31,8 +31,10 @@ get_geneset <- function(species = "Homo sapiens") {
 
 
 
-
-# helper function to run the pathway gsva
+#' This function performs gene set enrichment analysis on a Seurat object
+#' containing expression data to generate pathway score. The type of pathway 
+#' analysis method currently supported are ssgsea and aucell. The function 
+#' returns a matrix of samples x features with the pathway scores.
 helper_pathway_gsva <- function(data, method = "ssgsea", geneset, ncores = 1) {
     if (method == "ssgsea") {
         # if the dataset has greater than 30000 cells
