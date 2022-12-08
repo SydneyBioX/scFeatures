@@ -1,10 +1,7 @@
 
-
-
-
-
-
-# get hallmark geneset if the user does not provide one
+#' This function retrieves the hallmark gene set from the Molecular Signature 
+#' Database (MSigDB) for a specified species. The function returns a list of 
+#' gene sets where each list entry contains a vector of gene symbols in the gene set.
 get_geneset <- function(species = "Homo sapiens") {
     m_df <- msigdbr::msigdbr(species = species, category = "H")
     m_t2g <- m_df |>
