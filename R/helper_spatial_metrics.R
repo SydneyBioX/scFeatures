@@ -564,7 +564,9 @@ individual_moran_cor <- function(thissample) {
 
 
 
-
+#' Calculates the Moran's I value for all samples. 
+#' It applies the individual_moran_cor function to each sample,
+#' then merges the results from each sample. 
 helper_moran <- function(data, num_top_gene = NULL, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
