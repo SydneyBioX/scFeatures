@@ -31,7 +31,7 @@ helper_gene_mean <- function(data,
 }
 
   
-#' This function calculates the proportion of gene expression of genes in 
+#' This function calculates the proportion of expression of genes in 
 #' each sample in a Seurat object. If no list of genes is provided, it will 
 #' use find_var_gene function to select the top variable genes. 
 helper_gene_prop <- function(data,
@@ -87,7 +87,9 @@ helper_gene_prop <- function(data,
 
 
 
-# gene correlation bulk
+#' This function calculates the correlation of gene expression in 
+#' each sample in a Seurat object. If no list of genes is provided, it will 
+#' use find_var_gene function to select the top variable genes. 
 helper_gene_cor <- function(data,
     genes = NULL,
     num_top_gene = NULL,
