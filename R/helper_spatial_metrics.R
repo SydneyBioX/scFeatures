@@ -49,7 +49,9 @@ individual_celltype_interaction_sp <- function(this_sample) {
 
 
 
-
+#' Calculates the pairwise distance between cell types for spatial proteomics. 
+#' It applies the individual_celltype_interaction_sp function to each sample,
+#' then merges the results from each sample. 
 helper_celltype_interaction_sp <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
