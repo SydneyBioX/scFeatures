@@ -127,7 +127,9 @@ In normalizePath(path, winslash = winslash, mustWork = mustWork) :
 - [ ] Bioconductor requires documentation of `.rds`/`.Rdata` files in `inst/extdata` in an `inst/script/ directory`. See [data documentation](https://contributions.bioconductor.org/docs.html#doc-inst-script).
   - [ ] `inst/extdata` is usually used for 'raw' data, so these data might properly belong under `data/` rather than `inst/extdata/`; see https://contributions.bioconductor.org/data.html.
 - [x] Please add a table of contents to each vignette.
-- [ ] All man pages should have runnable examples (see https://contributions.bioconductor.org/docs.html#examples)
+- [x] All man pages should have runnable examples (see https://contributions.bioconductor.org/docs.html#examples)
+Nick to check - is there are reason that we include /dontrun in some of the examples?
+I saw this is stated as not recommended in the webpage. 
 - [ ] What are the `dev` and `docs` folders? Please justify or remove them from the main branch of the git repo (Bioconductor requests that \"Any files or directories for other applications (Github Actions, devtools, etc.) should ideally be in a different branch and not submitted to the Bioconductor version of the package.\" (see https://contributions.bioconductor.org/general.html?q=unnec#undesirable-files)
   - [x] Remove `docs` folder.
   - [ ] Rremove `dev` folder.
