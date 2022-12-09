@@ -72,6 +72,7 @@ remove_mito <- function(data) {
 #' taking the union of the HVGs across all samples. The ouput is a daraframe
 #' with two columns: marker and celltype. When celltype is set to FALSE, the 
 #' function only calculates the HVG across all cells and returns a vector of HVGs.
+#' @noRd
 find_var_gene <- function(data,
     num_top_gene = 1500,
     ncores = 1,
@@ -176,6 +177,7 @@ find_var_gene <- function(data,
 #' genes per cell type using the find_var_gene function, then calculates the gene 
 #' expression levels for these genes in their respective cell type. 
 #' The output is a returns a matrix of samples by features. 
+#' @noRd
 helper_gene_mean_celltype <- function(data,
     genes = NULL,
     num_top_gene = NULL,
@@ -265,6 +267,7 @@ helper_gene_mean_celltype <- function(data,
 #' genes per cell type using the find_var_gene function, then calculates the gene 
 #' expression levels for these genes in their respective cell type. 
 #' The output is a returns a matrix of samples by features. 
+#' @noRd
 helper_gene_prop_celltype <- function(data,
     genes = NULL,
     num_top_gene = NULL,
@@ -342,6 +345,7 @@ helper_gene_prop_celltype <- function(data,
 #' genes per cell type using the find_var_gene function, then calculates the gene 
 #' expression levels for these genes in their respective cell type. 
 #' The output is a returns a matrix of samples by features. 
+#' @noRd
 helper_gene_cor_celltype <- function(data,
     genes = NULL,
     num_top_gene = NULL,
@@ -438,8 +442,11 @@ helper_gene_cor_celltype <- function(data,
 #' at each spot to obtain regression coefficients and p-values. The regression 
 #' coefficients is considered as the cell type's contribution to the expression the gene. 
 #' Similar to the bulk deconvolution concept. 
+#' 
 #' @importFrom glue glue
 #' @importFrom stats lm
+#' 
+#' @noRd
 helper_gene_mean_celltype_st <- function(data,
     num_top_gene = NULL,
     ncores = 1) {

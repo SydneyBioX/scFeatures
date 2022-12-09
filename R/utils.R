@@ -19,6 +19,7 @@
 #' @return NULL
 #' @importFrom methods is
 #' 
+#' @noRd
 check_data <- function(data, type = "scrna") {
     if (!is(data, "Seurat")) {
         # TODO: Should this be a warning/error?
@@ -66,6 +67,7 @@ check_data <- function(data, type = "scrna") {
 #' @return A `BiocParallel` object that can be used to control the 
 #' parallelization of functions.
 #' 
+#' @noRd
 generateBPParam <- function(cores = 1) {
     seed <- .Random.seed[1]
 
@@ -109,6 +111,7 @@ generateBPParam <- function(cores = 1) {
 #' @return A Seurat object containing the pseudo-bulks for each cell type
 #'  of each sample. 
 #' 
+#' @noRd
 bulk_sample_celltype <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
@@ -172,6 +175,7 @@ bulk_sample_celltype <- function(data, ncores = 1) {
 #' @return A Seurat object containing the pseudo-bulks for each sample 
 #' in the input data. 
 #' 
+#' @noRd
 bulk_sample <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
@@ -247,6 +251,7 @@ get_num_cell_per_spot <- function(data) {
 #' @return A character string with the words sorted alphabetically and
 #' separated by underscores.
 #' 
+#' @noRd
 rearrange_string <- function(str) {
     unlist(lapply(strsplit(str, "_"), function(x) paste(sort(x), collapse = "_")))
 }
@@ -265,6 +270,8 @@ rearrange_string <- function(str) {
 #' @param data a spatial transcriptomics dataset in the form of a Seurat object.
 #' 
 #' @return A matrix with the number of cells per cell type at each spot.
+#' 
+#' @noRd
 get_num_cell_per_celltype <- function(data) {
     prob <- data@assays$predictions
     prob <- as.matrix(prob@data)
@@ -300,6 +307,7 @@ get_num_cell_per_celltype <- function(data) {
 #' @return
 #' A numeric value of the L statistic.
 #'
+#' @noRd
 L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
     L <- spatstat.explore::Lcross(ppp_obj,
         from = from, to = to,

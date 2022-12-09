@@ -2,6 +2,7 @@
 #' This function retrieves the hallmark gene set from the Molecular Signature 
 #' Database (MSigDB) for a specified species. The function returns a list of 
 #' gene sets where each list entry contains a vector of gene symbols in the gene set.
+#' @noRd
 get_geneset <- function(species = "Homo sapiens") {
     m_df <- msigdbr::msigdbr(species = species, category = "H")
     m_t2g <- m_df |>
@@ -35,6 +36,7 @@ get_geneset <- function(species = "Homo sapiens") {
 #' containing expression data to generate pathway score. The type of pathway 
 #' analysis method currently supported are ssgsea and aucell. The function 
 #' returns a matrix of samples x features with the pathway scores.
+#' @noRd
 helper_pathway_gsva <- function(data, method = "ssgsea", geneset, ncores = 1) {
     if (method == "ssgsea") {
         # if the dataset has greater than 30000 cells
@@ -105,6 +107,7 @@ helper_pathway_gsva <- function(data, method = "ssgsea", geneset, ncores = 1) {
 #' difference in library detection. The resulting gene set scores are passed 
 #' to the format_pathway function to convert them into a sample x pathway 
 #' feature matrix. 
+#' @noRd
 helper_pathway_mean <- function(data, geneset, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
@@ -154,6 +157,8 @@ helper_pathway_mean <- function(data, geneset, ncores = 1) {
 #' @importFrom stats quantile
 #' @importFrom DelayedMatrixStats colMeans2
 #' @importFrom DelayedArray DelayedArray
+#' 
+#' @noRd
 individual_geneset_proportion_celltype <- function(data, this_geneset) {
     # first find the average expression of the genes across cells
     expression_level <- DelayedMatrixStats::colMeans2(DelayedArray::DelayedArray(
@@ -231,6 +236,7 @@ individual_geneset_proportion_celltype <- function(data, this_geneset) {
 #' in each sample. It then concatenates the gene set name to the cell type 
 #' name in the output data frame. The output data frame contains one column 
 #' for each gene set-cell type combination. 
+#' @noRd
 helper_pathway_prop <- function(data, geneset, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
@@ -277,6 +283,7 @@ helper_pathway_prop <- function(data, geneset, ncores = 1) {
 #' aggregates the pathway scores by cell type and converts the data into a matrix of
 #' samples x features, where the features are the pathways and the cell types they 
 #' are associated with. 
+#' @noRd
 format_pathway <- function(data, topMatrixGSVA, ncores) {
     # aggregate the pathway score of each cell type
     topMatrixGSVA <- CreateSeuratObject(topMatrixGSVA)
@@ -320,6 +327,8 @@ format_pathway <- function(data, topMatrixGSVA, ncores) {
 #' 
 #' @importFrom glue glue
 #' @importFrom stats lm
+#' 
+#' @noRd
 helper_pathway_mean_st <- function(data, geneset, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 

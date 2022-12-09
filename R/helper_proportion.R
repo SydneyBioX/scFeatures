@@ -4,6 +4,7 @@
 #' each cell type in each sample, applicable to scRNA-seq and 
 #' spatial proteomics. It also takes an optional logit argument 
 #' that specifies whether the proportions should be logit-transformed.
+#' @noRd
 helper_proportion_raw <- function(data, logit = TRUE) {
     df <- data@meta.data
     df <- table(df$sample, data$celltype)
@@ -39,6 +40,7 @@ helper_proportion_raw <- function(data, logit = TRUE) {
 #' This function calculates the ratio of cell type proportion between 
 #' two cell types in each sample, applicable to scRNA-seq and spatial
 #' proteomics. The ratio is log2 transformed. 
+#' @noRd
 helper_proportion_ratio <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
@@ -122,6 +124,8 @@ helper_proportion_ratio <- function(data, ncores = 1) {
 #' each cell type in each sample, applicable to spatial transcriptomics. 
 #' It takes an optional logit argument that specifies whether the proportions 
 #' should be logit-transformed.
+#' @noRd
+#' 
 helper_proportion_raw_st <- function(data, logit = TRUE, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
@@ -168,6 +172,7 @@ helper_proportion_raw_st <- function(data, logit = TRUE, ncores = 1) {
 #' This function calculates the ratio of cell type proportion between 
 #' two cell types in each sample, applicable to spatial transcriptomics. 
 #' The ratio is log2 transformed. 
+#' @noRd
 helper_proportion_ratio_st <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 

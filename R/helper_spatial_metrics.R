@@ -6,6 +6,7 @@
 #' the pairwise distance between these cell types. The function returns 
 #' a list of the pairwise distances between the cell types.
 #' This function is designed for spatial proteomics. 
+#' @noRd
 individual_celltype_interaction_sp <- function(this_sample) {
     cell_points <- spatstat.geom::ppp(
         x = this_sample$x_cord,
@@ -52,6 +53,7 @@ individual_celltype_interaction_sp <- function(this_sample) {
 #' Calculates the pairwise distance between cell types for spatial proteomics. 
 #' It applies the individual_celltype_interaction_sp function to each sample,
 #' then merges the results from each sample. 
+#' @noRd
 helper_celltype_interaction_sp <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
@@ -119,6 +121,7 @@ helper_celltype_interaction_sp <- function(data, ncores = 1) {
 #' for each spot and perform matrix multiplication to get the probability of 
 #' cell-type co-occurrences for each spot. The output is a  vector containing 
 #' the co-occurrence probabilities for each cell-type pair.
+#' @noRd
 individual_celltype_interaction_st <- function(thisprob) {
     x <- 1
     temp <- lapply(seq_len(ncol(thisprob)), function(x) {
@@ -143,6 +146,7 @@ individual_celltype_interaction_st <- function(thisprob) {
 #' Calculates the cell-type interactions for spatial transcriptomic.
 #' It applies the individual_celltype_interaction_st function to each sample,
 #' then merges the results from each sample. 
+#' @noRd
 helper_celltype_interaction_st <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
@@ -184,6 +188,7 @@ helper_celltype_interaction_st <- function(data, ncores = 1) {
 #' the number of cells in each spatial location. The L-statistic measures the 
 #' degree of spatial clustering between two objects in a particular area. The output 
 #' vector represents the L-statistic for a pair of cell types.
+#' @noRd
 individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
     # expand each spot into its number of cells
     x <- c()
@@ -264,6 +269,7 @@ individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
 #' Calculates the L-statistics for spatial transcriptomic.
 #' It applies the individual_L_stat_st function to each sample,
 #' then merges the results from each sample. 
+#' @noRd
 helper_L_stat_st <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
@@ -330,6 +336,7 @@ helper_L_stat_st <- function(data, ncores = 1) {
 #' transcriptomics data. It uses spatial coordinates, cell type information 
 #' to calculate the spatial distribution of cells in the sample. 
 #' The output vector represents the L-statistic for a pair of cell types.
+#' @noRd
 individual_L_stat_sp <- function(this_sample) {
     cell_points <- spatstat.geom::ppp(
         x = this_sample$x_cord,
@@ -367,6 +374,7 @@ individual_L_stat_sp <- function(this_sample) {
 #' Calculates the L-statistics for spatial proteomics.
 #' It applies the individual_L_stat_sp function to each sample,
 #' then merges the results from each sample. 
+#' @noRd
 helper_L_stat_sp <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
@@ -437,6 +445,7 @@ helper_L_stat_sp <- function(data, ncores = 1) {
 #' It returns a vector of correlation values for each gene. 
 #' This function is used in as a helper function in helper_nncorr_protein 
 #' function to generate the nearest neighbor correlation for all samples.
+#' @noRd
 individual_nncorr_protein <- function(thissample) {
     exprsMat <- thissample@assays$RNA@data
 
@@ -472,7 +481,10 @@ individual_nncorr_protein <- function(thissample) {
 #' using the spatial coordinates and expression values of cells. 
 #' It applies the individual_nncorr_protein function to each sample,
 #' then merges the results from each sample. 
+#' 
 #' @importFrom methods is
+#' 
+#' @noRd
 helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
@@ -545,6 +557,7 @@ helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
 #' This function computes the Moran's I for each gene in a sample.
 #' Moran's I is a measure of spatial autocorrelation, which indicates 
 #' how strongly the gene expression values in a sample cluster or disperse. 
+#' @noRd
 individual_moran_cor <- function(thissample) {
     exprsMat <- thissample@assays$RNA@data
 
@@ -590,6 +603,7 @@ individual_moran_cor <- function(thissample) {
 #' Calculates the Moran's I value for all samples. 
 #' It applies the individual_moran_cor function to each sample,
 #' then merges the results from each sample. 
+#' @noRd
 helper_moran <- function(data, num_top_gene = NULL, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
