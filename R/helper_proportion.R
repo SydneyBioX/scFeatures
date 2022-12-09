@@ -1,7 +1,9 @@
 
 
-# calculates cell type proportion raw and logit transformed
-# applicable to scRNA-seq and spatial proteomics
+#' This function calculates the proportion of cells belonging to 
+#' each cell type in each sample, applicable to scRNA-seq and 
+#' spatial proteomics. It also takes an optional logit argument 
+#' that specifies whether the proportions should be logit-transformed.
 helper_proportion_raw <- function(data, logit = TRUE) {
     df <- data@meta.data
     df <- table(df$sample, data$celltype)
