@@ -108,7 +108,7 @@ Error: Cannot find 'cellType' in this Seurat object
 
 - [x] In the `scFeatures_associationstudy` vignette, please use a temporary directory via `tempdir()`, rather than the current working directory, to demonstrate report generation.
   - This vignette is not intended to be run as it simulates report generation and should be done with one's own results.
-- [ ] That said, the report generation fails when using `tempdir()` but should work.
+- [x] That said, the report generation fails when using `tempdir()` but should work.
 
 ```r
 > output_folder <- tempdir()
@@ -118,6 +118,8 @@ In addition: Warning message:
 In normalizePath(path, winslash = winslash, mustWork = mustWork) :
   path[1]=\"output_report.Rmd\": No such file or directory
 ```
+ **Fixed**: This is now fixed 
+
 
 - [x] The **org.Hs.eg.db** package is an unspecified dependency used in the report generation demonstrated in `scFeatures_associationstudy`. Please include it as a dependency in the `DESCRIPTION`.
   - Added `org.Hs.eg.db` to suggests.
@@ -175,3 +177,4 @@ I saw this is stated as not recommended in the webpage.
 - Nick: Down-sample data to 550 samples in order to create a dataset <3MB
 - Yue: Finished writing the documentation. All exported functions now have Title, Description, Arguments, Return value.  
 Non - exported functions now have description. 
+Fixed `scFeatures_associationstudy` vignette
