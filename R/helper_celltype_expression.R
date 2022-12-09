@@ -1,7 +1,4 @@
 
-
-
-
 #' Remove mitochondrial and ribosomal genes, and other highly correlated genes 
 #' 
 #' @description 
@@ -15,7 +12,12 @@
 #' correlated genes removed
 #'
 #' @importFrom proxyC simil
-#'
+#' 
+#' @examples 
+#' data <- readRDS(
+#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' data <- remove_mito(data)
+#' 
 #' @export
 remove_mito <- function(data) {
     if (ncol(data) > 20000) {
