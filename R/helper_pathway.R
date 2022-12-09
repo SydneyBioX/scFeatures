@@ -311,7 +311,13 @@ format_pathway <- function(data, topMatrixGSVA, ncores) {
 
 
 
-
+#' Thie function calculates the mean expression level of each gene set
+#' in a list of gene sets for each cell type in each sample, for spatial
+#' transcriptomics data. It first uses the cell type composition and 
+#' gene expression at each spot and uses linear regression to calculate the 
+#' regression coefficient of each cell type. It then sum the regression 
+#' coefficient of each cell type and returns the resulting matrix. 
+#' 
 #' @importFrom glue glue
 #' @importFrom stats lm
 helper_pathway_mean_st <- function(data, geneset, ncores = 1) {
