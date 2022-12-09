@@ -398,9 +398,13 @@ process_data <- function(data, normalise = TRUE) {
 #'
 #' @return an HTML file, saved to the directory defined in the `output_folder`
 #' argument
-#'
+#' 
+#' @examples
+#' output_folder <- tempdir()
+#' run_association_study_report(scfeatures_result, output_folder )
+#' 
 #' @import rmarkdown
-#'
+#' 
 #' @export
 run_association_study_report <- function(scfeatures_result, output_folder) {
     # check name
