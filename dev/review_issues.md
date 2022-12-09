@@ -141,7 +141,7 @@ In normalizePath(path, winslash = winslash, mustWork = mustWork) :
   **Fixed**: Added in the function description. 
 
 - [ ] Please try to cite relevant literature. E.g., in the `scFeatures_detail` vignette you write, \"the L values between the pairs of proteins are calculated using the L function defined in literature\" but no reference is given to the relevant literature.
-- [ ] In  the `scFeatures_detail` vignette is the advice, \"This can be obtained from performing cell type prediction using reference data, for example, using SCTransform from Seurat (see https://satijalab.org/seurat/articles/spatial_vignette.html)\". However, to my understanding, **SCTransform** is a normlization method, not a cell type prediction method, and the link points doesn't point to how to actually do the cell type prediction as best I can tell. Please clarify.
+- [x] In  the `scFeatures_detail` vignette is the advice, \"This can be obtained from performing cell type prediction using reference data, for example, using SCTransform from Seurat (see https://satijalab.org/seurat/articles/spatial_vignette.html)\". However, to my understanding, **SCTransform** is a normlization method, not a cell type prediction method, and the link points doesn't point to how to actually do the cell type prediction as best I can tell. Please clarify.
   **Fixed**: Update the link to https://satijalab.org/seurat/articles/spatial_vignette.html#integration-with-single-cell-data-1, which 
   corresponds to the section using SCTransform for "probabilistic transfer of annotations from a reference to a query set". 
 
