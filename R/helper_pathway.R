@@ -137,9 +137,15 @@ helper_pathway_mean <- function(data, geneset, ncores = 1) {
 
 
 
-#' helper function to calculate proportion that a gene is expressed in each
+#' Helper function to calculate proportion that a geneset is expressed in each
 #' cell type in a sample
 #'
+#' The function first calculates the average expression level of the genes in 
+#' the gene set across all cells. It then uses the third quantile of these expression 
+#' levels as a threshold to determine whether a gene is considered "expressed" in a cell.
+#' It then summarise the proportion of cells expressing the gene set for each cell type.
+#' This computation is done for each sample in the dataset. 
+#' 
 #' @param data Data to run the calculation on.
 #' @param this_geneset geneset to run analysis on
 #' @return a data frame containing the proportion a gene is expressed in each
