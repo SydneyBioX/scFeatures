@@ -934,12 +934,17 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 
 
 
-#' generate Moran's I
-#'
-#' @param data input data, a Seurat object containing `celltype` and `sample`
-#'  label
-#' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param ncores number of cores
+#' Generate Moran's I
+#' 
+#' @description 
+#' This function calculates Moran's I to measure spatial autocorrelation,
+#' which an indicattion of how strongly the feature(ie, genes/proteins) 
+#' expression values in a sample cluster or disperse. The function supports 
+#' spatial proteomics and spatial transcriptomics.
+#'  
+#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
+#' @param ncores Number of cores for parallel processing.
 #'
 #' @return a matrix of samples x features
 #'
