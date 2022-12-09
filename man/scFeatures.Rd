@@ -59,7 +59,9 @@ If no value is provided, the 50 hallmark pathways will be used}
 a list of dataframes containing the generated feature matrix in the form of sample x features
 }
 \description{
-Wrapper function to run all feature types in scFeatures
+The scFeatures function generates a variety of features from a Seurat object
+containing single cell RNA-sequencing data. By default, all feature types will be generated
+and returned in a single list containing multiple data frames.
 }
 \examples{
 

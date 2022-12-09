@@ -19,6 +19,7 @@ highly correlated with these genes, as mitochondria and ribosomal
 genes are typically not  interesting to look at.
 }
 \examples{
+
 data <- readRDS(
     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 data <- remove_mito(data)
