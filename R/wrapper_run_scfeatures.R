@@ -1,8 +1,12 @@
 
 
 
-#' wrapper function to run all feature types in scFeatures
-#'
+#' Wrapper function to run all feature types in scFeatures
+#' 
+#' @@description The scFeatures function generates a variety of features from a Seurat object 
+#' containing single cell RNA-sequencing data. By default, all feature types will be generated 
+#' and returned in a single list containing multiple data frames.  
+#' 
 #' @param data input data, a Seurat object containing "sample" and "celltype" column.
 #'  "x_cord" and "y_cord" is also required for constructing the features in the spatial metrics category.
 #'
@@ -180,8 +184,12 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 
 
 
-#' Format SingleCellExperiment or SpatialExperiment object into Seurat object
-#' for scFeatures functions
+#' Format data into Seurat object structured for scFeatures functions
+#' 
+#' @description 
+#' This function is used to convert a SingleCellExperiment, SpatialExperiment or a
+#' Seurat object into Seurat object containing all required fields and structured 
+#' for scFeatures functions. 
 #'
 #' @param data input data, either a SingleCellExperiment or SpatialExperiment
 #'  object.
@@ -206,8 +214,8 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 #'  provided, we use the column called "sample".
 #' @param assay the assay identifier if using a SingleCellExperiment or
 #'  SpatialExperiment object.
-#' @param spatialCoords the spatialCoords identifiers if users want to
-#'  construct features from the spatial category.
+#' @param spatialCoords the spatialCoords identifiers provided in a list of 
+#' two vectors, if users want to construct features from the spatial category.
 #' If not provided, we use the columns called "x_cord" and "y_cord".
 #' @param spotProbability a matrix in the format of celltype x spot, where each
 #'  entry is the prediction probability of that cell type for each spot.
@@ -217,6 +225,13 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 #' @importFrom SummarizedExperiment colData
 #' @importFrom SpatialExperiment spatialCoords
 #'
+#' @examples
+#'
+#' \dontrun{
+#'  data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+#'  coordinate <- list(x = rep(1, ncol(data)), y = rep(1, ncol(data)))
+#'  data <- makeSeurat(data, spatialCoords = coordinate)
+#' }
 #' @export
 makeSeurat <- function(data,
     sample,
