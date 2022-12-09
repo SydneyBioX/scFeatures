@@ -881,12 +881,16 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 
 
 
-#' generate cell type interaction
+#' Generate cell type interaction
 #'
-#' @param data input data, a Seurat object containing `celltype` and `sample`
-#'  label
-#' @param type input data type, either scrna, spatial_p, or spatial_t
-#' @param ncores number of cores
+#' @description 
+#' This function calculates the pairwise distance between cell types
+#' for a sample by using the coordinates and cell types of the cells. 
+#' The function supports spatial proteomics and spatial transcriptomics.
+#' 
+#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
+#' @param ncores Number of cores for parallel processing.
 #'
 #' @return a matrix of samples x features
 #'
