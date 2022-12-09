@@ -14,6 +14,7 @@
 #' @importFrom proxyC simil
 #' 
 #' @examples 
+#' 
 #' data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #' data <- remove_mito(data)

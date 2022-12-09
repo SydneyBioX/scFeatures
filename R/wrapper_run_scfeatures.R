@@ -3,7 +3,7 @@
 
 #' Wrapper function to run all feature types in scFeatures
 #' 
-#' @@description The scFeatures function generates a variety of features from a Seurat object 
+#' @description The scFeatures function generates a variety of features from a Seurat object 
 #' containing single cell RNA-sequencing data. By default, all feature types will be generated 
 #' and returned in a single list containing multiple data frames.  
 #' 
