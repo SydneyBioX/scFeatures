@@ -225,7 +225,12 @@ individual_geneset_proportion_celltype <- function(data, this_geneset) {
 }
 
 
-
+#' Calculates proportion that a geneset is expressed in each cell type in a
+#' sample. The function first uses the individual_geneset_proportion_celltype
+#' function to calculate the proportion of cells expressing each gene set 
+#' in each sample. It then concatenates the gene set name to the cell type 
+#' name in the output data frame. The output data frame contains one column 
+#' for each gene set-cell type combination. 
 helper_pathway_prop <- function(data, geneset, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
