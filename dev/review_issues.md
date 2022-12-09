@@ -79,9 +79,17 @@ Error: Cannot find 'cellType' in this Seurat object
     - The 'Description' just repeats the title, which doesn't explain what pre-processing actually is.
     - There's no real description of arguments (what sort of object is `data`, what sort of normalisation is applied when `normalise = TRUE`, etc.)
     - The 'Value' section is incorrect (the return value is actually a _Seurat_ object) and it should be explained what the returned object  contains.
+
   - You might take a look at popular Bioconductor packages such as **scater** or **edgeR** for inspiration for the documentation (although it needn't be that detailed).
   - Some of the required documentation detail is in the `scFeatures_detail` vignette, but it properly belongs in the man pages. The vignette should show users how to use the package as a whole and the man pages how to use individual functions.
+  
+  **Fixed**: All exported functions now have Title, Description, Arguments, Return value.  
+  Non - exported functions now have description. 
+    
 - [x] The 'Value' section of many man pages is incorrect. E.g., `run_proportion_raw()` returns a _data.frame_ but is documented to return 'a _matrix_ of samples x features'. These details matter when it comes to documenting package code.
+  
+  **Fixed**: Corrected the return value type. 
+
 - [ ] The 'Introduction' of the each vignette, especially the first or main vignette (which I take to be `scFeatures_summary`) should read like an abstract; see https://contributions.bioconductor.org/docs.html#vignette-introduction
 - [x] Please give the vignettes informative titles and filenames; see https://contributions.bioconductor.org/docs.html#vignettes
   - The titles and names seems sufficiently informative.
@@ -130,6 +138,8 @@ In normalizePath(path, winslash = winslash, mustWork = mustWork) :
 - [x] This may be personal preference, but the function outputs feel the wrong way around (with samples as rows and features as columns). This is the opposite of how 'rectangular' data are usually stored in Bioonductor, e.g., *SummarizedExperiment*, where rows are features (e.g., genes) and samples are columns. A side effect, is that this leads to very 'wide' objects that don't display very nicely when printed (at least that was my experience with the example data). I recommend at least documenting why you choose to return the results in this orientation.
   - This is one of the reasons why sfFeatures was created.' Rectangular' data are not suitable for statistical modelling, which requires standard sample by feature [design matrices](https://en.wikipedia.org/wiki/Design_matrix). The reason why the output is as such is that the purpose of the features is statisitcal modelling.
 - [x] `makeSeurat()` also accepts Seurat objects (https://github.com/SydneyBioX/scFeatures/blob/709f075578bf01b1823dc39fe1d5617472c3f888/R/wrapper_run_scfeatures.R#L225-L237), but this isn't documented. Please document when a user would need this functionality.
+  **Fixed**: Added in the function description. 
+
 - [ ] Please try to cite relevant literature. E.g., in the `scFeatures_detail` vignette you write, \"the L values between the pairs of proteins are calculated using the L function defined in literature\" but no reference is given to the relevant literature.
 - [ ] In  the `scFeatures_detail` vignette is the advice, \"This can be obtained from performing cell type prediction using reference data, for example, using SCTransform from Seurat (see https://satijalab.org/seurat/articles/spatial_vignette.html)\". However, to my understanding, **SCTransform** is a normlization method, not a cell type prediction method, and the link points doesn't point to how to actually do the cell type prediction as best I can tell. Please clarify.
 - [ ] Please consider NOTES raised by `BiocCheck::BiocCheck()`. Code styling notes can be regarded as suggestions, but other points should be followed or reasons given for not following them. 
