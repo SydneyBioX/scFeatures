@@ -69,7 +69,7 @@ Error: Cannot find 'cellType' in this Seurat object
 ```
  - **Fixed**: Code was not evaluated because of very long runtimes, but this has been changed and broken chunks have been fixed.
 
-- [ ] The man pages (documentation) is too terse and imprecise.
+- [x] The man pages (documentation) is too terse and imprecise.
   - Each man page should include well-written:
     - Title, Description and Details (see https://r-pkgs.org/man.html#title-description-details)
     - Arguments (see https://r-pkgs.org/man.html#arguments)
@@ -81,7 +81,7 @@ Error: Cannot find 'cellType' in this Seurat object
     - The 'Value' section is incorrect (the return value is actually a _Seurat_ object) and it should be explained what the returned object  contains.
   - You might take a look at popular Bioconductor packages such as **scater** or **edgeR** for inspiration for the documentation (although it needn't be that detailed).
   - Some of the required documentation detail is in the `scFeatures_detail` vignette, but it properly belongs in the man pages. The vignette should show users how to use the package as a whole and the man pages how to use individual functions.
-- [ ] The 'Value' section of many man pages is incorrect. E.g., `run_proportion_raw()` returns a _data.frame_ but is documented to return 'a _matrix_ of samples x features'. These details matter when it comes to documenting package code.
+- [x] The 'Value' section of many man pages is incorrect. E.g., `run_proportion_raw()` returns a _data.frame_ but is documented to return 'a _matrix_ of samples x features'. These details matter when it comes to documenting package code.
 - [ ] The 'Introduction' of the each vignette, especially the first or main vignette (which I take to be `scFeatures_summary`) should read like an abstract; see https://contributions.bioconductor.org/docs.html#vignette-introduction
 - [x] Please give the vignettes informative titles and filenames; see https://contributions.bioconductor.org/docs.html#vignettes
   - The titles and names seems sufficiently informative.
@@ -158,3 +158,5 @@ In normalizePath(path, winslash = winslash, mustWork = mustWork) :
 # Work Done
 
 - Nick: Down-sample data to 550 samples in order to create a dataset <3MB
+- Yue: Finished writing the documentation. All exported functions now have Title, Description, Arguments, Return value.  
+Non - exported functions now have description. 
