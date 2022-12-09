@@ -453,7 +453,7 @@ For spatial transcriptomics, the required information are `sample`, `x_cord` and
 
 Additionally, there are two assays needed, the `RNA`, which contains the gene expression of each spot and the `predictions`. 
 
-The `predictions` assay is a matrix in the form of cell types x spot, which stores the cell type probability of each spot. This can be obtained from performing cell type prediction using reference data, for example, using `SCTransform` from Seurat (see https://satijalab.org/seurat/articles/spatial_vignette.html). The purpose of having this cell type probability matrix is due to spatial transcriptomics assay contain multiple cells from multiple cell type populations, and this cell type prediction is necessary for generating cell type specific feature types. 
+The `predictions` assay is a matrix in the form of cell types x spot, which stores the cell type probability of each spot. This can be obtained from performing cell type prediction using reference data, for example, using `SCTransform` from Seurat (see https://satijalab.org/seurat/articles/spatial_vignette.html#integration-with-single-cell-data-1). The purpose of having this cell type probability matrix is due to spatial transcriptomics assay contain multiple cells from multiple cell type populations, and this cell type prediction is necessary for generating cell type specific feature types. 
 
 
 ```{r, include=TRUE}
