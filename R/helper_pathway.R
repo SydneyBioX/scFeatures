@@ -96,7 +96,15 @@ helper_pathway_gsva <- function(data, method = "ssgsea", geneset, ncores = 1) {
 
 
 
-# helper function to run the pathway mean
+#' The helper_pathway_mean function use the mean expression of genes in a 
+#' gene set as the basis of pathway score. The input is a Seurat object 
+#' containing the gene expression data, the gene set of interest. Frist 
+#' compute the mean expression of each gene in the gene set. This is 
+#' done on each cell. The mean expression values are then subtracted from 
+#' the overall mean expression of all genes in each cell to control for the 
+#' difference in library detection. The resulting gene set scores are passed 
+#' to the format_pathway function to convert them into a sample x pathway 
+#' feature matrix. 
 helper_pathway_mean <- function(data, geneset, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
