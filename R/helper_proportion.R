@@ -118,8 +118,10 @@ helper_proportion_ratio <- function(data, ncores = 1) {
 
 
 
-# calculates cell type proportion raw and logit transformed
-# applicable to spatial transcriptomics
+#' This function calculates the proportion of cells belonging to 
+#' each cell type in each sample, applicable to spatial transcriptomics. 
+#' It takes an optional logit argument that specifies whether the proportions 
+#' should be logit-transformed.
 helper_proportion_raw_st <- function(data, logit = TRUE, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
