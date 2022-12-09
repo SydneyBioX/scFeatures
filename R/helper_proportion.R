@@ -166,8 +166,8 @@ helper_proportion_raw_st <- function(data, logit = TRUE, ncores = 1) {
 
 
 #' This function calculates the ratio of cell type proportion between 
-#' two cell types in each sample, applicable to scRNA-seq and spatial
-#' proteomics. The ratio is log2 transformed. 
+#' two cell types in each sample, applicable to spatial transcriptomics. 
+#' The ratio is log2 transformed. 
 helper_proportion_ratio_st <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
