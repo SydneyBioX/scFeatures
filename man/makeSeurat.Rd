@@ -2,8 +2,7 @@
 % Please edit documentation in R/wrapper_run_scfeatures.R
 \name{makeSeurat}
 \alias{makeSeurat}
-\title{Format SingleCellExperiment or SpatialExperiment object into Seurat object
-for scFeatures functions}
+\title{Format data into Seurat object structured for scFeatures functions}
 \usage{
 makeSeurat(
   data,
@@ -41,8 +40,8 @@ provided, we use the column called "sample".}
 \item{assay}{the assay identifier if using a SingleCellExperiment or
 SpatialExperiment object.}
 
-\item{spatialCoords}{the spatialCoords identifiers if users want to
-construct features from the spatial category.
+\item{spatialCoords}{the spatialCoords identifiers provided in a list of
+two vectors, if users want to construct features from the spatial category.
 If not provided, we use the columns called "x_cord" and "y_cord".}
 
 \item{spotProbability}{a matrix in the format of celltype x spot, where each
@@ -52,6 +51,15 @@ entry is the prediction probability of that cell type for each spot.}
 A \code{Seurat} dataset obtained by transforming input data
 }
 \description{
-Format SingleCellExperiment or SpatialExperiment object into Seurat object
-for scFeatures functions
+This function is used to convert a SingleCellExperiment, SpatialExperiment or a
+Seurat object into Seurat object containing all required fields and structured
+for scFeatures functions.
+}
+\examples{
+
+\dontrun{
+ data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+ coordinate <- list(x = rep(1, ncol(data)), y = rep(1, ncol(data)))
+ data <- makeSeurat(data, spatialCoords = coordinate)
+}
 }

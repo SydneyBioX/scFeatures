@@ -2,18 +2,19 @@
 % Please edit documentation in R/helper_celltype_expression.R
 \name{remove_mito}
 \alias{remove_mito}
-\title{remove mito and ribo genes and genes highly correlated with mito genes
-as mitochondria and ribosomal genes may not as interesting to look at}
+\title{Remove mitochondrial and ribosomal genes, and other highly correlated genes}
 \usage{
 remove_mito(data)
 }
 \arguments{
-\item{data}{input data}
+\item{data}{A Seurat object containing expression data}
 }
 \value{
-data with the mito and rib genes removed
+The Seurat object with the mito and rib genes and other highly
+correlated genes removed
 }
 \description{
-remove mito and ribo genes and genes highly correlated with mito genes
-as mitochondria and ribosomal genes may not as interesting to look at
+This function removes mitochondria and ribosomal genes and genes
+highly correlated with these genes, as mitochondria and ribosomal
+genes are typically not  interesting to look at.
 }

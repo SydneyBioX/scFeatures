@@ -27,7 +27,7 @@ Defaults to 1500.}
 \item{ncores}{Number of cores for parallel processing.}
 }
 \value{
-a matrix of samples x features
+a dataframe of samples x features
 }
 \description{
 This function computes the proportion of gene expression across samples. The user

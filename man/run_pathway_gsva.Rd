@@ -38,7 +38,7 @@ speed.}
 \item{ncores}{Number of cores for parallel processing.}
 }
 \value{
-a matrix of samples x features
+a dataframe of samples x features
 }
 \description{
 This function calculates pathway scores for a given input

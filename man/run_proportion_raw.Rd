@@ -14,13 +14,13 @@ run_proportion_raw(data, type = "scrna", ncores = 1)
 \item{ncores}{Number of cores for parallel processing.}
 }
 \value{
-a matrix of samples x features
+a dataframe of samples x features
 }
 \description{
 This function calculates the proportions of cells belonging to each cell type.
 The input data must contain \code{sample} and \code{celltype} metadata column.
 The function supports scRNA-seq and spatial proteomics.
-The function returns a matrix with samples as rows and cell types as columns.
+The function returns a dataframe with samples as rows and cell types as columns.
 }
 \examples{
 data <- readRDS(

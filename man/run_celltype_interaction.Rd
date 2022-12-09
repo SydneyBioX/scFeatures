@@ -2,23 +2,24 @@
 % Please edit documentation in R/run_scfeatures.R
 \name{run_celltype_interaction}
 \alias{run_celltype_interaction}
-\title{generate cell type interaction}
+\title{Generate cell type interaction}
 \usage{
 run_celltype_interaction(data, type = "spatial_p", ncores = 1)
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample}
-label}
+\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
 
-\item{type}{input data type, either scrna, spatial_p, or spatial_t}
+\item{type}{The type of dataset, either "scrna", "spatial_t", or "spatial_p".}
 
-\item{ncores}{number of cores}
+\item{ncores}{Number of cores for parallel processing.}
 }
 \value{
-a matrix of samples x features
+a dataframe of samples x features
 }
 \description{
-generate cell type interaction
+This function calculates the pairwise distance between cell types
+for a sample by using the coordinates and cell types of the cells.
+The function supports spatial proteomics and spatial transcriptomics.
 }
 \examples{
 

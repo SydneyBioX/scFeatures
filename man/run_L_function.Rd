@@ -14,7 +14,7 @@ run_L_function(data, type = "spatial_p", ncores = 1)
 \item{ncores}{Number of cores for parallel processing.}
 }
 \value{
-a matrix of samples x features
+a dataframe of samples x features
 }
 \description{
 This function calculates L-statistics to measure spatial autocorrelation.

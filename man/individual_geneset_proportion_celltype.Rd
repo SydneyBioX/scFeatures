@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_pathway.R
 \name{individual_geneset_proportion_celltype}
 \alias{individual_geneset_proportion_celltype}
-\title{helper function to calculate proportion that a gene is expressed in each
+\title{Helper function to calculate proportion that a geneset is expressed in each
 cell type in a sample}
 \usage{
 individual_geneset_proportion_celltype(data, this_geneset)
@@ -17,6 +17,9 @@ a data frame containing the proportion a gene is expressed in each
 cell type in a sample
 }
 \description{
-helper function to calculate proportion that a gene is expressed in each
-cell type in a sample
+The function first calculates the average expression level of the genes in
+the gene set across all cells. It then uses the third quantile of these expression
+levels as a threshold to determine whether a gene is considered "expressed" in a cell.
+It then summarise the proportion of cells expressing the gene set for each cell type.
+This computation is done for each sample in the dataset.
 }

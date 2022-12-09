@@ -27,3 +27,8 @@ scFeatures as input and creates an HTML report containing the
 results of the association study. The report is saved to the specified
 output folder.
 }
+\examples{
+output_folder <- tempdir()
+run_association_study_report(scfeatures_result, output_folder )
+
+}

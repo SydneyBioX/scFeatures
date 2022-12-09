@@ -2,23 +2,25 @@
 % Please edit documentation in R/run_scfeatures.R
 \name{run_Morans_I}
 \alias{run_Morans_I}
-\title{generate Moran's I}
+\title{Generate Moran's I}
 \usage{
 run_Morans_I(data, type = "spatial_p", ncores = 1)
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample}
-label}
+\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
 
-\item{type}{input data type, either scrna, spatial_p, or spatial_t}
+\item{type}{The type of dataset, either "scrna", "spatial_t", or "spatial_p".}
 
-\item{ncores}{number of cores}
+\item{ncores}{Number of cores for parallel processing.}
 }
 \value{
-a matrix of samples x features
+a dataframe of samples x features
 }
 \description{
-generate Moran's I
+This function calculates Moran's I to measure spatial autocorrelation,
+which an indicattion of how strongly the feature(ie, genes/proteins)
+expression values in a sample cluster or disperse. The function supports
+spatial proteomics and spatial transcriptomics.
 }
 \examples{
 

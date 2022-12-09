@@ -2,23 +2,28 @@
 % Please edit documentation in R/run_scfeatures.R
 \name{run_nn_correlation}
 \alias{run_nn_correlation}
-\title{generate nearest neighbour correlation}
+\title{Generate nearest neighbour correlation}
 \usage{
-run_nn_correlation(data, type = "spatial_p", ncores = 1)
+run_nn_correlation(data, type = "spatial_p", num_top_gene = NULL, ncores = 1)
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample}
-label}
+\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
 
-\item{type}{input data type, either scrna, spatial_p, or spatial_t}
+\item{type}{The type of dataset, either "scrna", "spatial_t", or "spatial_p".}
 
-\item{ncores}{number of cores}
+\item{num_top_gene}{Number of top variable genes to use when genes is
+not provided. Defaults to 1500.}
+
+\item{ncores}{Number of cores for parallel processing.}
 }
 \value{
-a matrix of samples x features
+a dataframe of samples x features
 }
 \description{
-generate nearest neighbour correlation
+This function calculates the nearest neighbour correlation for each feature
+(eg, proteins) in each sample. This is calculated by taking the correlation
+between each cell and its nearest neighbours cell for a particular feature.
+This function supports spatial proteomics, and spatial transcriptomics.
 }
 \examples{
 

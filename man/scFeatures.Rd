@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrapper_run_scfeatures.R
 \name{scFeatures}
 \alias{scFeatures}
-\title{wrapper function to run all feature types in scFeatures}
+\title{Wrapper function to run all feature types in scFeatures}
 \usage{
 scFeatures(
   data,
@@ -59,7 +59,7 @@ If no value is provided, the 50 hallmark pathways will be used}
 a list of dataframes containing the generated feature matrix in the form of sample x features
 }
 \description{
-wrapper function to run all feature types in scFeatures
+Wrapper function to run all feature types in scFeatures
 }
 \examples{
 
