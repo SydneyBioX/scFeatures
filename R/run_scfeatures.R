@@ -8,13 +8,13 @@
 #' This function calculates the proportions of cells belonging to each cell type. 
 #' The input data must contain `sample` and `celltype` metadata column. 
 #' The function supports scRNA-seq and spatial proteomics.
-#' The function returns a matrix with samples as rows and cell types as columns.
+#' The function returns a dataframe with samples as rows and cell types as columns.
 #' 
 #' @param data A Seurat object containing `celltype` and `sample` label
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #' data <- readRDS(
@@ -65,13 +65,13 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #' and applies a logit transformation to the proportions. 
 #' The input data must contain `sample` and `celltype` metadata column. 
 #' The function supports scRNA-seq and spatial proteomics.
-#' The function returns a matrix with samples as rows and cell types as columns.
+#' The function returns a dataframe with samples as rows and cell types as columns.
 #' 
 #' @param data A Seurat object containing `celltype` and `sample` label
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #' data <- readRDS(
@@ -122,13 +122,13 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #' and applies a logit transformation to the proportions. 
 #' The input data must contain `sample` and `celltype` metadata column. 
 #' The function supports scRNA-seq and spatial proteomics.
-#' The function returns a matrix with samples as rows and cell types as columns.
+#' The function returns a dataframe with samples as rows and cell types as columns.
 #' 
 #' @param data A Seurat object containing `celltype` and `sample` label
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #'
@@ -187,7 +187,7 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #' Defaults to 100.
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #'
@@ -262,7 +262,7 @@ run_gene_mean_celltype <- function(data,
 #' Defaults to 100.
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #'
@@ -335,7 +335,7 @@ run_gene_prop_celltype <- function(data,
 #' Defaults to 5.
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #'
@@ -416,7 +416,7 @@ run_gene_cor_celltype <- function(data,
 #'  speed.
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #' \dontrun{
@@ -508,7 +508,7 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #'  Default is "Homo sapiens".
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #' \dontrun{
@@ -589,7 +589,7 @@ run_pathway_mean <- function(data, geneset = NULL,
 #'  Default is "Homo sapiens".
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #' \dontrun{
@@ -673,7 +673,7 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' Defaults to 1500.
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #'
@@ -734,7 +734,7 @@ run_gene_mean <- function(data,
 #' Defaults to 1500.
 #' @param ncores Number of cores for parallel processing.
 #' 
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #'
@@ -786,7 +786,7 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 #' Defaults to 5.
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #'
@@ -836,7 +836,7 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #'
@@ -892,7 +892,7 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #'
@@ -950,7 +950,7 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #'
@@ -1011,7 +1011,7 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #' @param num_top_gene Number of top variable genes to use when genes is 
 #' not provided. Defaults to 1500.
 #' 
-#' @return a matrix of samples x features
+#' @return a dataframe of samples x features
 #'
 #' @examples
 #'
