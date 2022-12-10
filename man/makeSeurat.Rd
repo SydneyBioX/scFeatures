@@ -6,10 +6,10 @@
 \usage{
 makeSeurat(
   data,
-  sample,
-  celltype,
-  assay,
-  spatialCoords,
+  sample = NULL,
+  celltype = NULL,
+  assay = NULL,
+  spatialCoords = NULL,
   spotProbability = NULL
 )
 }

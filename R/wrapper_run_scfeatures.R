@@ -248,10 +248,10 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 #' }
 #' @export
 makeSeurat <- function(data,
-    sample,
-    celltype,
-    assay,
-    spatialCoords,
+    sample = NULL ,
+    celltype = NULL,
+    assay = NULL,
+    spatialCoords = NULL,
     spotProbability = NULL) {
     if (is(data, "Seurat")) {
         if (!is.null(celltype)){
@@ -338,7 +338,7 @@ makeSeurat <- function(data,
         }else{  
             data <- Seurat::as.Seurat(df)
         }
-        
+
         data@assays$RNA <- data@assays$originalexp
 
         if (!is.null(spotProbability)) {
