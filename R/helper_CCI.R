@@ -1,11 +1,12 @@
  
 # helper function to run CCI 
 helper_CCI <- function( data , ncores = 1  ){
-  
-  
+ 
   BPparam <- generateBPParam(ncores)
+ 
+  data(LRdb, package = "SingleCellSignalR")
   
-  # x <- unique(data$sample)
+  # x <- unique(data$sample)[1]
 
   individual_cci <- BiocParallel::bplapply(  unique(data$sample), function(x){
     
@@ -14,7 +15,7 @@ helper_CCI <- function( data , ncores = 1  ){
                         celltype <- as.factor(thissample$celltype)
                         celltype_numeric <- as.numeric(  celltype)
                         
-                        signal <- SingleCellSignalR::cell_signaling(data = data_dataframe, genes = rownames(data_dataframe), 
+                        signal <-  SingleCellSignalR::cell_signaling(data = data_dataframe, genes = rownames(data_dataframe), 
                                                                    cluster =   celltype_numeric,
                                                                    c.names = levels(celltype), write = FALSE)
                         
