@@ -220,13 +220,6 @@ run_gene_mean_celltype <- function(data,
     if (type %in% c("scrna", "spatial_p")) {
         X <- helper_gene_mean_celltype(data, genes, num_top_gene, ncores)
     } else if (type == "spatial_t") {
-        if (!is.null(genes) || !is.null(num_top_gene) || ncores > 1) {
-            cli::cli_warn(c(
-                "{.var gene}, {.var num_top_gene} and {.var ncores} are not ",
-                "implemented for {type} data.\n",
-                "i" = "Defaults will be used instead."
-            ))
-        }
         X <- helper_gene_mean_celltype_st(data)
     } else {
         cli::cli_abort(c(
