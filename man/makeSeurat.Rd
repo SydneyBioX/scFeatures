@@ -31,24 +31,28 @@ For spot-based spatial transcriptomics, we also requires a matrix
 containing cell type prediction probability of each spot, in the format of
 celltype x spot}
 
-\item{sample}{the name of column containing sample identifier. If not
-provided, we use the column called "sample".}
+\item{sample}{a vector providing sample identifier for each cell. If not
+provided, we assume the data contain a metadata column "sample" for running
+scFeatures.}
 
-\item{celltype}{the name of column containing sample identifier. If not
-provided, we use the column called "sample".}
+\item{celltype}{a vector providing celltype identifier. If not
+provided, we assume the data contain a metadata column "celltype" for
+running scFeatures.}
 
 \item{assay}{the assay identifier if using a SingleCellExperiment or
 SpatialExperiment object.}
 
 \item{spatialCoords}{the spatialCoords identifiers provided in a list of
 two vectors, if users want to construct features from the spatial category.
-If not provided, we use the columns called "x_cord" and "y_cord".}
+If not provided, we assume the data contain the metadata columns "x_cord" and
+"y_cord" for constructing spatial features.}
 
 \item{spotProbability}{a matrix in the format of celltype x spot, where each
-entry is the prediction probability of that cell type for each spot.}
+entry is the prediction probability of that cell type for each spot. This is
+needed by spatial transcriptomics data.}
 }
 \value{
-A \code{Seurat} dataset obtained by transforming input data
+A \code{Seurat} dataset containing required metadata for running scFeatures.
 }
 \description{
 This function is used to convert a SingleCellExperiment, SpatialExperiment or a
