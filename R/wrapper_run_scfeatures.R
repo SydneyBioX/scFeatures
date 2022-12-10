@@ -253,6 +253,19 @@ makeSeurat <- function(data,
     assay = NULL,
     spatialCoords = NULL,
     spotProbability = NULL) {
+  
+  
+    if (!is.null(spotProbability)){
+        spotProbability  <- t(spotProbability )
+        predictions <- data.frame( 
+                          prediction.score = as.matrix(spotProbability ),
+                          row.names = colnames(data),  stringsAsFactors = FALSE )
+          
+        predictions <- Seurat::CreateAssayObject( data = t(x = as.matrix(x = predictions)), 
+                                                  check.matrix = FALSE )
+    }
+    
+     
     if (is(data, "Seurat")) {
         if (!is.null(celltype)){
             data$celltype <- celltype
@@ -266,8 +279,7 @@ makeSeurat <- function(data,
             data$y_cord <-  spatialCoords[2]
         }
         if (!is.null(spotProbability)) {
-            data[["predictions"]] <- data[["RNA"]]
-            data@assays$predictions@data <- spotProbability
+            data[["predictions"]] <-  predictions
         }
         return(data)
     }
@@ -304,7 +316,7 @@ makeSeurat <- function(data,
         data@assays$RNA <- data@assays$originalexp
 
         if (!is.null(spotProbability)) {
-            data@assays$predictions <- spotProbability
+           data[["predictions"]] <-  predictions
         }
         return(data)
     }
@@ -342,7 +354,7 @@ makeSeurat <- function(data,
         data@assays$RNA <- data@assays$originalexp
 
         if (!is.null(spotProbability)) {
-            data@assays$predictions <- spotProbability
+           data[["predictions"]] <-  predictions
         }
 
         return(data)

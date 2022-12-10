@@ -211,21 +211,43 @@ Additionally, apart from the `RNA` assay, which contains the gene expression of 
 The `predictions` assay is a matrix in the form of cell types x spot, which stores the cell type probability of each spot. This can be obtained from performing cell type prediction using reference data. 
 
 
-For SingleCellExperiment or SpatialExperiment object, we provide a function `makeSeurat()` for the conversion. 
-
 ```{r, run-spatial-t, eval=TRUE, include=TRUE, warning=FALSE, message=FALSE}
 #---------------------------------------------------------------------------
 # read in data
 #---------------------------------------------------------------------------
+
 data <- readRDS(
-  system.file(
-    "extdata", "example_spatial_transcriptomics.rds",
-    package = "scFeatures"
-  )
+  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 )
-data <- process_data(data, normalise = F) # data were previously normalised
+
+# generate a toy "spatial transcriptomics" data
+data$celltype <- NULL #spatial transcriptomics don't have celltype 
+
+# randomly generate some x and y coordinates
+x <- sample(1:100, ncol(data) , replace = T)
+y <- sample(1:100, ncol(data) , replace = T)
+
 # for spatial transcriptomics, we need to estimate the number of cells per spot
 data <- get_num_cell_per_spot(data)
+
+# also need a dataframe of celltype probability at each spot 
+# here we randomly create one 
+nrow <- 5 #pretend there are 5 cell types 
+ncol <- ncol(data) 
+
+# Create a matrix of random numbers
+matrix <- matrix(runif(nrow * ncol), nrow, ncol)
+# Normalize the columns of the matrix so that each column sum to 1
+prediction.scores <-  sweep(matrix, 2, colSums(matrix), "/")
+colnames(prediction.scores) <- colnames(data)
+rownames(prediction.scores) <- c(paste0("celltype", 1:5))
+
+# format the data using makeSeurat
+data <- makeSeurat(data, spatialCoords = list(x,y), spotProbability = prediction.scores)
+data <- process_data(data, normalise = T)  
+
+
+
 
 # format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`.
 # This is so that we can retrieve the sample ID and the corresponding
@@ -245,21 +267,15 @@ feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_t")
 #---------------------------------------------------------------------------
 data_remove_mito <- remove_mito(data)
 feature_gene_mean_celltype <- run_gene_mean_celltype(
-  data_remove_mito, type = "spatial_t"
+  data_remove_mito, type = "spatial_t", genes = rownames(data_remove_mito)[1:10] #to speed up example
 )
 
 
 #---------------------------------------------------------------------------
 # cell type specific pathway expressions
 #---------------------------------------------------------------------------
-feature_pathway_mean <- run_pathway_mean(data,
-    geneset = NULL,
-    species = "Mus musculus",
-    type = "spatial_t"
-)
-# The data are from mouse samples, so we must set the species accordingly.
-
-
+feature_pathway_mean <- run_pathway_mean(data, geneset = NULL, type = "spatial_t")
+ 
 #---------------------------------------------------------------------------
 # Bulk expressions
 #---------------------------------------------------------------------------

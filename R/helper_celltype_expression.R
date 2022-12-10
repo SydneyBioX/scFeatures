@@ -50,7 +50,7 @@ remove_mito <- function(data ){
     gene_corMat_max <- apply(gene_corMat, 2, max, na.rm = TRUE)
     exclude_genes <- c(bad_genes, names(gene_corMat_max)[gene_corMat_max > 0.7])
     
-    data <- data[ -c(which(rownames(data) %in%   exclude_genes )) , ]
+    data@assays$RNA@data <- data@assays$RNA@data[ -c(which(rownames(data) %in%   exclude_genes )) , ]
     
   }
  
@@ -423,7 +423,7 @@ helper_gene_mean_celltype_st <- function( data , genes = NULL, num_top_gene  = N
  
   BPparam <- generateBPParam(ncores)
   
-  if ( is.null( num_top_gene ) ){
+  if ( is.null( num_top_gene )){
     num_top_gene = min(nrow(data), 1500 ) 
   }
   
