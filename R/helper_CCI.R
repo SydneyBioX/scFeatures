@@ -18,18 +18,23 @@ helper_CCI <- function( data , ncores = 1  ){
                                                                    cluster =   celltype_numeric,
                                                                    c.names = levels(celltype), write = FALSE)
                         
-                        # concat interaction from each cell type
-                        all_interaction <- NULL
-                        for ( i in 1:length(signal)){
+                        if ( length(signal) == 0 ){
+                          all_interaction <- data.frame(LRscore = 0, feature = "placeholder" )
+                        }else{
+                          # concat interaction from each cell type
+                          all_interaction <- NULL
+                          for ( i in 1:length(signal)){
                             this_celltype <- signal[[i]]
                             this_celltype$feature <- paste0( colnames( this_celltype )[1] , "->" , colnames( this_celltype )[2],
                                                              "--", 
                                                              this_celltype[, 1]  , "->", this_celltype[, 2])
                             this_celltype <-   this_celltype[, c("LRscore", "feature")]
                             all_interaction <- rbind( all_interaction,    this_celltype )
+                          }
                         }
+                       
                         all_interaction
-                     }, BPPARAM = BPparam) 
+               }, BPPARAM = BPparam) 
    
    
    # gather the cell - cell interaction probability into sample x interaction probability matrix 
@@ -45,12 +50,13 @@ helper_CCI <- function( data , ncores = 1  ){
      }
    }
    rownames(X) <- X$feature
+   X <- X[!rownames(X) == "placeholder", ]
    X <- X[, -1]
    colnames(X) <-  unique(data$sample)
    X[is.na(X)] <- 0
    
    X <- t(X)
-   
+ 
    return(X)
    
 }
