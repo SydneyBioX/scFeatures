@@ -32,7 +32,7 @@ Default is "Homo sapiens".}
 a dataframe of samples x features
 }
 \description{
-#' This function calculates pathway scores for a given input dataset and gene set
+This function calculates pathway scores for a given input dataset and gene set
 using the proportion of gene expression levels. It supports scRNA-seq, spatial transcriptomics
 and spatial proteomics and spatial transcriptomics).
 By default, it uses the 50 hallmark gene sets from msigdb.
