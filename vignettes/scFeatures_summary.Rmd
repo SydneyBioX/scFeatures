@@ -156,14 +156,17 @@ Note that, as spatial proteomics contain few genes, the feature categories of pa
 #---------------------------------------------------------------------------
 # read in data
 #---------------------------------------------------------------------------
-data <- readRDS(
-  system.file(
-    "extdata", "example_spatial_proteomics.rds", 
-    package = "scFeatures"
-  )
-)
-data <- process_data(data, normalise = FALSE) # data were previously normalised
 
+data <- readRDS(
+  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+)
+
+# randomly generate some x and y coordinate to make this a 
+# toy "spatial proteomics" data
+x <- sample(1:100, ncol(data) , replace = T)
+y <- sample(1:100, ncol(data) , replace = T)
+data <- makeSeurat(data, spatialCoords = list(x,y))
+data <- process_data(data, normalise = T)  
 
 #---------------------------------------------------------------------------
 # cell type proportions
