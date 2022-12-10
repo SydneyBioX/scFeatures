@@ -244,6 +244,19 @@ feature_pathway_prop <- run_pathway_prop(data)
 ```
 
 
+### Cell type specific cell-cell communications 
+
+* Detail: 
+  * `CCI`: This uses the `SingleCellSignalR` package to calculate the cell-cell interaction score of ligand recepor pairs.  
+
+* Expected output: 
+  * `CCI`: The features are in the form of ligand 1 receptor 2 celltype a, ligand 1 receptor 2 celltype b ... etc, with the numbers representing cell-cell interaction probability.  
+
+ 
+```{r eval=FALSE, include=TRUE}
+feature_CCI <- run_CCI(data) 
+```
+
 
 ### Overall aggregated gene expressions 
 

@@ -572,7 +572,7 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' Generate pathway score using proportion of expression
 #' 
 #' @description 
-#' #' This function calculates pathway scores for a given input dataset and gene set 
+#' This function calculates pathway scores for a given input dataset and gene set 
 #' using the proportion of gene expression levels. It supports scRNA-seq, spatial transcriptomics 
 #' and spatial proteomics and spatial transcriptomics). 
 #' By default, it uses the 50 hallmark gene sets from msigdb. 
@@ -654,8 +654,15 @@ run_pathway_prop <- function(data, geneset = NULL,
 
 
 
-#' generate cell cell communication score
-#'
+#' Generate cell cell communication score
+#' 
+#' @description 
+#' This function calculates the ligand receptor interaction score using SingleCellSignalR. 
+#' The output features are in the form of celltype a -> celltype b -- ligand 1 -> receptor 2 ,
+#' which indicates the interaction between ligand 1 in celltype a and receptor 2 in celltype b. 
+#' 
+#' It supports scRNA-seq. 
+#' 
 #' @param data input data, a Seurat object containing `celltype` and `sample` label
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param ncores number of cores 
