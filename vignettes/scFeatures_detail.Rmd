@@ -331,23 +331,23 @@ ClassifyR::performancePlot(results = result)
 
 # scFeatures on spatial proteomics data
 
-For demonstration purpose, we provide a subsampled version of triple negative breast cancer patients dataset [2] as used in our manuscript.  
-
-For spatial proteomics, the required information are `sample`, `x_cord` and `y_cord` (the x- and y- coordinates of the cell).  
-
+For demonstration purpose, we "generate" a spatial proteomics data from the single cell RNA-seq data by randomly generating some x and y - coordinates. 
+ 
 
 ```{r}
+ 
 data <- readRDS(
-    system.file("extdata",
-        "example_spatial_proteomics.rds",
-        package = "scFeatures"
-    )
+  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 )
 
-# data were previously normalised
-data <- process_data(data, normalise = FALSE)
+# randomly generate some x and y coordinate to make this a 
+# toy "spatial proteomics" data
+x <- sample(1:100, ncol(data) , replace = T)
+y <- sample(1:100, ncol(data) , replace = T)
+data <- makeSeurat(data, spatialCoords = list(x,y))
+data <- process_data(data, normalise = T)  
 
-# For spatial proteomics, we require the x- and y- coordinates
+# how the x- and y- coordinates look like 
 data$x_cord[1:5]
 ```
 
@@ -421,33 +421,33 @@ feature_nn_correlation <- run_nn_correlation(data, type = "spatial_p")
 
 ## Survival analysis using the generated features
 
-Given this dataset contain survival outcome of the patients, we can perform survival analysis using the generated features. 
+Suppose we want to use the features to perform survival analysis, here we "generate" some random survival data. 
 
 ```{r eval=TRUE, fig.height=5, fig.width=7, include=TRUE}
 library(survival)
 library(survminer)
 
-# get meta data of the patients with stage 2 breast cancer
-meta_patients <- data@meta.data
-meta_patients <- meta_patients[!duplicated(meta_patients$sample), ]
-meta_patients <- meta_patients[which(meta_patients$STAGE == "2"), ]
-
-
 nncor <- t(feature_nn_correlation)
-nncor <- nncor[, as.character(meta_patients$sample)]
-
+nncor <- nncor[, !colSums(nncor)==0]
 # run hierarchical clustering
 hclust_res <- hclust(
     as.dist(1 - cor(nncor, method = "pearson")),
     method = "ward.D2"
 )
+
+# generate some survival outcome
+survival_day <- sample(1:100, ncol(nncor))
+censoring <- sample(0:1, ncol(nncor), replace = T)
+
 cluster_res <- cutree(hclust_res, k = 2)
-meta_patients$cluster <- factor(cluster_res)
+metadata <- data.frame( cluster = factor(cluster_res),
+                        survival_day = survival_day,
+                        censoring = censoring)
 
 # plot survival curve
 fit <- survfit(
-    Surv(Survival_days_capped_2016.1.1, Censoring) ~ cluster,
-    data = meta_patients
+    Surv(survival_day, censoring) ~ cluster,
+    data = metadata
 )
 ggsurv <- ggsurvplot(fit,
     conf.int = FALSE, risk.table = TRUE,
@@ -460,7 +460,7 @@ ggsurv
 
 # scFeatures on spatial transcriptomics data
 
-For demonstration purpose, we provide the subsampled version of ALS dataset [3] as used in our manuscript.  
+For demonstration purpose, we also "generate" the spatial transciptomics from the single-cell RNA-seq data. 
  
 For spatial transcriptomics, the required information are `sample`, `x_cord` and `y_cord` (the x- and y- coordinates of each spot). 
 
@@ -471,14 +471,38 @@ The `predictions` assay is a matrix in the form of cell types x spot, which stor
 
 ```{r, include=TRUE}
 
-data <- readRDS(system.file("extdata", "example_spatial_transcriptomics.rds",
-    package = "scFeatures"
-))
-data <- process_data(data, normalise = FALSE) # data already normalised
+data <- readRDS(
+  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+)
 
-# for spatial transcriptomics, we need to estimate the number of cells in each
-# spot
+# generate a toy "spatial transcriptomics" data
+data$celltype <- NULL #spatial transcriptomics don't have celltype 
+
+# randomly generate some x and y coordinates
+x <- sample(1:100, ncol(data) , replace = T)
+y <- sample(1:100, ncol(data) , replace = T)
+
+# for spatial transcriptomics, we need to estimate the number of cells per spot
 data <- get_num_cell_per_spot(data)
+
+# also need a dataframe of celltype probability at each spot 
+# here we randomly create one 
+nrow <- 5 #pretend there are 5 cell types 
+ncol <- ncol(data) 
+
+# Create a matrix of random numbers
+matrix <- matrix(runif(nrow * ncol), nrow, ncol)
+# Normalize the columns of the matrix so that each column sum to 1
+prediction.scores <-  sweep(matrix, 2, colSums(matrix), "/")
+colnames(prediction.scores) <- colnames(data)
+rownames(prediction.scores) <- c(paste0("celltype", 1:5))
+
+# format the data using makeSeurat
+data <- makeSeurat(data, spatialCoords = list(x,y), spotProbability = prediction.scores)
+data <- process_data(data, normalise = T)  
+
+
+
 
 # how the prediction assay look like
 # the rows contain the predicted cell type probability of each spot
@@ -529,7 +553,8 @@ data_remove_mito <- remove_mito(data)
 
 feature_gene_mean_celltype <- run_gene_mean_celltype(
     data_remove_mito,
-    type = "spatial_t"
+    type = "spatial_t",
+    genes = rownames(data_remove_mito)[1:100] # to speed up the vignette generation 
 )
 ```
 
@@ -593,8 +618,6 @@ feature_nn_correlation <- run_nn_correlation(data, type = "spatial_t")
 # Reference 
 
 1. Defining T cell states associated with response to checkpoint immunotherapy in melanoma. Cell, 175(4), 998-1013.    
-2. Keren et al. (2019). MIBI-TOF: A multiplexed imaging platform relates cellular phenotypes and tissue structure. Science advances, 5(10), eaax5851.  
-3. Maniatis et al. (2019). Spatiotemporal dynamics of molecular pathology in amyotrophic lateral sclerosis. Science, 364(6435), 89-93.  
 
 
 # sessionInfo()
