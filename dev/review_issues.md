@@ -35,6 +35,9 @@ Error in run_CCI(data, species = \"Homo sapiens\") :
 ```
 
   - **Fixed**: use to include cell-cell interaction via CellChat, but it is not on CRAN/BioC, so it was removed.
+  Now we implemented this function using the method SingleCellSignalR, which is also a top performing method
+  as shown in `Evaluation of cell-cell interaction methods by integrating single-cell RNA sequencing data with spatial information`.
+  and is available as a Bioconductor package. 
 
 ```r
 genes_of_interest <- c(\"TIGIT\", \"PDCD1\")
@@ -177,4 +180,7 @@ I saw this is stated as not recommended in the webpage.
 - Nick: Down-sample data to 550 samples in order to create a dataset <3MB
 - Yue: Finished writing the documentation. All exported functions now have Title, Description, Arguments, Return value.  
 Non - exported functions now have description. 
-Fixed `scFeatures_associationstudy` vignette
+Fixed `scFeatures_associationstudy` vignette. 
+Added back the cell cell communication features, now implemented using SingleCellSignalR instead of CellChat. 
+
+
