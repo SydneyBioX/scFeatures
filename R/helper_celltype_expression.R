@@ -1,15 +1,22 @@
-  
-
-
-
-#' remove mito and ribo genes and genes highly correlated with mito genes 
-#' as mitochondria and ribosomal genes may not as interesting to look at 
+#' Remove mitochondrial and ribosomal genes, and other highly correlated genes 
 #' 
-#' @param data input data
-#' 
-#' @return data with the mito and rib genes removed 
-#' 
+#' @description 
+#' This function removes mitochondria and ribosomal genes and genes 
+#' highly correlated with these genes, as mitochondria and ribosomal 
+#' genes are typically not  interesting to look at. 
+#'
+#' @param data A Seurat object containing expression data
+#'
+#' @return The Seurat object with the mito and rib genes and other highly 
+#' correlated genes removed
+#'
 #' @importFrom proxyC simil
+#' 
+#' @examples 
+#' 
+#' data <- readRDS(
+#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' data <- remove_mito(data)
 #' 
 #' @export
 remove_mito <- function(data ){
@@ -53,9 +60,14 @@ remove_mito <- function(data ){
 
 
 
-# find variable genes per sample,  then take the union  
-# for cell type specific methods, find the variable genes per cell type per sample 
 
+#' Identify the highly variable genes (HVGs) in the input data. By default, 
+#' the function calculates the HVG across the cells within each cell type, 
+#' as well across all cells). This is done for each sample separately, then 
+#' taking the union of the HVGs across all samples. The ouput is a daraframe
+#' with two columns: marker and celltype. When celltype is set to FALSE, the 
+#' function only calculates the HVG across all cells and returns a vector of HVGs.
+#' @noRd
 find_var_gene <- function(data,  num_top_gene  = 1500 ,   ncores = 1 , celltype = T ){
   
   BPparam <- generateBPParam(ncores)
@@ -140,7 +152,13 @@ find_var_gene <- function(data,  num_top_gene  = 1500 ,   ncores = 1 , celltype 
 
 
 
-# cell type specific gene mean, set to top 100 variable genes per cell type per sample 
+ 
+#' This function is used to calculate gene expression levels in a Seurat object
+#' containing expression values. By default, the function first finds the variable 
+#' genes per cell type using the find_var_gene function, then calculates the gene 
+#' expression levels for these genes in their respective cell type. 
+#' The output is a returns a matrix of samples by features. 
+#' @noRd
 helper_gene_mean_celltype  <- function( data , genes  = NULL , num_top_gene = NULL  , ncores = 1 ){
   
   
@@ -214,7 +232,13 @@ helper_gene_mean_celltype  <- function( data , genes  = NULL , num_top_gene = NU
 
 
 
- # cell type specific gene prop 
+
+#' This function is used to calculate the proportion of gene expression levels in a Seurat object
+#' containing expression values. By default, the function first finds the variable 
+#' genes per cell type using the find_var_gene function, then calculates the gene 
+#' expression levels for these genes in their respective cell type. 
+#' The output is a returns a matrix of samples by features. 
+#' @noRd
 helper_gene_prop_celltype  <- function( data, genes = NULL ,  num_top_gene  = NULL , ncores = 1 ){
   
   
@@ -288,8 +312,14 @@ helper_gene_prop_celltype  <- function( data, genes = NULL ,  num_top_gene  = NU
 
 
 
-# cell type specific gene correlation bulk
-# set to just top 5 genes per cell type per sample, because otherwise creates too many features 
+
+
+#' This function is used to calculate the gene expression correlation in a Seurat object
+#' containing expression values. By default, the function first finds the variable 
+#' genes per cell type using the find_var_gene function, then calculates the gene 
+#' expression levels for these genes in their respective cell type. 
+#' The output is a returns a matrix of samples by features. 
+#' @noRd
 helper_gene_cor_celltype <- function(data, genes  = NULL, num_top_gene  = NULL   , ncores = 1 ){
   
   BPparam <- generateBPParam(ncores)
@@ -378,6 +408,17 @@ helper_gene_cor_celltype <- function(data, genes  = NULL, num_top_gene  = NULL  
 
 
 
+#' This function is used to calculate the expression of genes in each cell type 
+#' in a Seurat object containing expression values for spatial transcriptomics. 
+#' It performs a linear regression on the gene expression and cell type composition 
+#' at each spot to obtain regression coefficients and p-values. The regression 
+#' coefficients is considered as the cell type's contribution to the expression the gene. 
+#' Similar to the bulk deconvolution concept. 
+#' 
+#' @importFrom glue glue
+#' @importFrom stats lm
+#' 
+#' @noRd
 helper_gene_mean_celltype_st <- function( data , genes = NULL, num_top_gene  = NULL , ncores = 1  ){
  
   BPparam <- generateBPParam(ncores)
