@@ -218,19 +218,23 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 #'  containing cell type prediction probability of each spot, in the format of
 #'  celltype x spot
 #'
-#' @param sample the name of column containing sample identifier. If not
-#'  provided, we use the column called "sample".
-#' @param celltype the name of column containing sample identifier. If not
-#'  provided, we use the column called "sample".
+#' @param sample a vector providing sample identifier for each cell. If not
+#' provided, we assume the data contain a metadata column "sample" for running
+#' scFeatures. 
+#' @param celltype a vector providing celltype identifier. If not
+#' provided, we assume the data contain a metadata column "celltype" for 
+#' running scFeatures. 
 #' @param assay the assay identifier if using a SingleCellExperiment or
 #'  SpatialExperiment object.
 #' @param spatialCoords the spatialCoords identifiers provided in a list of 
 #' two vectors, if users want to construct features from the spatial category.
-#' If not provided, we use the columns called "x_cord" and "y_cord".
+#' If not provided, we assume the data contain the metadata columns "x_cord" and 
+#' "y_cord" for constructing spatial features. 
 #' @param spotProbability a matrix in the format of celltype x spot, where each
-#'  entry is the prediction probability of that cell type for each spot.
+#' entry is the prediction probability of that cell type for each spot. This is
+#' needed by spatial transcriptomics data. 
 #'
-#' @return A `Seurat` dataset obtained by transforming input data
+#' @return A `Seurat` dataset containing required metadata for running scFeatures. 
 #'
 #' @importFrom SummarizedExperiment colData
 #' @importFrom SpatialExperiment spatialCoords
@@ -250,11 +254,16 @@ makeSeurat <- function(data,
     spatialCoords,
     spotProbability = NULL) {
     if (is(data, "Seurat")) {
-        data$celltype <- data[[celltype]]
-        data$sample <- data[[sample]]
+        if (!is.null(celltype)){
+            data$celltype <- celltype
+        }
+        if (!is.null(sample)){
+            data$sample <- sample
+        }
+
         if (!is.null(spatialCoords)) {
-            data$x_cord <- data[[spatialCoords[1]]]
-            data$y_cord <- data[[spatialCoords[2]]]
+            data$x_cord <-  spatialCoords[1]
+            data$y_cord <-  spatialCoords[2]
         }
         if (!is.null(spotProbability)) {
             data[["predictions"]] <- data[["RNA"]]
@@ -265,13 +274,33 @@ makeSeurat <- function(data,
 
     if (is(data, "SingleCellExperiment")) {
         df <- data
-        df$celltype <- SummarizedExperiment::colData(df)[, celltype]
-        df$sample <- SummarizedExperiment::colData(df)[, sample]
-        if (!is.null(spatialCoords)) {
-            df$x_cord <- SummarizedExperiment::colData(df)[, spatialCoords[1]]
-            df$y_cord <- SummarizedExperiment::colData(df)[, spatialCoords[2]]
+
+        if(!is.null(celltype)){
+            df$celltype <- celltype
+        }else{
+            df$celltype <- SummarizedExperiment::colData(df)[, "celltype"]
         }
-        data <- Seurat::as.Seurat(df, data = assay)
+
+        if(!is.null(sample)){
+            df$sample <- sample
+        }else{
+            df$sample <- SummarizedExperiment::colData(df)[, "sample"]
+        }
+        if (!is.null(spatialCoords)) {
+            df$x_cord <- spatialCoords[1]
+            df$y_cord <- spatialCoords[2]
+        }else{
+            df$x_cord <- SummarizedExperiment::colData(df)[, "x_cord"]
+            df$y_cord <- SummarizedExperiment::colData(df)[, "y_cord"]
+        }
+
+        
+        if (!is.null(assay)){
+            data <- Seurat::as.Seurat(df, data = assay)
+        }else{
+            data <- Seurat::as.Seurat(df)
+        }
+        
         data@assays$RNA <- data@assays$originalexp
 
         if (!is.null(spotProbability)) {
@@ -283,11 +312,33 @@ makeSeurat <- function(data,
 
     if (is(data, "SpatialExperiment")) {
         df <- data
-        df$celltype <- SummarizedExperiment::colData(df)[, celltype]
-        df$sample <- SummarizedExperiment::colData(df)[, sample]
-        df$x_cord <- SpatialExperiment::spatialCoords(df)[, 1]
-        df$y_cord <- SpatialExperiment::spatialCoords(df)[, 2]
-        data <- Seurat::as.Seurat(df, data = assay)
+
+        if(!is.null(celltype)){
+            df$celltype <- celltype
+        }else{
+            df$celltype <- SummarizedExperiment::colData(df)[, "celltype"]
+        }
+
+        if(!is.null(sample)){
+            df$sample <- sample
+        }else{
+            df$sample <- SummarizedExperiment::colData(df)[, "sample"]
+        }
+
+        if(!is.null(spatialCoords)){
+            df$x_cord <- spatialCoords[1]
+            df$y_cord <- spatialCoords[2]
+        }else{
+            df$x_cord <- SpatialExperiment::spatialCoords(df)[, 1]
+            df$y_cord <- SpatialExperiment::spatialCoords(df)[, 2]
+        }
+        
+        if (!is.null(assay)){
+            data <- Seurat::as.Seurat(df, data = assay)
+        }else{  
+            data <- Seurat::as.Seurat(df)
+        }
+        
         data@assays$RNA <- data@assays$originalexp
 
         if (!is.null(spotProbability)) {
