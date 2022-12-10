@@ -2,13 +2,14 @@
 # helper function to run CCI 
 helper_CCI <- function( data , ncores = 1  ){
  
-  BPparam <- generateBPParam(ncores)
+  BPparam <-  generateBPParam(ncores)
  
   data(LRdb, package = "SingleCellSignalR")
   
   # x <- unique(data$sample)[1]
 
-  individual_cci <- BiocParallel::bplapply(  unique(data$sample), function(x){
+  
+  capture.output( suppressMessages( individual_cci <- BiocParallel::bplapply(  unique(data$sample), function(x){
     
                         thissample <- data[, data$sample == x]
                         data_dataframe <- thissample@assays$RNA@data
@@ -35,7 +36,7 @@ helper_CCI <- function( data , ncores = 1  ){
                         }
                        
                         all_interaction
-               }, BPPARAM = BPparam) 
+               }, BPPARAM = BPparam) ) )
    
    
    # gather the cell - cell interaction probability into sample x interaction probability matrix 

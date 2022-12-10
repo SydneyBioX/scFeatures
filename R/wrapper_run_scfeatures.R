@@ -57,6 +57,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
             "proportion_raw", "proportion_logit", "proportion_ratio",
             "gene_mean_celltype", "gene_prop_celltype", "gene_cor_celltype",
             "pathway_gsva", "pathway_mean", "pathway_prop",
+            "CCI", 
             "gene_mean_aggregated", "gene_prop_aggregated", "gene_cor_aggregated",
             "L_stats", "celltype_interaction", "morans_I", "nn_correlation"
         )
@@ -135,8 +136,8 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
             
             if (thisfeature == "CCI"){
                 print("generating CCI features")
-                return_list[["CCI"]] <- run_CCI(data , 
-                      type = type, ncores = ncores , species = species 
+                 return_list[["CCI"]] <- run_CCI(data , 
+                      type = type, ncores = ncores 
                 )
             }
             
