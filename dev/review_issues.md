@@ -182,5 +182,6 @@ I saw this is stated as not recommended in the webpage.
 Non - exported functions now have description. 
 Fixed `scFeatures_associationstudy` vignette. 
 Added back the cell cell communication features, now implemented using SingleCellSignalR instead of CellChat. 
-
+Removed the real spatial transcriptomics and spatial proteomics data. 
+For vignette, generate the spatial transcriptomics and spatial proteomics by adding fake x, y coordinates onto the single-cell RNA-seq data that's included in the package. 
 
