@@ -220,7 +220,7 @@ run_gene_mean_celltype <- function(data,
     if (type %in% c("scrna", "spatial_p")) {
         X <- helper_gene_mean_celltype(data, genes, num_top_gene, ncores)
     } else if (type == "spatial_t") {
-        X <- helper_gene_mean_celltype_st(data)
+        X <- helper_gene_mean_celltype_st(data, genes, num_top_gene, ncores)
     } else {
         cli::cli_abort(c(
             "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
