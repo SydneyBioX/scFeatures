@@ -654,6 +654,52 @@ run_pathway_prop <- function(data, geneset = NULL,
 
 
 
+#' generate cell cell communication score
+#'
+#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param type input data type, either scrna, spatial_p, or spatial_t
+#' @param ncores number of cores 
+#' 
+#' @return a matrix of samples x features 
+#' 
+#' @examples
+#'
+#' data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+#' feature_CCI <- run_CCI(data, type = "scrna" ,  ncores = 1 )
+#' 
+#' @import dplyr
+#' @import DelayedArray
+#' @import parallel
+#' @import SingleCellSignalR
+#' @import plyr
+#' 
+#' @export
+run_CCI <- function( data, type = "scrna" , ncores = 1  ){
+  
+  check_data(data, type)
+  
+  if ( type == "scrna" )  {
+    X <- helper_CCI(data, ncores =  ncores )
+  }
+  
+  if ( type == "spatial_p" )  {
+    print("This feature class currently does not support spatial proteomics")
+    return(NULL)
+  }
+  
+  if ( type == "spatial_t" ) {
+    print("This feature class currently does not support spatial transcriptomics")
+    return(NULL)
+  }
+  
+  return (X)
+  
+}
+
+
+
+
+
 
 
 #' Generate overall aggregated mean expression
