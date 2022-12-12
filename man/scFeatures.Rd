@@ -13,9 +13,9 @@ scFeatures(
   celltype_genes = NULL,
   aggregated_genes = NULL,
   geneset = NULL,
-  sample = "sample",
-  celltype = "celltype",
-  assay = "logcounts",
+  sample = NULL,
+  celltype = NULL,
+  assay = NULL,
   spatialCoords = NULL
 )
 }

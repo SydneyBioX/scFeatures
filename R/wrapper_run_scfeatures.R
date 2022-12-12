@@ -46,7 +46,8 @@
 #' @export
 scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
     species = "Homo sapiens", celltype_genes = NULL, aggregated_genes = NULL, geneset = NULL,
-    sample = "sample", celltype = "celltype", assay = "logcounts", spatialCoords = NULL) {
+    sample = NULL, celltype = NULL, assay = NULL, spatialCoords = NULL) {
+  
     data <- makeSeurat(data, sample, celltype, assay, spatialCoords)
 
     return_list <- list()
