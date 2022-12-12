@@ -36,7 +36,7 @@ Error in run_CCI(data, species = \"Homo sapiens\") :
 
   - **Fixed**: use to include cell-cell interaction via CellChat, but it is not on CRAN/BioC, so it was removed.
   Now we implemented this function using the method SingleCellSignalR, which is also a top performing method
-  as shown in `Evaluation of cell-cell interaction methods by integrating single-cell RNA sequencing data with spatial information`.
+  as shown in the paper `Evaluation of cell-cell interaction methods by integrating single-cell RNA sequencing data with spatial information`.
   and is available as a Bioconductor package. 
 
 ```r
@@ -133,7 +133,7 @@ In normalizePath(path, winslash = winslash, mustWork = mustWork) :
 - [x] Please add a `BugReports` field to the `DESCRIPTION` (usually a link to the Issues page of the GitHub repo).
 - [x] Bioconductor requires documentation of `.rds`/`.Rdata` files in `inst/extdata` in an `inst/script/ directory`. See [data documentation](https://contributions.bioconductor.org/docs.html#doc-inst-script).
  **Fixed**: Added documentation for the `example_scrnaseq.rds`.
- 
+
   - [x] `inst/extdata` is usually used for 'raw' data, so these data might properly belong under `data/` rather than `inst/extdata/`; see https://contributions.bioconductor.org/data.html.
  **Fixed**: We have tried this, but found the `data` directory only allows .Rdata file instead of the .RDS format.
  Once we convert to .Rdata, the file size expanded from under 3MB to 16MB and became too big to include in the package.
