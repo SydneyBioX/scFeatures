@@ -1,0 +1,20 @@
+citHeader("To cite 'scFeatures' in publications use:")
+
+
+citEntry(entry = "Article",
+    title = "scFeatures: multi-view representations of single-cell and spatial data for disease outcome prediction",
+    journal = "Bioinformatics",
+    author = "Cao,Y., Lin,Y., Patrick,E., Yang,P., & Yang,J.Y.H.",
+    volume = "38",
+         number = "20",
+         pages = "4745-4753",
+         year = "2022",
+         month = "08",
+         issn = "1367-4803",
+         doi = "10.1093/bioinformatics/btac590",
+         url = "https://doi.org/10.1093/bioinformatics/btac590",
+         eprint = "https://academic.oup.com/bioinformatics/article-pdf/38/20/4745/46535070/btac590.pdf",
+    textVersion  = paste("Cao,Y.,Lin,Y.,Patrick,E.,Yang,P.,&Yang,J.Y.H.(2022).",
+        "scFeatures: Multi-view representations of single-cell and spatial data for disease outcome prediction.",
+        "Bioinformatics, Volume 38, Issue 20, 15 October 2022, Pages 4745-4753." )
+)
