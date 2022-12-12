@@ -95,7 +95,7 @@ Error: Cannot find 'cellType' in this Seurat object
 
 - [x] The 'Introduction' of the each vignette, especially the first or main vignette (which I take to be `scFeatures_summary`) should read like an abstract; see https://contributions.bioconductor.org/docs.html#vignette-introduction
  **Fixed**: edited the introduction in `scFeatures_summary`
- 
+
 - [x] Please give the vignettes informative titles and filenames; see https://contributions.bioconductor.org/docs.html#vignettes
   - The titles and names seems sufficiently informative.
 - [x] Please use [BiocStyle](https://www.bioconductor.org/packages/release/bioc/html/BiocStyle.html) for vignette formatting.
@@ -171,7 +171,9 @@ I saw this is stated as not recommended in the webpage.
 
 - [ ] Consider adding a top-level README file.
 - [ ] Recommend adding a NEWS file (see https://contributions.bioconductor.org/news.html)
-- [ ] Recommend adding a `inst/CITATION` file (see https://contributions.bioconductor.org/citation.html)
+- [x] Recommend adding a `inst/CITATION` file (see https://contributions.bioconductor.org/citation.html)
+ **Fixed**: This is now added
+ 
 - [ ] Consider adding a package-level man page (see https://contributions.bioconductor.org/docs.html#package-level-documentation).
 - [ ] It's strongly recommended to avoid direct slot access with `@` or `slot()` of S4 objects. Instead, use accessor functions. That said, my understanding is that **Seurat** authors have not followed this advice, so it's unavoidable when interacting with **Seurat** objects, but please ensure you are doing this when interacting with Bioconductor objects.
 - [ ] Why does `remove_mito()` remove more than just mitochondrial genes? I strongly recommend choosing a more precise name for the function or split the functionality up into `remove_mito()`, `remove_ribo()`, etc.
