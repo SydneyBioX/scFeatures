@@ -18,18 +18,16 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction 
 
-This vignette provides a list of all functions in scFeatures for quick reference. For detailed explanation of scFeatures and case studies, please refer to the other vignette "Vignette - detailed explanation of scFeatures".  
+This vignette provides an overview of scFeatures package. scFeatures generates features for single-cell RNA-seq, spatial proteomic and spatial transcriptomic data. The features span across six categories representing different molecular views of cellular characteristics. These include (i) cell type proportions, (ii) cell type specific gene expressions, (iii) cell type specific pathway expressions, (iv) cell type specific cell-cell interaction (CCI) scores, (v) overall aggregated gene expressions and (vi) spatial metrics. These features enable a more comprehensive multi-view representation of the expression data and can be used for downstream analysis such as association study.  
 
-If you wish to run downstream analysis using the generated features (see "Vignette - association study"), please make sure that when you run scFeatures, the `sample` is in the format of `a_cond_b`. Where `a` is sample ID and `b` is the condition, e.g., `patient09_cond_nonresponder`. This is so that we can retrieve the sample ID and the corresponding condition when running the analysis. 
-
-
+ 
 
 ```{r, load-scFeatures}
 library(scFeatures)
 ```
 
 
-# Quick run of scFeatures
+# Quick start
 
 scFeatures can be run using one line of code `scfeatures_result <- scFeatures(data)`, which generates a list of data frames containing all feature types in the form of samples x features.    
 
