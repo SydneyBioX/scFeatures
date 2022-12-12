@@ -93,7 +93,9 @@ Error: Cannot find 'cellType' in this Seurat object
   
   **Fixed**: Corrected the return value type. 
 
-- [ ] The 'Introduction' of the each vignette, especially the first or main vignette (which I take to be `scFeatures_summary`) should read like an abstract; see https://contributions.bioconductor.org/docs.html#vignette-introduction
+- [x] The 'Introduction' of the each vignette, especially the first or main vignette (which I take to be `scFeatures_summary`) should read like an abstract; see https://contributions.bioconductor.org/docs.html#vignette-introduction
+ **Fixed**: edited the introduction in `scFeatures_summary`
+ 
 - [x] Please give the vignettes informative titles and filenames; see https://contributions.bioconductor.org/docs.html#vignettes
   - The titles and names seems sufficiently informative.
 - [x] Please use [BiocStyle](https://www.bioconductor.org/packages/release/bioc/html/BiocStyle.html) for vignette formatting.
