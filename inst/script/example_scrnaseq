@@ -1,0 +1,26 @@
+Data: 
+example_scrnaseq.rds
+ 
+Description: 
+This data is included in the package for demonstration purposes. 
+It is a subsampled version of a melanoma data, containing treatment
+response status (ie, responder and non-responder) of melanoma patients. 
+
+Structure: 
+A Seurat object with 3,523 rows and 550 columns.
+Each row is a gene and each column is a cell. 
+It include metadata that describe each cell. 
+Some important metdata columns are:
+- celltype: Cell type label of the cell
+- sample: Which sample the cell is from
+- patient: The patient ID
+- respond: Response under therapy
+- pre_post: Pre or post therapy
+
+References: 
+Sade-Feldman, M., Yizhak, K., Bjorgaard, S. L., Ray, J. P., 
+de Boer, C. G., Jenkins, R. W., ... & Hacohen, N.(2018). Defining T cell 
+states associated with response to checkpoint immunotherapy in melanoma. 
+Cell, 175(4), 998-1013.
+
+ 

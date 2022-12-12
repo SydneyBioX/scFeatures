@@ -131,8 +131,13 @@ In normalizePath(path, winslash = winslash, mustWork = mustWork) :
 - [x] There are hardcoded paths in the report demonstrated in `scFeatures_associationstudy` (https://github.com/SydneyBioX/scFeatures/blob/80034c0ec37c206d63a08198e22dda351126b805/inst/extdata/output_report.Rmd#L228). This means it won't work on anyone else's computer.
   - Removed hard-coded path in favour of `system.file` call.
 - [x] Please add a `BugReports` field to the `DESCRIPTION` (usually a link to the Issues page of the GitHub repo).
-- [ ] Bioconductor requires documentation of `.rds`/`.Rdata` files in `inst/extdata` in an `inst/script/ directory`. See [data documentation](https://contributions.bioconductor.org/docs.html#doc-inst-script).
-  - [ ] `inst/extdata` is usually used for 'raw' data, so these data might properly belong under `data/` rather than `inst/extdata/`; see https://contributions.bioconductor.org/data.html.
+- [x] Bioconductor requires documentation of `.rds`/`.Rdata` files in `inst/extdata` in an `inst/script/ directory`. See [data documentation](https://contributions.bioconductor.org/docs.html#doc-inst-script).
+ **Fixed**: Added documentation for the `example_scrnaseq.rds`.
+ 
+  - [x] `inst/extdata` is usually used for 'raw' data, so these data might properly belong under `data/` rather than `inst/extdata/`; see https://contributions.bioconductor.org/data.html.
+ **Fixed**: We have tried this, but found the `data` directory only allows .Rdata file instead of the .RDS format.
+ Once we convert to .Rdata, the file size expanded from under 3MB to 16MB and became too big to include in the package.
+
 - [x] Please add a table of contents to each vignette.
 - [x] All man pages should have runnable examples (see https://contributions.bioconductor.org/docs.html#examples)
 Nick to check - is there are reason that we include /dontrun in some of the examples?
