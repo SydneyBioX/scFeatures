@@ -56,13 +56,22 @@ scfeatures_result <- scFeatures(data)
 The above function uses all default settings and generate all feature types. We provide an example below that describes how this can be done with a spatial proteomics dataset.   
 
 ```{r, include=TRUE}
+#---------------------------------------------------------------------------
+# read in data
+#---------------------------------------------------------------------------
+
 data <- readRDS(
-    system.file(
-        "extdata", "example_spatial_proteomics.rds",
-        package = "scFeatures"
-    )
+  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 )
-data <- process_data(data, normalise = FALSE) # data were previously normalised
+
+# randomly generate some x and y coordinate to make this a 
+# toy "spatial proteomics" data
+x <- sample(1:100, ncol(data) , replace = T)
+y <- sample(1:100, ncol(data) , replace = T)
+data <- makeSeurat(data, spatialCoords = list(x,y))
+data <- process_data(data, normalise = T)  
+
+
 
 # select feature types to compute.
 feature_types <- c(
@@ -74,23 +83,21 @@ feature_types <- c(
 scfeatures_result <- scFeatures(data,
     feature_types = feature_types,
     type = "spatial_p",
-    # set species to `Mus musculus`.
-    species = "Mus musculus",
     # set to user specified pathways.
     geneset = list(
-        "pathway_a" = c("SMA", "Vimentin"),
-        "pathway_b" = c("B7H3", "FoxP3")
+        "pathway_a" = rownames(data)[1:50],
+        "pathway_b" = rownames(data)[51:100]
     ),
     # by default uses top variable genes to generate the celltype
     # specific gene expression feature, now set to user defined genes.
     celltype_genes = data.frame(
-        celltype = c("Macrophages", "Mono/Neu"),
-        marker = c("CD3", "p53")
+        celltype = c(rep("Naive T Cells" , 10),  rep( "Cytotoxic CD8" , 10)),
+        marker = c( rownames(data)[1:10],  rownames(data)[11:20])
     ),
     # by default uses top variable genes to generate the overall
     # aggregated gene expression feature category, now set to user
     # defined genes.
-    aggregated_genes = c("CD3", "p53"),
+    aggregated_genes =  rownames(data)[1:50],
     # by default uses single core
     ncores = 8
 )
