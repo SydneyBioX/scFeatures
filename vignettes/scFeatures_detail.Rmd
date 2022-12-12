@@ -399,8 +399,8 @@ feature_gene_cor_aggregated <- run_gene_cor(data, type = "spatial_p")
 
 * Detail:   
 This feature category is designed for spatial data and contains feature types commonly used for spatial analysis. 
-  * `L_function`: the L values between the pairs of proteins are calculated using the L function defined in literature. L value greater than zero indicates spatial attraction of the pair of proteins whereas L value less than zero indicates spatial repulsion. 
-  * `Morans_I`:  Moran’s I are calculated using the function defined in literature. It calculates the spatial autocorrelation based on both the locations and values simultaneously. A value closer to 1 indicates clustering of similar values and a value closer to -1 indicates clustering of dissimilar values. A value of 0 indicates no particular clustering structure, ie, the values are spatially distributed randomly.   
+  * `L_function`: the L values between the pairs of proteins are calculated using the L function defined in literature[2]. L value greater than zero indicates spatial attraction of the pair of proteins whereas L value less than zero indicates spatial repulsion. 
+  * `Morans_I`:  Moran’s I are calculated using the function defined in literature [3]. It calculates the spatial autocorrelation based on both the locations and values simultaneously. A value closer to 1 indicates clustering of similar values and a value closer to -1 indicates clustering of dissimilar values. A value of 0 indicates no particular clustering structure, ie, the values are spatially distributed randomly.   
   * `celltype_interaction`:  We find the nearest neighbours of each cell and the cell types of these neighbours. These are considered as spatial interaction pairs. The cell type composition of the spatial interaction pairs are used as features.  
   * `nn_correlation`:  Pearson's correlation is calculated for the protein expression between a cell with its nearest neighbour cell for spatial proteomics.  
 
@@ -576,7 +576,7 @@ feature_gene_mean_celltype <- run_gene_mean_celltype(
 ```{r, include=TRUE }
 feature_pathway_mean <- run_pathway_mean(
     data,
-    geneset = NULL, species = "Mus musculus", type = "spatial_t"
+    geneset = NULL, species = "Homo sapiens", type = "spatial_t"
 )
 ```
 
@@ -624,8 +624,9 @@ feature_nn_correlation <- run_nn_correlation(data, type = "spatial_t")
  
 # Reference 
 
-1. Defining T cell states associated with response to checkpoint immunotherapy in melanoma. Cell, 175(4), 998-1013.    
-
+1. Sade-Feldman, M., Yizhak, K., Bjorgaard, S. L., Ray, J. P., de Boer, C. G., Jenkins, R. W., ... & Hacohen, N.(2018). Defining T cell states associated with response to checkpoint immunotherapy in melanoma. Cell, 175(4), 998-1013.
+2. Besag, J. (1977) Discussion of Dr Ripley's paper. Journal of the Royal Statistical Society, Series B, 39, 193–195.
+3. Moran, P. A. P. (1950)."Notes on Continuous Stochastic Phenomena". Biometrika.37 (1) : 17–23. doi:10.2307/2332142
 
 # sessionInfo()
 

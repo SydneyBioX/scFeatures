@@ -149,7 +149,9 @@ I saw this is stated as not recommended in the webpage.
 - [x] `makeSeurat()` also accepts Seurat objects (https://github.com/SydneyBioX/scFeatures/blob/709f075578bf01b1823dc39fe1d5617472c3f888/R/wrapper_run_scfeatures.R#L225-L237), but this isn't documented. Please document when a user would need this functionality.
   **Fixed**: Added in the function description. 
 
-- [ ] Please try to cite relevant literature. E.g., in the `scFeatures_detail` vignette you write, \"the L values between the pairs of proteins are calculated using the L function defined in literature\" but no reference is given to the relevant literature.
+- [x] Please try to cite relevant literature. E.g., in the `scFeatures_detail` vignette you write, \"the L values between the pairs of proteins are calculated using the L function defined in literature\" but no reference is given to the relevant literature.
+**Fixed**: Added references for Moran's I and L function.  
+
 - [x] In  the `scFeatures_detail` vignette is the advice, \"This can be obtained from performing cell type prediction using reference data, for example, using SCTransform from Seurat (see https://satijalab.org/seurat/articles/spatial_vignette.html)\". However, to my understanding, **SCTransform** is a normlization method, not a cell type prediction method, and the link points doesn't point to how to actually do the cell type prediction as best I can tell. Please clarify.
   **Fixed**: Update the link to https://satijalab.org/seurat/articles/spatial_vignette.html#integration-with-single-cell-data-1, which 
   corresponds to the section using SCTransform for "probabilistic transfer of annotations from a reference to a query set". 
