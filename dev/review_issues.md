@@ -106,8 +106,8 @@ Error: Cannot find 'cellType' in this Seurat object
   - It was added to fix a bug that is now forgotten, I removed all references.
 - [x] Why is **inline** needed in the vignettes?
   - Same as above. It is no longer needed.
-- [ ] The formatting in the `scFeatures_detail` vignette is a bit messy because it includes lots of verbose output (progress bars). Please revise.
-  - Messages and warnings have been removed from the output.
+- [x] The formatting in the `scFeatures_detail` vignette is a bit messy because it includes lots of verbose output (progress bars). Please revise.
+   **Fixed**: Messages and warnings have been removed from the output.
 - [x] In the `scFeatures_detail` vignette you are subsetting a vector outside its bounds; please fix:
   - This has been fixed by including different data with the package.
 

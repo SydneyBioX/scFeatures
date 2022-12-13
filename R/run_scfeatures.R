@@ -451,10 +451,10 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 
     if (type == "scrna") {
         # TODO: if the user does not provide geneset, need to get the geneset from msigdb
-        X <- helper_pathway_gsva(
+        capture.output( suppressMessages( X <- helper_pathway_gsva(
             data,
             method = method, geneset = geneset, ncores = ncores
-        )
+        ) ))
     } else if (type == "spatial_p") {
         cli::cli_warn(c(
             "Pathway GSVA currently does not support spatial proteomics"
