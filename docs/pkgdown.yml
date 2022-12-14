@@ -6,4 +6,5 @@ articles:
   scFeatures_detail: scFeatures_detail.html
   scFeatures_summary: scFeatures_summary.html
 last_built: 2022-12-14T06:10Z
-
+development:
+  mode: auto
