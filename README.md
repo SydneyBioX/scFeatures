@@ -28,18 +28,15 @@ A number of vignettes are provided in the Vignettes folder of this repo. These c
      
 ### Feaeture generation using scFeatures
 
-* [Brief vignette](https://htmlpreview.github.io/?https://github.com/SydneyBioX/scFeatures/blob/master/vignettes/Vignette_summary.html) - The brief vignette is a quick starting point and provides a checklist of the functions to apply on single-cell and spatial data.   
-* [Detailed vignette with case studies](https://htmlpreview.github.io/?https://github.com/SydneyBioX/scFeatures/blob/master/vignettes/Vignette_detail.html) - This provides an in-depth description for each feature types and explanation of the output. It contains a step-by-step case study to the application of scFeatures on i) scRNA-seq data, ii) spatial proteomics data and iii) spatial transcriptomics data.    
+* [Brief vignette](https://sydneybiox.github.io/scFeatures/articles/scFeatures_summary.html) - The brief vignette is a quick starting point and provides a checklist of the functions to apply on single-cell and spatial data.   
+* [Detailed vignette with case studies](https://sydneybiox.github.io/scFeatures/articles/scFeatures_detail.html) - This provides an in-depth description for each feature types and explanation of the output. It contains a step-by-step case study to the application of scFeatures on i) scRNA-seq data, ii) spatial proteomics data and iii) spatial transcriptomics data.    
 
 
 ### Association study of the features with conditions
 
 We provide a function `run_association_study_report(scfeatures_result, output_folder)` that automatically runs association study and generates an html output report. The report visualises the features most associated with conditions (eg, diseased vs non-diseased).   
 
-*  [Association study vignette](https://htmlpreview.github.io/?https://github.com/SydneyBioX/scFeatures/blob/master/vignettes/Vignette_associationstudy.html) - This explains the usage of the function.
-*  [Example of html output](https://htmlpreview.github.io/?https://github.com/SydneyBioX/scFeatures/blob/master/inst/extdata/output_report.html) - An example of generated report. 
-   
-
+*  [Association study vignette](https://sydneybiox.github.io/scFeatures/articles/scFeatures_associationstudy.html) - This explains the usage of the function.
 
 ## Reference
 
