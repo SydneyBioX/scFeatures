@@ -669,7 +669,6 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' 
 #' @import dplyr
 #' @import DelayedArray
-#' @import parallel
 #' @import SingleCellSignalR
 #' 
 #' @export
