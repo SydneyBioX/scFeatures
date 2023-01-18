@@ -22,10 +22,13 @@ The function supports  spatial proteomics and spatial transcriptomics.
 }
 \examples{
 
-data <- readRDS(system.file(
-    "extdata", "example_spatial_proteomics.rds",
-    package = "scFeatures"
-))
+data <- readRDS(
+system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+)
+x <- sample(1:100, ncol(data) , replace = TRUE)
+y <- sample(1:100, ncol(data) , replace = TRUE)
+data <- makeSeurat(data, spatialCoords = list(x,y))
+
 feature_L_function <- run_L_function(data, type = "spatial_p", ncores = 1)
 
 }

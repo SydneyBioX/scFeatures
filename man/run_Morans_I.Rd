@@ -24,10 +24,18 @@ spatial proteomics and spatial transcriptomics.
 }
 \examples{
 
-data <- readRDS(system.file(
-    "extdata", "example_spatial_proteomics.rds",
-    package = "scFeatures"
-))
+data <- readRDS(
+system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+)
+x <- sample(1:100, ncol(data) , replace = TRUE)
+y <- sample(1:100, ncol(data) , replace = TRUE)
+data <- makeSeurat(data, spatialCoords = list(x,y))
+
+feature_celltype_interaction <- run_celltype_interaction(
+    data,
+    type = "spatial_p", ncores = 1
+)
+
 feature_Morans_I <- run_Morans_I(data, type = "spatial_p", ncores = 1)
 
 }
