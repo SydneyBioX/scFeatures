@@ -671,7 +671,6 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' @import DelayedArray
 #' @import parallel
 #' @import SingleCellSignalR
-#' @import plyr
 #' 
 #' @export
 run_CCI <- function( data, type = "scrna" , ncores = 1  ){
