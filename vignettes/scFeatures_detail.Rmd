@@ -256,7 +256,7 @@ feature_pathway_prop <- run_pathway_prop(data, ncores = 4)
   * `CCI`: The features are in the form of ligand 1 receptor 2 celltype a, ligand 1 receptor 2 celltype b ... etc, with the numbers representing cell-cell interaction probability.  
 
  
-```{r eval=FALSE, include=TRUE}
+```{r include=TRUE}
 feature_CCI <- run_CCI(data, ncores = 4) 
 ```
 
@@ -535,7 +535,7 @@ For spatial transcriptomics, each spot contains multiple cells and potentially f
 * Expected output:  
 The output format is the same as for scRNA-seq data.   
 
-```{r, include=TRUE}
+```{r, eval=FALSE, include=TRUE}
 feature_proportion_raw <- run_proportion_raw(data, type = "spatial_t")
 feature_proportion_logit <- run_proportion_logit(data, type = "spatial_t")
 feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_t", ncores = 4)
@@ -549,7 +549,7 @@ feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_t", ncore
 * Expected output: For each sample, the features are in the form of gene a celltype a, gene a celltype b ... etc, with the number representing regression coefficient.     
 
 
-```{r, include=TRUE }
+```{r, eval=FALSE, include=TRUE }
 data_remove_mito <- remove_mito(data)
 
 feature_gene_mean_celltype <- run_gene_mean_celltype(
@@ -568,7 +568,7 @@ feature_gene_mean_celltype <- run_gene_mean_celltype(
 * Expected output: For each sample, the features are in the form of pathway a celltype a, pathway a celltype b ... etc, with the number representing the summation of regression coefficient.  
 
 
-```{r, include=TRUE }
+```{r, eval=FALSE, include=TRUE }
 feature_pathway_mean <- run_pathway_mean(
     data,
     geneset = NULL, species = "Homo sapiens", type = "spatial_t",
@@ -585,7 +585,7 @@ This is based on the expression of genes across all cells.
 * Expected output:   
 The output format is the same as for scRNA-seq data.   
 
-```{r, include=TRUE }
+```{r, eval=FALSE, include=TRUE }
 feature_gene_mean_aggregated <- run_gene_mean(data, type = "spatial_t" , ncores = 4)
 feature_gene_prop_aggregated <- run_gene_prop(data, type = "spatial_t" , ncores = 4)
 feature_gene_cor_aggregated <- run_gene_cor(data, type = "spatial_t", ncores = 4)
@@ -607,7 +607,7 @@ This feature category is designed for spatial data and contains feature types co
   * `celltype_interaction`: The features are in the form of gene 1 vs gene 2, gene 1 vs gene 3 ... etc, with the numbers representing the proportion of each interaction pairs in a give sample. 
   * `nn_correlation`:  The features are in the form of gene 1, gene 2 ... etc, with the numbers representing Pearson's correlation.
 
-```{r, include=TRUE}
+```{r, eval=FALSE, include=TRUE}
 feature_L_stats <- run_L_function(data, type = "spatial_t", ncores = 4)
 feature_morans_I <- run_Morans_I(data, type = "spatial_t", ncores = 4)
 feature_celltype_interaction <- run_celltype_interaction(
