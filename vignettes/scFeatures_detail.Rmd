@@ -66,10 +66,10 @@ data <- readRDS(
 
 # randomly generate some x and y coordinate to make this a 
 # toy "spatial proteomics" data
-x <- sample(1:100, ncol(data) , replace = T)
-y <- sample(1:100, ncol(data) , replace = T)
+x <- sample(1:100, ncol(data) , replace = TRUE)
+y <- sample(1:100, ncol(data) , replace = TRUE)
 data <- makeSeurat(data, spatialCoords = list(x,y))
-data <- process_data(data, normalise = T)  
+data <- process_data(data, normalise = TRUE)  
 
 
 
@@ -346,10 +346,10 @@ data <- readRDS(
 
 # randomly generate some x and y coordinate to make this a 
 # toy "spatial proteomics" data
-x <- sample(1:100, ncol(data) , replace = T)
-y <- sample(1:100, ncol(data) , replace = T)
+x <- sample(1:100, ncol(data) , replace = TRUE)
+y <- sample(1:100, ncol(data) , replace = TRUE)
 data <- makeSeurat(data, spatialCoords = list(x,y))
-data <- process_data(data, normalise = T)  
+data <- process_data(data, normalise = TRUE)  
 
 # how the x- and y- coordinates look like 
 data$x_cord[1:5]
@@ -438,7 +438,7 @@ hclust_res <- hclust(
 
 # generate some survival outcome
 survival_day <- sample(1:100, ncol(nncor))
-censoring <- sample(0:1, ncol(nncor), replace = T)
+censoring <- sample(0:1, ncol(nncor), replace = TRUE)
 
 cluster_res <- cutree(hclust_res, k = 2)
 metadata <- data.frame( cluster = factor(cluster_res),
@@ -480,8 +480,8 @@ data <- readRDS(
 data$celltype <- NULL #spatial transcriptomics don't have celltype 
 
 # randomly generate some x and y coordinates
-x <- sample(1:100, ncol(data) , replace = T)
-y <- sample(1:100, ncol(data) , replace = T)
+x <- sample(1:100, ncol(data) , replace = TRUE)
+y <- sample(1:100, ncol(data) , replace = TRUE)
 
 # for spatial transcriptomics, we need to estimate the number of cells per spot
 data <- get_num_cell_per_spot(data)
@@ -500,7 +500,7 @@ rownames(prediction.scores) <- c(paste0("celltype", 1:5))
 
 # format the data using makeSeurat
 data <- makeSeurat(data, spatialCoords = list(x,y), spotProbability = prediction.scores)
-data <- process_data(data, normalise = T)  
+data <- process_data(data, normalise = TRUE)  
 
 
 
