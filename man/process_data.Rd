@@ -25,7 +25,7 @@ the data using the \code{Seurat::NormalizeData} function.
 }
 \examples{
 data <- readRDS(system.file(
-    "extdata", "example_spatial_transcriptomics.rds",
+    "extdata", "example_scrnaseq.rds",
     package = "scFeatures"
 ))
 data <- process_data(data, normalise = FALSE)
