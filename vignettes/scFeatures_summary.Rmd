@@ -13,7 +13,9 @@ knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>"
 )
-knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(message = FALSE,
+                      eval = FALSE, 
+                      warning = FALSE)
 ```
 
 # Introduction 
@@ -31,7 +33,7 @@ library(scFeatures)
 
 scFeatures can be run using one line of code `scfeatures_result <- scFeatures(data)`, which generates a list of data frames containing all feature types in the form of samples x features.    
 
-```{r, load-data, eval=FALSE, include=TRUE}
+```{r, load-data, include=TRUE}
 data <- readRDS(
   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 )
@@ -150,7 +152,7 @@ For SingleCellExperiment or SpatialExperiment object, we provide a function `mak
 
 Note that, as spatial proteomics contain few genes, the feature categories of pathway expressions and cell-cell interactions are not applicable. 
 
-```{r, run-spatial-p, eval=TRUE, include=TRUE, warning=FALSE, message=FALSE}
+```{r, run-spatial-p, include=TRUE, warning=FALSE, message=FALSE}
 #---------------------------------------------------------------------------
 # read in data
 #---------------------------------------------------------------------------
@@ -209,7 +211,7 @@ Additionally, apart from the `RNA` assay, which contains the gene expression of 
 The `predictions` assay is a matrix in the form of cell types x spot, which stores the cell type probability of each spot. This can be obtained from performing cell type prediction using reference data. 
 
 
-```{r, run-spatial-t, eval=TRUE, include=TRUE, warning=FALSE, message=FALSE}
+```{r, run-spatial-t, include=TRUE, warning=FALSE, message=FALSE}
 #---------------------------------------------------------------------------
 # read in data
 #---------------------------------------------------------------------------
