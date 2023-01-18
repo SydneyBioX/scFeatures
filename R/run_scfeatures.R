@@ -943,10 +943,14 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file(
-#'     "extdata", "example_spatial_proteomics.rds",
-#'     package = "scFeatures"
-#' ))
+#' 
+#'data <- readRDS(
+#' system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' )
+#' x <- sample(1:100, ncol(data) , replace = TRUE)
+#' y <- sample(1:100, ncol(data) , replace = TRUE)
+#' data <- makeSeurat(data, spatialCoords = list(x,y))
+#' 
 #' feature_celltype_interaction <- run_celltype_interaction(
 #'     data,
 #'     type = "spatial_p", ncores = 1
@@ -1001,10 +1005,18 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file(
-#'     "extdata", "example_spatial_proteomics.rds",
-#'     package = "scFeatures"
-#' ))
+#'data <- readRDS(
+#' system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' )
+#' x <- sample(1:100, ncol(data) , replace = TRUE)
+#' y <- sample(1:100, ncol(data) , replace = TRUE)
+#' data <- makeSeurat(data, spatialCoords = list(x,y))
+#' 
+#' feature_celltype_interaction <- run_celltype_interaction(
+#'     data,
+#'     type = "spatial_p", ncores = 1
+#' )
+#'
 #' feature_Morans_I <- run_Morans_I(data, type = "spatial_p", ncores = 1)
 #'
 #' @importFrom spatstat.geom ppp pairdist
@@ -1062,10 +1074,13 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file(
-#'     "extdata", "example_spatial_proteomics.rds",
-#'     package = "scFeatures"
-#' ))
+#' data <- readRDS(
+#' system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+#' )
+#' x <- sample(1:100, ncol(data) , replace = TRUE)
+#' y <- sample(1:100, ncol(data) , replace = TRUE)
+#' data <- makeSeurat(data, spatialCoords = list(x,y))
+#' 
 #' feature_nn_correlation <- run_nn_correlation(
 #'     data,
 #'     type = "spatial_p", ncores = 1
