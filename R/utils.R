@@ -350,7 +350,7 @@ L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
 #'
 #' @examples
 #' data <- readRDS(system.file(
-#'     "extdata", "example_spatial_transcriptomics.rds",
+#'     "extdata", "example_scrnaseq.rds",
 #'     package = "scFeatures"
 #' ))
 #' data <- process_data(data, normalise = FALSE)
