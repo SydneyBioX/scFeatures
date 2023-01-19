@@ -9,7 +9,7 @@ vignette: >
 
 
 ```{r, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
@@ -21,14 +21,14 @@ For this, we would first need to generate the features using scFeatures and then
 
 For demonstration purpose, we provide an example of this features list. The code below show a step to step guide of generating the hmtl output from the features list. 
 
-```{r, include=FALSE}
+```{r, include=FALSE , eval = FALSE}
 
 library(scFeatures)
 ```
 
 
 
-```{r, include=TRUE}
+```{r, include=TRUE, eval = FALSE}
 # here we use the demo data from the package 
 scfeatures_result <- readRDS(system.file("extdata", "scfeatures_result.rds", 
                             package = "scFeatures"))
@@ -52,7 +52,7 @@ When creating the list, the name of the list must use the same name as shown bel
 Not all feature types need to be provided. If a feature type is missing, the section in the html for the feature type will just be left blank. 
 
 
-```{r, include=TRUE}
+```{r, include=TRUE, eval = FALSE}
 # example of creating the feature list using the correct naming conventions
 scfeatures_result <- list( 
    proportion_raw = proportion_raw,
