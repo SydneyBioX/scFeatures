@@ -410,6 +410,9 @@ process_data <- function(data, normalise = TRUE) {
 #' 
 #' @examples
 #' output_folder <- tempdir()
+#' scfeatures_result <- readRDS(
+#'    system.file("extdata", "scfeatures_result.rds", package = "scFeatures")
+#' )
 #' run_association_study_report(scfeatures_result, output_folder )
 #' 
 #' @import rmarkdown
