@@ -30,14 +30,14 @@ remove_mito <- function(data ){
   
   nms <- rownames(temp)
   
-  bad_genes <- unique(c(grep("^MT-", nms, v=T), 
-                        grep("^MTMR", nms, v=T), 
-                        grep("^MTND", nms, v=T),
-                        grep("RPL|RPS", nms, v=T),
-                        "NEAT1","TMSB4X", "TMSB10"), c(grep("^mt-", nms, v=T), 
-                                                       grep("^Mtmr", nms, v=T), 
-                                                       grep("^Mtnd", nms, v=T),
-                                                       grep("Rpl|Rps", nms, v=T),
+  bad_genes <- unique(c(grep("^MT-", nms, value = TRUE), 
+                        grep("^MTMR", nms, value = TRUE), 
+                        grep("^MTND", nms, value = TRUE),
+                        grep("RPL|RPS", nms, value = TRUE),
+                        "NEAT1","TMSB4X", "TMSB10"), c(grep("^mt-", nms, value = TRUE), 
+                                                       grep("^Mtmr", nms, value = TRUE), 
+                                                       grep("^Mtnd", nms, value = TRUE),
+                                                       grep("Rpl|Rps", nms, value = TRUE),
                                                        "Neat1","Tmsb4x", "Tmsb10"))
   
   check <- sum ( rownames(data) %in% bad_genes)

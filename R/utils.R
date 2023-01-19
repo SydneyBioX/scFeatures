@@ -206,7 +206,7 @@ bulk_sample <- function(data, ncores = 1) {
 #' This function takes a spatial transcriptomics data as input 
 #' and estimates the relative number of cells per spot in the data. 
 #' The number of cells is estimated as the library size scaled to 
-#' the range [1, 100]. 
+#' the range from 1 to 100.
 #' This value stored in the `number_cells` attribute.
 #' 
 #' @param data spatial transcriptomics data in Seurat object. 
@@ -221,14 +221,10 @@ bulk_sample <- function(data, ncores = 1) {
 #' data <- readRDS(
 #' system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #' )
-#' 
-#' data$celltype <- NULL  
-#' 
-#' x <- sample(1:100, ncol(data) , replace = TRUE)
-#' y <- sample(1:100, ncol(data) , replace = TRUE)
-#' 
+#' data$celltype <- NULL
+#'
 #' data <- get_num_cell_per_spot(data)
-#' 
+#'
 #'
 #' @export
 get_num_cell_per_spot <- function(data) {
