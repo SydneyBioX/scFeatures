@@ -26,11 +26,7 @@ This value stored in the \code{number_cells} attribute.
 data <- readRDS(
 system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 )
-
-data$celltype <- NULL  
-
-x <- sample(1:100, ncol(data) , replace = TRUE)
-y <- sample(1:100, ncol(data) , replace = TRUE)
+data$celltype <- NULL
 
 data <- get_num_cell_per_spot(data)
 
