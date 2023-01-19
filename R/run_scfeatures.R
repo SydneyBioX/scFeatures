@@ -191,17 +191,17 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #'
 #' @examples
 #'
-#' \dontrun{
 #'   data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #'   )
+#' 
 #'   # optional step, if mito and ribo genes are not of interest
 #'   data_remove_mito <- remove_mito(data)
+#' 
 #'   feature_gene_mean_celltype <- run_gene_mean_celltype(
 #'     data_remove_mito,
 #'     type = "scrna", num_top_gene = 100, ncores = 1
 #'   )
-#' }
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
@@ -259,17 +259,17 @@ run_gene_mean_celltype <- function(data,
 #'
 #' @examples
 #'
-#' \dontrun{
 #'  data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #'  )
+#' 
 #' # optional step, if mito and ribo genes are not of interest
 #' data_remove_mito <- remove_mito(data)
+#' 
 #'  feature_gene_prop_celltype <- run_gene_prop_celltype(
 #'     data_remove_mito,
 #'     type = "scrna", num_top_gene = 100, ncores = 1
 #'  )
-#' }
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
@@ -332,18 +332,19 @@ run_gene_prop_celltype <- function(data,
 #'
 #' @examples
 #'
-#' \dontrun{
 #'  data <- readRDS(system.file("extdata",
 #'    "example_scrnaseq.rds",
 #'     package = "scFeatures"
 #'  ))
+#' 
 #'  # optional step, if mito and ribo genes are not of interest
+#' 
 #'  data_remove_mito <- remove_mito(data)
+#' 
 #'  feature_gene_cor_celltype <- run_gene_cor_celltype(
 #'    data_remove_mito,
 #'    type = "scrna", num_top_gene = 100, ncores = 1
 #'  )
-#' }
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowVars rowMeans2
@@ -412,7 +413,7 @@ run_gene_cor_celltype <- function(data,
 #' @return a dataframe of samples x features
 #'
 #' @examples
-#' \dontrun{
+#' 
 #'  data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #'  )
@@ -421,7 +422,6 @@ run_gene_cor_celltype <- function(data,
 #'     geneset = NULL, species = "Homo sapiens",
 #'     type = "scrna", subsample = FALSE, ncores = 1
 #'  )
-#' }
 #'
 #' @importFrom msigdbr msigdbr
 #' @importFrom GSVA gsva
@@ -504,7 +504,7 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #' @return a dataframe of samples x features
 #'
 #' @examples
-#' \dontrun{
+#' 
 #'  data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #'  )
@@ -513,7 +513,7 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #'     geneset = NULL, species = "Homo sapiens",
 #'     type = "scrna", ncores = 1
 #'  )
-#' }
+#' 
 #'
 #' @importFrom msigdbr msigdbr
 #' @importFrom GSVA gsva
@@ -585,7 +585,7 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' @return a dataframe of samples x features
 #'
 #' @examples
-#' \dontrun{
+#' 
 #'  data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #'  )
@@ -594,7 +594,7 @@ run_pathway_mean <- function(data, geneset = NULL,
 #'     geneset = NULL, species = "Homo sapiens",
 #'     type = "scrna", ncores = 1
 #'  )
-#' }
+#' 
 #'
 #' @importFrom msigdbr msigdbr
 #' @importFrom GSVA gsva
@@ -834,14 +834,12 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 #'
 #' @examples
 #'
-#' \dontrun{
 #'  data <- readRDS(
 #'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #'  )
 #'  feature_gene_cor <- run_gene_cor(
 #'    data, type = "scrna", num_top_gene = 5, ncores = 1
 #'  )
-#' }
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowMeans2

@@ -242,11 +242,10 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 #'
 #' @examples
 #'
-#' \dontrun{
 #'  data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
 #'  coordinate <- list(x = rep(1, ncol(data)), y = rep(1, ncol(data)))
 #'  data <- makeSeurat(data, spatialCoords = coordinate)
-#' }
+#' 
 #' @export
 makeSeurat <- function(data,
     sample = NULL ,
