@@ -18,7 +18,7 @@ in the \code{number_cells} attribute.
 This function takes a spatial transcriptomics data as input
 and estimates the relative number of cells per spot in the data.
 The number of cells is estimated as the library size scaled to
-the range \link{1, 100}.
+the range from 1 to 100.
 This value stored in the \code{number_cells} attribute.
 }
 \examples{
