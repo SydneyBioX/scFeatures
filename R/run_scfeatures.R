@@ -405,7 +405,7 @@ run_gene_cor_celltype <- function(data,
 #'  eg, geneset <- list("pathway_a" = c("CAPN1", ...), "pathway_b" = c("PEX6"))
 #' @param species Whether the species is "Homo sapiens" or "Mus musculus".
 #'  Default is "Homo sapiens".
-#' @param subsample Whether to subsample, either T or F. For larger datasets
+#' @param subsample Whether to subsample, either TRUE or FALSE. For larger datasets
 #'  (eg, over 30,000 cells), the subsample function can be used to increase
 #'  speed.
 #' @param ncores Number of cores for parallel processing.
