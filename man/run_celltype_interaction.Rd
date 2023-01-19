@@ -30,6 +30,7 @@ system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 x <- sample(1:100, ncol(data) , replace = TRUE)
 y <- sample(1:100, ncol(data) , replace = TRUE)
 data <- makeSeurat(data, spatialCoords = list(x,y))
+data$sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= T )
 
 feature_celltype_interaction <- run_celltype_interaction(
     data,

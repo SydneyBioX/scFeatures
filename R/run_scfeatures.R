@@ -890,6 +890,7 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' data <- makeSeurat(data, spatialCoords = list(x,y))
+#' data$sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
 #' 
 #' feature_L_function <- run_L_function(data, type = "spatial_p", ncores = 1)
 #'
@@ -950,6 +951,7 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' data <- makeSeurat(data, spatialCoords = list(x,y))
+#' data$sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
 #' 
 #' feature_celltype_interaction <- run_celltype_interaction(
 #'     data,
@@ -1011,6 +1013,7 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' data <- makeSeurat(data, spatialCoords = list(x,y))
+#' data$sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
 #' 
 #' feature_celltype_interaction <- run_celltype_interaction(
 #'     data,
@@ -1080,6 +1083,7 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' data <- makeSeurat(data, spatialCoords = list(x,y))
+#' data$sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
 #' 
 #' feature_nn_correlation <- run_nn_correlation(
 #'     data,

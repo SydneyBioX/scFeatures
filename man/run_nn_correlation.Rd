@@ -33,6 +33,7 @@ system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 x <- sample(1:100, ncol(data) , replace = TRUE)
 y <- sample(1:100, ncol(data) , replace = TRUE)
 data <- makeSeurat(data, spatialCoords = list(x,y))
+data$sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= T )
 
 feature_nn_correlation <- run_nn_correlation(
     data,
