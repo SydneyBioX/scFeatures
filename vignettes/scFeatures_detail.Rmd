@@ -53,7 +53,7 @@ scfeatures_result <- scFeatures(data)
 
  
 
-The above function uses all default settings and generate all feature types. We provide an example below that describes how this can be done with a spatial proteomics dataset.   
+The above function uses all default settings and generate all feature types. We provide an example below that describes how this can be customised with a spatial proteomics dataset.   
 
 ```{r, include=TRUE}
 #---------------------------------------------------------------------------
@@ -75,8 +75,7 @@ data <- process_data(data, normalise = TRUE)
 
 # select feature types to compute.
 feature_types <- c(
-    "proportion_raw", "pathway_gsva", "L_stats", "gene_mean_celltype",
-    "gene_prop_aggregated"
+    "pathway_gsva", "gene_mean_celltype",  "gene_prop_aggregated"
 )
 
 
@@ -99,7 +98,7 @@ scfeatures_result <- scFeatures(data,
     # defined genes.
     aggregated_genes =  rownames(data)[1:50],
     # by default uses single core
-    ncores = 8
+    ncores = 2
 )
 ```
 
@@ -162,7 +161,7 @@ For each sample, we calculate the proportion of each cell type:
 ```{r, include=TRUE}
 feature_proportion_raw <- run_proportion_raw(data)
 feature_proportion_logit <- run_proportion_logit(data)
-feature_proportion_ratio <- run_proportion_ratio(data , ncores = 4)
+feature_proportion_ratio <- run_proportion_ratio(data , ncores = 2)
 ```
 
 
@@ -190,7 +189,7 @@ Note that mitochondria and ribosomal genes may not be as interesting to look at.
 ```{r, include=TRUE}
 data_remove_mito <- remove_mito(data)
 
-feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito, ncores = 4)
+feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito, ncores = 2)
 
 # we can provide our own sets of genes
 genes_of_interest <- data.frame(
@@ -204,14 +203,14 @@ genes_of_interest <- data.frame(
 feature_gene_prop_celltype <- run_gene_prop_celltype(
     data_remove_mito,
     genes = genes_of_interest,
-    ncores = 4
+    ncores = 2
 )
 
 # we can change the number to pick ~10 top variables genes per cell type
 feature_gene_cor_celltype <- run_gene_cor_celltype(
     data_remove_mito,
     num_top_gene = 10,
-    ncores = 4
+    ncores = 2
 )
 ```
 
@@ -240,10 +239,10 @@ Note that it is necessarily to indicate whether the species is "Homo sapiens" or
 feature_pathway_gsva <- run_pathway_gsva(
     data,
     geneset = NULL, species = "Homo sapiens", subsample = FALSE,
-    ncores = 4
+    ncores = 2
 )
-feature_pathway_mean <- run_pathway_mean(data, ncores = 4)
-feature_pathway_prop <- run_pathway_prop(data, ncores = 4)
+feature_pathway_mean <- run_pathway_mean(data, ncores = 2)
+feature_pathway_prop <- run_pathway_prop(data, ncores = 2)
 ```
 
 
@@ -257,7 +256,7 @@ feature_pathway_prop <- run_pathway_prop(data, ncores = 4)
 
  
 ```{r include=TRUE}
-feature_CCI <- run_CCI(data, ncores = 4) 
+feature_CCI <- run_CCI(data, ncores = 2) 
 ```
 
 
@@ -273,16 +272,16 @@ The feature types in this category is calculated based on the aggregated express
 
 
 ```{r, include=TRUE}
-feature_gene_mean_aggregated <- run_gene_mean(data, ncores = 4)
+feature_gene_mean_aggregated <- run_gene_mean(data, ncores = 2)
 
 genes_of_interest <- c("TIGIT", "PDCD1")
 feature_gene_cor_aggregated <- run_gene_cor(
     data,
     genes = genes_of_interest,
-    ncores = 4
+    ncores = 2
 )
 # we can change this number to pick 100 top variable genes
-feature_gene_prop_aggregated <- run_gene_prop(data, num_top_gene = 100, ncores = 4)
+feature_gene_prop_aggregated <- run_gene_prop(data, num_top_gene = 100, ncores = 2)
 ```
 
 
@@ -325,8 +324,8 @@ y <- y[match(rownames(X), y$sample), ]$condition
 # run the classification model using random forest
 result <- ClassifyR::crossValidate(
     X, y,
-    classifier = "randomForest", nCores = 8,
-    nFolds = 3, nRepeats = 10
+    classifier = "randomForest", nCores = 2,
+    nFolds = 3, nRepeats = 6
 )
 
 ClassifyR::performancePlot(results = result)
@@ -363,10 +362,10 @@ data$x_cord[1:5]
 
 For spatial proteomics, we need to set the `type` to `spatial_p`
 
-```{r, include=TRUE}
+```{r, eval = FALSE, include=TRUE}
 feature_proportion_raw <- run_proportion_raw(data, type = "spatial_p")
 feature_proportion_logit <- run_proportion_logit(data, type = "spatial_p")
-feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_p", ncores = 4)
+feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_p", ncores = 2)
 ```
 
 
@@ -374,10 +373,10 @@ feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_p", ncore
 
 By default, this feature category calculates the gene/protein expression based on the top 100 most variable genes/proteins per cell type. However, because this data only measured 38 proteins, all proteins will be used.  
 
-```{r, include=TRUE}
-feature_gene_mean_celltype <- run_gene_mean_celltype(data, type = "spatial_p", ncores = 4)
-feature_gene_prop_celltype <- run_gene_prop_celltype(data, type = "spatial_p", ncores = 4)
-feature_gene_cor_celltype <- run_gene_cor_celltype(data, type = "spatial_p", ncores = 4)
+```{r, eval = FALSE, include=TRUE}
+feature_gene_mean_celltype <- run_gene_mean_celltype(data, type = "spatial_p", ncores = 2)
+feature_gene_prop_celltype <- run_gene_prop_celltype(data, type = "spatial_p", ncores = 2)
+feature_gene_cor_celltype <- run_gene_cor_celltype(data, type = "spatial_p", ncores = 2)
 ```
 
 
@@ -385,10 +384,10 @@ feature_gene_cor_celltype <- run_gene_cor_celltype(data, type = "spatial_p", nco
 
 By default, this feature category calculates the gene/protein expression based on the top 1500 most variable genes/proteins. However, because in this data there are only 38 proteins, we will use all proteins.  
 
-```{r, include=TRUE}
-feature_gene_mean_aggregated <- run_gene_mean(data, type = "spatial_p", ncores = 4)
-feature_gene_prop_aggregated <- run_gene_prop(data, type = "spatial_p", ncores = 4)
-feature_gene_cor_aggregated <- run_gene_cor(data, type = "spatial_p", ncores = 4)
+```{r, eval = FALSE, include=TRUE}
+feature_gene_mean_aggregated <- run_gene_mean(data, type = "spatial_p", ncores = 2)
+feature_gene_prop_aggregated <- run_gene_prop(data, type = "spatial_p", ncores = 2)
+feature_gene_cor_aggregated <- run_gene_cor(data, type = "spatial_p", ncores = 2)
 ```
 
 
@@ -407,17 +406,20 @@ This feature category is designed for spatial data and contains feature types co
   * `celltype_interaction`: The features are in the form of protein 1 vs protein 2, protein 1 vs protein 3 ... etc, with the numbers representing the proportion of each interaction pairs in a give sample. 
   * `nn_correlation`:  The features are in the form of protein 1, protein 2 ... etc, with the numbers representing Pearson's correlation.
 
-```{r, include=TRUE}
-feature_L_stats <- run_L_function(data, type = "spatial_p", ncores = 4)
-feature_morans_I <- run_Morans_I(data, type = "spatial_p", ncores = 4)
+```{r, eval=FALSE, include=TRUE}
+feature_L_stats <- run_L_function(data, type = "spatial_p", ncores = 2)
+feature_morans_I <- run_Morans_I(data, type = "spatial_p", ncores = 2)
 feature_celltype_interaction <- run_celltype_interaction(
     data,
     type = "spatial_p",
-    ncores = 4
+    ncores = 2
 )
-feature_nn_correlation <- run_nn_correlation(data, type = "spatial_p", ncores = 4)
+feature_nn_correlation <- run_nn_correlation(data, type = "spatial_p", ncores = 2)
 ```
- 
+
+```{r, eval=TRUE, include = FALSE}
+feature_nn_correlation <- run_nn_correlation(data, type = "spatial_p", ncores = 2)
+```
 
 
 ## Survival analysis using the generated features
@@ -538,7 +540,7 @@ The output format is the same as for scRNA-seq data.
 ```{r, eval=FALSE, include=TRUE}
 feature_proportion_raw <- run_proportion_raw(data, type = "spatial_t")
 feature_proportion_logit <- run_proportion_logit(data, type = "spatial_t")
-feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_t", ncores = 4)
+feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_t", ncores = 2)
 ```
 
 
@@ -556,7 +558,7 @@ feature_gene_mean_celltype <- run_gene_mean_celltype(
     data_remove_mito,
     type = "spatial_t",
     genes = rownames(data_remove_mito)[1:100],  # to speed up the vignette generation 
-    ncores = 4
+    ncores = 2
 )
 ```
 
@@ -572,7 +574,7 @@ feature_gene_mean_celltype <- run_gene_mean_celltype(
 feature_pathway_mean <- run_pathway_mean(
     data,
     geneset = NULL, species = "Homo sapiens", type = "spatial_t",
-    ncores = 4
+    ncores = 2
 )
 ```
 
@@ -586,9 +588,9 @@ This is based on the expression of genes across all cells.
 The output format is the same as for scRNA-seq data.   
 
 ```{r, eval=FALSE, include=TRUE }
-feature_gene_mean_aggregated <- run_gene_mean(data, type = "spatial_t" , ncores = 4)
-feature_gene_prop_aggregated <- run_gene_prop(data, type = "spatial_t" , ncores = 4)
-feature_gene_cor_aggregated <- run_gene_cor(data, type = "spatial_t", ncores = 4)
+feature_gene_mean_aggregated <- run_gene_mean(data, type = "spatial_t" , ncores = 2)
+feature_gene_prop_aggregated <- run_gene_prop(data, type = "spatial_t" , ncores = 2)
+feature_gene_cor_aggregated <- run_gene_cor(data, type = "spatial_t", ncores = 2)
 ```
 
 
@@ -608,14 +610,14 @@ This feature category is designed for spatial data and contains feature types co
   * `nn_correlation`:  The features are in the form of gene 1, gene 2 ... etc, with the numbers representing Pearson's correlation.
 
 ```{r, eval=FALSE, include=TRUE}
-feature_L_stats <- run_L_function(data, type = "spatial_t", ncores = 4)
-feature_morans_I <- run_Morans_I(data, type = "spatial_t", ncores = 4)
+feature_L_stats <- run_L_function(data, type = "spatial_t", ncores = 2)
+feature_morans_I <- run_Morans_I(data, type = "spatial_t", ncores = 2)
 feature_celltype_interaction <- run_celltype_interaction(
     data,
     type = "spatial_t",
-    ncores = 4
+    ncores = 2
 )
-feature_nn_correlation <- run_nn_correlation(data, type = "spatial_t", ncores = 4)
+feature_nn_correlation <- run_nn_correlation(data, type = "spatial_t", ncores = 2)
 ```
  
  
