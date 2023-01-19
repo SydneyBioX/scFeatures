@@ -221,14 +221,10 @@ bulk_sample <- function(data, ncores = 1) {
 #' data <- readRDS(
 #' system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
 #' )
-#' 
-#' data$celltype <- NULL  
-#' 
-#' x <- sample(1:100, ncol(data) , replace = TRUE)
-#' y <- sample(1:100, ncol(data) , replace = TRUE)
-#' 
+#' data$celltype <- NULL
+#'
 #' data <- get_num_cell_per_spot(data)
-#' 
+#'
 #'
 #' @export
 get_num_cell_per_spot <- function(data) {
