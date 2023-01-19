@@ -31,7 +31,7 @@ Default is "Homo sapiens".}
 
 \item{type}{The type of dataset, either "scrna", "spatial_t", or "spatial_p".}
 
-\item{subsample}{Whether to subsample, either T or F. For larger datasets
+\item{subsample}{Whether to subsample, either TRUE or FALSE. For larger datasets
 (eg, over 30,000 cells), the subsample function can be used to increase
 speed.}
 
