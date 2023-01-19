@@ -37,13 +37,11 @@ and spatial transcriptomics.
 }
 \examples{
 
-\dontrun{
  data <- readRDS(
    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
  )
  feature_gene_cor <- run_gene_cor(
    data, type = "scrna", num_top_gene = 5, ncores = 1
  )
-}
 
 }

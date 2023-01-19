@@ -50,7 +50,7 @@ Alternatively, users can provide their own gene sets of interest
 in a list format.
 }
 \examples{
-\dontrun{
+
  data <- readRDS(
     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
  )
@@ -59,6 +59,5 @@ in a list format.
     geneset = NULL, species = "Homo sapiens",
     type = "scrna", subsample = FALSE, ncores = 1
  )
-}
 
 }
