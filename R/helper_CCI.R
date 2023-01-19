@@ -48,7 +48,7 @@ helper_CCI <- function( data , ncores = 1  ){
      if (is.null(X)){
        X <- temp
      }else{
-       X <- merge(X, temp , by="feature", all = T)
+       X <- merge(X, temp , by="feature", all = TRUE)
      }
    }
    rownames(X) <- X$feature

@@ -930,7 +930,7 @@ plot_CCI <- function(data ){
    setHook("grid.newpage", function() pushViewport(viewport(x=1,y=1,width=0.9, height=0.9, name="vp", just=c("right","top"))), action="prepend")
      pheatmap(  df , fontsize_row = 10 , fontsize_col = 10,  cluster_cols = FALSE,
                  cluster_rows = FALSE ,
-                display_numbers =T ,  number_color = "black" )
+                display_numbers = TRUE,  number_color = "black" )
   setHook("grid.newpage", NULL, "replace")
   grid::grid.text("sender (ligand)", y=-0.07, gp=gpar(fontsize=16))
   grid::grid.text("target (receptor)", x=-0.07, rot=90, gp=gpar(fontsize=16)) 
