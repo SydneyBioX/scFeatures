@@ -50,8 +50,13 @@ load_data <- function(filename, path = NULL, metadata = NULL) {
     return(data)
 }
 
+# source the new function(s)
+source("dev/opt_helper.R")
+
 dataset <- "sinha"
 data <- load_data(dataset)
+
+cli::cli_inform("Running benchmarks.")
 
 res <- microbenchmark(
     cores_1 = {
