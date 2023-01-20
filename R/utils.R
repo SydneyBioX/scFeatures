@@ -441,11 +441,11 @@ run_association_study_report <- function(scfeatures_result, output_folder) {
 
     file.copy(from = output_report, to = output_folder, overwrite = FALSE)
 
-    setwd( output_folder)
     # generate the html output
     rmarkdown::render(
         input = paste0(output_folder, "/", "output_report.Rmd"),
         output_format = "html_document",
-        output_file = "output_report.html"
+        output_file = "output_report.html",
+        output_dir = output_folder
     )
 }
