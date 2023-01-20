@@ -175,7 +175,19 @@ helper_gene_mean_celltype  <- function( data , genes  = NULL , num_top_gene = NU
   
     all_marker <- find_var_gene(data,  num_top_gene  = num_top_gene , 
                               ncores = ncores , celltype = TRUE)
-  }else{
+  } else if (genes == "all") {
+    all_marker <- list()
+    i <- 1
+    n <- length(rownames(data))
+    for (celltype in unique(data$celltype)) {
+        all_marker[[i]] <- data.frame(
+            "marker" = rownames(data), "celltype" = rep(celltype, n)
+        )
+        i <- i + 1
+    }
+    all_marker <- do.call(rbind, all_marker)
+  }
+  else{
     all_marker <- genes 
   }
   
