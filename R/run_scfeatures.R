@@ -332,7 +332,7 @@ run_gene_prop_celltype <- function(data,
 #'
 #' @examples
 #'
-#'  data <- readRDS(system.file("extdata",
+#' data <- readRDS(system.file("extdata",
 #'    "example_scrnaseq.rds",
 #'     package = "scFeatures"
 #'  ))
@@ -343,7 +343,7 @@ run_gene_prop_celltype <- function(data,
 #' 
 #'  feature_gene_cor_celltype <- run_gene_cor_celltype(
 #'    data_remove_mito,
-#'    type = "scrna", num_top_gene = 100, ncores = 1
+#'    type = "scrna", num_top_gene = 5, ncores = 1
 #'  )
 #'
 #' @importFrom proxyC simil
