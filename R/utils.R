@@ -444,7 +444,7 @@ run_association_study_report <- function(scfeatures_result, output_folder) {
     setwd( output_folder)
     # generate the html output
     rmarkdown::render(
-        input = "output_report.Rmd",
+        input = paste0(output_folder, "/", "output_report.Rmd"),
         output_format = "html_document",
         output_file = "output_report.html"
     )
