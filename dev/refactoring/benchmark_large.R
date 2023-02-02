@@ -91,3 +91,21 @@ res <- microbenchmark(
 )
 
 saveRDS(res, paste0(dataset, "_big_bench.rds"))
+
+
+
+res <- microbenchmark(
+    cores_16 = {
+        helper_gene_mean_celltype(
+            data, ncores = 16, genes = "all"
+    )},
+    v2_cores_16 = {
+        helper_gene_mean_celltype_v2(
+            data, ncores = 16
+    )},
+    v3_cores_16 = {
+        helper_gene_mean_celltype_v3(
+            data, ncores = 16
+    )},
+    times = 10
+)
