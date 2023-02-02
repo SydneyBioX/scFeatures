@@ -43,7 +43,7 @@ num_top_gene parameter (defaults to 100).
 
  data <- readRDS(
     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
- )
+ )[,1:20]
 
  feature_gene_prop_celltype <- run_gene_prop_celltype(
     data,

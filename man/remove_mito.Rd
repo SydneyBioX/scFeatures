@@ -21,8 +21,8 @@ genes are typically not  interesting to look at.
 \examples{
 
 data <- readRDS(
-    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
+  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+)[,1:20]
 data <- remove_mito(data)
 
 }

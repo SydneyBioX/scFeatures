@@ -193,7 +193,7 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #'
 #'   data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'   )
+#'   )[,1:20]
 #'
 #'   feature_gene_mean_celltype <- run_gene_mean_celltype(
 #'     data,
@@ -258,7 +258,7 @@ run_gene_mean_celltype <- function(data,
 #'
 #'  data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )
+#'  )[,1:20]
 #'
 #'  feature_gene_prop_celltype <- run_gene_prop_celltype(
 #'     data,
@@ -407,7 +407,7 @@ run_gene_cor_celltype <- function(data,
 #' 
 #'  data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )
+#'  )[,1:20]
 #' 
 #'  feature_pathway_gsva <- run_pathway_gsva(
 #'     data,
@@ -580,7 +580,7 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' 
 #'  data <- readRDS(
 #'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )[1:50, 1:20]
+#'  )[1:30, 1:20]
 #'  feature_pathway_prop <- run_pathway_prop(
 #'     data,
 #'     geneset = NULL, species = "Homo sapiens",

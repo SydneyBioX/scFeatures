@@ -53,7 +53,7 @@ in a list format.
 
  data <- readRDS(
     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
- )
+ )[,1:20]
 
  feature_pathway_gsva <- run_pathway_gsva(
     data,
