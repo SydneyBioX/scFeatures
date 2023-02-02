@@ -25,7 +25,7 @@ The function returns a dataframe with samples as rows and cell types as columns.
 \examples{
 data <- readRDS(
     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
+)[1:50, 1:20]
 feature_proportion_raw <- run_proportion_raw(
     data,
     type = "scrna", ncores = 1

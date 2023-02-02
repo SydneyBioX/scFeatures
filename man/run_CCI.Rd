@@ -25,7 +25,9 @@ It supports scRNA-seq.
 }
 \examples{
 
-data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+data <- readRDS(
+    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
+)[1:50, 1:20]
 feature_CCI <- run_CCI(data, type = "scrna" ,  ncores = 1 )
 
 }

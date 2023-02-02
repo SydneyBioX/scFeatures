@@ -26,7 +26,7 @@ The function returns a dataframe with samples as rows and cell types as columns.
 \examples{
 data <- readRDS(
     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
+)[1:50, 1:20]
 feature_proportion_logit <- run_proportion_logit(
     data,
     type = "scrna", ncores = 1

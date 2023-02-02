@@ -45,11 +45,8 @@ the num_top_gene parameter (defaults to 100).
     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
   )
 
-  # optional step, if mito and ribo genes are not of interest
-  data_remove_mito <- remove_mito(data)
-
   feature_gene_mean_celltype <- run_gene_mean_celltype(
-    data_remove_mito,
+    data,
     type = "scrna", num_top_gene = 100, ncores = 1
   )
 

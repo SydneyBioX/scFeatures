@@ -54,6 +54,7 @@ in a list format.
  data <- readRDS(
     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
  )
+
  feature_pathway_gsva <- run_pathway_gsva(
     data,
     geneset = NULL, species = "Homo sapiens",

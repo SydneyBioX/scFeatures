@@ -42,7 +42,7 @@ data <- readRDS(
 )
 feature_gene_mean <- run_gene_mean(
     data,
-    type = "scrna", num_top_gene = 1500, ncores = 1
+    type = "scrna", num_top_gene = 150, ncores = 1
 )
 
 }
