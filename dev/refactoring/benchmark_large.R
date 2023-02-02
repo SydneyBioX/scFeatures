@@ -61,31 +61,19 @@ cli::cli_inform("Running benchmarks.")
 res <- microbenchmark(
     cores_1 = {
         helper_gene_mean_celltype(
-            data, ncores = 1, find_variable_genes = FALSE
-    )},
-    cores_2 = {
-        helper_gene_mean_celltype(
-            data, ncores = 2, find_variable_genes = FALSE
+            data, ncores = 1, genes = "all"
     )},
     cores_4 = {
         helper_gene_mean_celltype(
-            data, ncores = 4, find_variable_genes = FALSE
+            data, ncores = 4, genes = "all"
     )},
     cores_8 = {
         helper_gene_mean_celltype(
-            data, ncores = 8, find_variable_genes = FALSE
+            data, ncores = 8, genes = "all"
     )},
     cores_16 = {
         helper_gene_mean_celltype(
-            data, ncores = 16, find_variable_genes = FALSE
-    )},
-    v2_cores_1 = {
-        helper_gene_mean_celltype_v2(
-            data, ncores = 1
-    )},
-    v2_cores_2 = {
-        helper_gene_mean_celltype_v2(
-            data, ncores = 2
+            data, ncores = 16, genes = "all"
     )},
     v2_cores_4 = {
         helper_gene_mean_celltype_v2(
