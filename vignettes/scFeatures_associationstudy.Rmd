@@ -30,8 +30,7 @@ library(scFeatures)
 
 ```{r, include=TRUE, eval = FALSE}
 # here we use the demo data from the package 
-scfeatures_result <- readRDS(system.file("extdata", "scfeatures_result.rds", 
-                            package = "scFeatures"))
+data("scfeatures_result" , package = "scFeatures")
 
 # here we use the current working directory to save the html output
 # modify this to save the html file to other directory
