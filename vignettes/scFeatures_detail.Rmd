@@ -43,9 +43,8 @@ library(scFeatures)
 scFeatures can be run using one line of code `scfeatures_result <- scFeatures(data)`, which generates a list of dataframes containing all feature types in the form of samples x features.    
 
 ```{r, include=TRUE}
-data <- readRDS(
-    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq
 data <- process_data(data, normalise = TRUE) #  perform normalisation
 
 scfeatures_result <- scFeatures(data)
@@ -60,9 +59,8 @@ The above function uses all default settings and generate all feature types. We 
 # read in data
 #---------------------------------------------------------------------------
 
-data <- readRDS(
-  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq
 
 # randomly generate some x and y coordinate to make this a 
 # toy "spatial proteomics" data
@@ -112,9 +110,9 @@ scFeatures takes in data as a Seurat object, with the gene expression stored in 
 
 
 ```{r}
-data <- readRDS(
-    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
+
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq
 
 data <- process_data(data) # some pre-processing, including normalisation
 
@@ -339,9 +337,8 @@ For demonstration purpose, we "generate" a spatial proteomics data from the sing
 
 ```{r}
  
-data <- readRDS(
-  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq
 
 # randomly generate some x and y coordinate to make this a 
 # toy "spatial proteomics" data
@@ -472,10 +469,8 @@ Additionally, there are two assays needed, the `RNA`, which contains the gene ex
 The `predictions` assay is a matrix in the form of cell types x spot, which stores the cell type probability of each spot. This can be obtained by performing cell type prediction using reference data, for example, using methods available in `r BiocStyle::CRANpkg('Seurat')` (see https://satijalab.org/seurat/articles/spatial_vignette.html#integration-with-single-cell-data-1)
 
 ```{r, include=TRUE}
-
-data <- readRDS(
-  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq
 
 # generate a toy "spatial transcriptomics" data
 data$celltype <- NULL #spatial transcriptomics don't have celltype 

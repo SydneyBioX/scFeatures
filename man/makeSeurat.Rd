@@ -61,7 +61,8 @@ for scFeatures functions.
 }
 \examples{
 
- data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+ data("example_scrnaseq" , package = "scFeatures")
+ data <- example_scrnaseq
  coordinate <- list(x = rep(1, ncol(data)), y = rep(1, ncol(data)))
  data <- makeSeurat(data, spatialCoords = coordinate)
 

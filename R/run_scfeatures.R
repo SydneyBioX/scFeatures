@@ -1071,9 +1071,8 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' data <- makeSeurat(data, spatialCoords = list(x,y))

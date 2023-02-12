@@ -33,9 +33,9 @@ library(scFeatures)
 scFeatures can be run using one line of code `scfeatures_result <- scFeatures(data)`, which generates a list of data frames containing all feature types in the form of samples x features.    
 
 ```{r, load-data, include=TRUE, eval=FALSE}
-data <- readRDS(
-  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq
+
 data <- process_data(data, normalise = TRUE) #  perform normalisation
 
 scfeatures_result <- scFeatures(data)
@@ -55,9 +55,9 @@ For SingleCellExperiment or SpatialExperiment object, we provide a function `mak
 #---------------------------------------------------------------------------
 # read in data
 #---------------------------------------------------------------------------
-data <- readRDS(
-  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq
+
 data <- process_data(data, normalise = TRUE) #  perform normalisation
 
 # format the patient ID as `a_cond_b` eg, `patient09_cond_nonresponder`.
@@ -156,10 +156,8 @@ Note that, as spatial proteomics contain few genes, the feature categories of pa
 # read in data
 #---------------------------------------------------------------------------
 
-data <- readRDS(
-  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
-
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq
 # randomly generate some x and y coordinate to make this a 
 # toy "spatial proteomics" data
 x <- sample(1:100, ncol(data) , replace = TRUE)
@@ -213,11 +211,8 @@ The `predictions` assay is a matrix in the form of cell types x spot, which stor
 #---------------------------------------------------------------------------
 # read in data
 #---------------------------------------------------------------------------
-
-data <- readRDS(
-  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)
-
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq
 # generate a toy "spatial transcriptomics" data
 data$celltype <- NULL #spatial transcriptomics don't have celltype 
 

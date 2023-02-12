@@ -37,11 +37,9 @@
 #' @return a list of dataframes containing the generated feature matrix in the form of sample x features
 #'
 #' @examples
-#'
-#' \dontrun{
-#'  data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
-#'  scfeatures_result <- scFeatures(data, type = "scrna")
-#' }
+#' data("example_scrnaseq" , package = "scFeatures") 
+#' data <- example_scrnaseq
+#' scfeatures_result <- scFeatures(data, type = "scrna", feature_types = "proportion_raw")
 #' 
 #' @export
 scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
@@ -242,7 +240,8 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 #'
 #' @examples
 #'
-#'  data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
+#'  data("example_scrnaseq" , package = "scFeatures")
+#'  data <- example_scrnaseq
 #'  coordinate <- list(x = rep(1, ncol(data)), y = rep(1, ncol(data)))
 #'  data <- makeSeurat(data, spatialCoords = coordinate)
 #' 
