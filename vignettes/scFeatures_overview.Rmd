@@ -1,0 +1,188 @@
+---
+title: "A detailed explanation of scFeatures' features"
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Overview of scFeatures with case studies}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    message = FALSE,
+    warning = FALSE
+)
+```
+
+
+```{r eval=TRUE, include=FALSE, paged.print=TRUE}
+library(S4Vectors)
+```
+
+
+# Introduction 
+
+scFeatures is a tool for generating multi-view representations of samples in a single-cell dataset. This vignette provides an overview of scFeatures. It uses the main function to generate features and then illustrates case studies of using the generated features for classification, survival analysis and association study. 
+
+
+
+
+```{r}
+library(scFeatures)
+```
+
+
+# Running scFeatures
+
+scFeatures can be run using one line of code `scfeatures_result <- scFeatures(data)`, which generates a list of dataframes containing all feature types in the form of samples x features.    
+
+
+
+```{r}
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq
+data <- process_data(data, normalise = TRUE) #  perform normalisation
+
+scfeatures_result <- scFeatures(data, feature_types = "gene_mean_celltype")
+```
+
+  
+By default, the above function generates all feature types. To reduce the computational time for the demonstrate, here we generate only the selected feature type "gene mean celltype". More information on the function customisation can be obtained by typing `?scFeatures()`
+
+
+
+
+
+## Classification of conditions using the generated features
+
+To build disease prediction model from the generated features we utilise [`ClassifyR`](https://www.bioconductor.org/packages/release/bioc/html/ClassifyR.html). 
+
+
+The output from scFeatures is a matrix of sample x feature, ie, the row corresponds to each sample, the column corresponds to the feature, and can be directly used as the `X`. The order of the rows is in the order of unique(data$sample). 
+
+Here we use the feature type gene mean celltype as an example to build classification model on the disease condition. 
+
+```{r}
+ 
+feature_gene_mean_celltype <- scfeatures_result$gene_mean_celltype
+
+# inspect the first 5 rows and first 5 columns
+feature_gene_mean_celltype[1:5, 1:5]
+
+# inspect the dimension of the matrix
+dim(feature_gene_mean_celltype)
+
+```
+
+
+We recommend using `ClassifyR::crossValidate` to do cross-validated classification with the extracted feaures. 
+
+```{r fig.height=4, fig.width=7}
+library(ClassifyR)
+
+# X is the feature type generated
+# y is the condition for classification
+X <- feature_gene_mean_celltype
+y <- data@meta.data[!duplicated(data$sample), ]
+y <- y[match(rownames(X), y$sample), ]$condition
+
+# run the classification model using random forest
+result <- ClassifyR::crossValidate(
+    X, y,
+    classifier = "randomForest", nCores = 2,
+    nFolds = 3, nRepeats = 5
+)
+
+ClassifyR::performancePlot(results = result)
+```
+ 
+It is expected that the classification accuracy is low. This is because we are using a small subset of data containing only 3523 genes and 519 cells. The dataset is unlikely to contain enough information to distinguish responders and non-responders. 
+
+
+
+
+
+
+
+## Survival analysis using the generated features
+
+Suppose we want to use the features to perform survival analysis. In here, since the patient outcomes are responder and non-responder, and do not contain survival information, we randomly "generate" the survival outcome for the purpose of demonstration. 
+
+We use a standard hierarchical clustering to split the patients into 2 groups based on the generated features. 
+
+```{r  fig.height=5, fig.width=7}
+library(survival)
+library(survminer)
+ 
+
+X <- feature_gene_mean_celltype
+X <- t(X)
+
+# run hierarchical clustering
+hclust_res <- hclust(
+    as.dist(1 - cor(X, method = "pearson")),
+    method = "ward.D2"
+)
+
+set.seed(1)
+# generate some survival outcome, including the survival days and the censoring outcome
+survival_day <- sample(1:100, ncol(X))
+censoring <- sample(0:1, ncol(X), replace = TRUE)
+
+cluster_res <- cutree(hclust_res, k = 2)
+metadata <- data.frame( cluster = factor(cluster_res),
+                        survival_day = survival_day,
+                        censoring = censoring)
+
+# plot survival curve
+fit <- survfit(
+    Surv(survival_day, censoring) ~ cluster,
+    data = metadata
+)
+ggsurv <- ggsurvplot(fit,
+    conf.int = FALSE, risk.table = TRUE,
+    risk.table.col = "strata", pval = TRUE
+)
+ggsurv
+```
+
+The p-value is very high, indicating there is not enough evidence to claim there is a survival difference between the two groups. 
+This is as expected, because we randomly assigned survival status to each of the patient. 
+
+
+
+
+# Association study of the features with the conditions 
+
+scFeatures provides a function that automatically run association study of the features with the conditions and produce an HTML file with the visualisation of the features and the association result.  
+
+For this, we would first need to generate the features using scFeatures and then store the result in a named list format. 
+
+For demonstration purpose, we provide an example of this features list. The code below show the steps of generating the HTML output from the features list. 
+
+
+```{r}
+# here we use the demo data from the package 
+data("scfeatures_result" , package = "scFeatures")
+
+# here we use the current working directory to save the html output
+# modify this to save the html file to other directory
+output_folder <-  tempdir()
+
+run_association_study_report(scfeatures_result, output_folder )
+```
+
+Inside the directory defined in the `output_folder`, you will see the html report output with the name `output_report.html`. 
+
+
+# sessionInfo()
+
+```{r, eval=TRUE}
+sessionInfo()
+```
+
+
+
+

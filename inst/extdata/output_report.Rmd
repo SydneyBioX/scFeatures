@@ -225,12 +225,6 @@ Here we provide a brief overview of the association study result, including the 
 
 
 ```{r}
-scfeatures_result <- readRDS(system.file("extdata", "scfeatures_result.rds", package = "scFeatures"))
-```
-
-
-
-```{r}
 
 num_features <- lapply(scfeatures_result, dim)
 num_features <- t( data.frame(  lapply(num_features, `[` , 2) )) 
