@@ -58,16 +58,18 @@
  
  ## Required
  * [ ]  Most of the code in the vignettes is **still** unevaluated and so is untested by `R CMD check`. Bioconductor expects that vignettes contain non-trivial evaluated code chunks and static vignettes are generally not acceptable.
- * [ ]  Please give the vignettes informative titles and filenames; see https://contributions.bioconductor.org/docs.html#vignettes
+ * [x]  Please give the vignettes informative titles and filenames; see https://contributions.bioconductor.org/docs.html#vignettes
    
    * Compare the titles of the **scFeatures** vignettes to those from some other packages - it should be a short 1 sentence summary of the vignette (like the title of a paper).
      ![Screen Shot 2023-01-27 at 1 32 10 pm](https://user-images.githubusercontent.com/1049741/215001876-66dc8c03-db23-442d-93c2-5f928f393fee.png)
- * [ ]  `inst/extdata` is usually used for 'raw' data, so these data properly belong under `data/` rather than `inst/extdata/`; see https://contributions.bioconductor.org/data.html.
+Response: We have now updated the vignette names to make them more informative.  
+
+ * [x]  `inst/extdata` is usually used for 'raw' data, so these data properly belong under `data/` rather than `inst/extdata/`; see https://contributions.bioconductor.org/data.html.
    
    * Regarding your comment: "We have tried this, but found the data directory only allows .Rdata file instead of the .RDS format. Once we convert to .Rdata, the file size expanded from under 3MB to 16MB and became too big to include in the package. Therefore we decided to keep the data in the inst/extdata."
      
      * I'm not sure how you tried to do this, but I was able to compress the `example_scrnaseq` data set to a 1.4 MB `.RData` file by using the following:
- 
+
  ```r
  x <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
  # Note the use of xz-compression, which generally results in the smallest file 
@@ -77,6 +79,8 @@
  
  * So unless there is another reason, please store the data under `data/` and document it as explained in https://contributions.bioconductor.org/data.html.
  
+Response: Thank you for the tip! We have now stored the data under `data/` and added relevant documentation. 
+
  ## Recommended
  * [ ]  It is strongly recommended to add unit tests. I would suggest starting with the individual `scFeatures::run_*()` functions that underpin the wrapper `scFeatures::scFeatures()` function.
  * [ ]  Recommend adding a NEWS file (see https://contributions.bioconductor.org/news.html).

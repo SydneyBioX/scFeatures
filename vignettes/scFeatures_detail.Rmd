@@ -2,7 +2,7 @@
 title: "A detailed explanation of scFeatures' features"
 output: BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{scFeatures_detail}
+  %\VignetteIndexEntry{Detailed explanation of scFeatures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -2,7 +2,7 @@
 title: "An association study of features with conditions with scFeatures"
 output: BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{scFeatures_associationstudy}
+  %\VignetteIndexEntry{Perform association study with scFeatures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
