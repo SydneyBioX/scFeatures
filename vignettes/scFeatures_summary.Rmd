@@ -207,8 +207,7 @@ feature_nn_correlation <- run_nn_correlation(data, type = "spatial_p")
 The input data is a Seurat object containing `sample`, `x_cord` and `y_cord` columns.  
 Additionally, apart from the `RNA` assay, which contains the gene expression of each spot, a `predictions` assay is also needed. 
 
-The `predictions` assay is a matrix in the form of cell types x spot, which stores the cell type probability of each spot. This can be obtained from performing cell type prediction using reference data. 
-
+The `predictions` assay is a matrix in the form of cell types x spot, which stores the cell type probability of each spot. This can be obtained by performing cell type prediction using reference data, for example, using methods available in `r BiocStyle::CRANpkg('Seurat')` (see https://satijalab.org/seurat/articles/spatial_vignette.html#integration-with-single-cell-data-1)
 
 ```{r, run-spatial-t, include=TRUE, warning=FALSE, message=FALSE, eval=FALSE}
 #---------------------------------------------------------------------------

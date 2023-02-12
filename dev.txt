@@ -83,8 +83,8 @@
  * [x]  Why does `remove_mito()` remove more than just mitochondrial genes? I strongly recommend choosing a more precise name for the function or split the functionality up into distinct `remove_mito()`, `remove_ribo()`, etc. functions.
 Response: We have now changed the `remove_mito()` function name into `remove_mito_ribo()` so the name is more accurate. 
 
- * [ ]  Minor point regarding 'This can be obtained from performing cell type prediction using reference data, for example, using `SCTransform` from Seurat (see https://satijalab.org/seurat/articles/spatial_vignette.html#integration-with-single-cell-data-1)'.
+ * [x]  Minor point regarding 'This can be obtained from performing cell type prediction using reference data, for example, using `SCTransform` from Seurat (see https://satijalab.org/seurat/articles/spatial_vignette.html#integration-with-single-cell-data-1)'.
    
    * This still seems to me not quite accurate. `SCTransform()` is just a normalization method; the actual 'cell type prediction using reference data' is via label transfer with `FindTransferAnchors()` and `TransferData()` (where the reference and target datasets just so happen to have been normalized with `SCTransform()` but other normalizations are possible).
    * If keeping, I'd suggest changing to 'This can be obtained by performing cell type prediction using reference data, for example, using methods available in `r BiocStyle::CRANpkg('Seurat')` (see https://satijalab.org/seurat/articles/spatial_vignette.html#integration-with-single-cell-data-1)'.
-
+Response: Thank you for spotting this! We have now replaced the sentence with your suggestion. 
