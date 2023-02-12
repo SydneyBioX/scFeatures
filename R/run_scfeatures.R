@@ -597,7 +597,7 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' @examples
 #' 
 #' data("example_scrnaseq" , package = "scFeatures")
-#' data <- example_scrnaseq[1:30, 1:20]
+#' data <- example_scrnaseq[1:20, 1:20]
 #' 
 #'  feature_pathway_prop <- run_pathway_prop(
 #'     data,
