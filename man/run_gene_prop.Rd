@@ -37,9 +37,9 @@ and spatial transcriptomics.
 }
 \examples{
 
-data <- readRDS(
-    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)[1:50, 1:20]
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq[1:50, 1:20]
+
 feature_gene_prop <- run_gene_prop(data, type = "scrna", num_top_gene = 1500, ncores = 1)
 
 }

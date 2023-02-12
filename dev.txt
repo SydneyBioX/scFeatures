@@ -57,12 +57,14 @@
  In revising the vignette(s), each of these case studies would greatly benefit from more exposition and explanation because this is lacking in their current form (e.g. the survival analysis is 1 sentence with no explanation of the data, model, or outputs).
  
  ## Required
- * [ ]  Most of the code in the vignettes is **still** unevaluated and so is untested by `R CMD check`. Bioconductor expects that vignettes contain non-trivial evaluated code chunks and static vignettes are generally not acceptable.
+ * [x]  Most of the code in the vignettes is **still** unevaluated and so is untested by `R CMD check`. Bioconductor expects that vignettes contain non-trivial evaluated code chunks and static vignettes are generally not acceptable.
+Response: We have now created a new vignette, where all the code are evaluated. 
+
  * [x]  Please give the vignettes informative titles and filenames; see https://contributions.bioconductor.org/docs.html#vignettes
    
    * Compare the titles of the **scFeatures** vignettes to those from some other packages - it should be a short 1 sentence summary of the vignette (like the title of a paper).
      ![Screen Shot 2023-01-27 at 1 32 10 pm](https://user-images.githubusercontent.com/1049741/215001876-66dc8c03-db23-442d-93c2-5f928f393fee.png)
-Response: We have now updated the vignette names to make them more informative.  
+Response: The newest vignette now has informative name. 
 
  * [x]  `inst/extdata` is usually used for 'raw' data, so these data properly belong under `data/` rather than `inst/extdata/`; see https://contributions.bioconductor.org/data.html.
    

@@ -20,9 +20,9 @@ genes are typically not  interesting to look at.
 }
 \examples{
 
-data <- readRDS(
-  system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)[,1:20]
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq[, 1:20]
+
 data <- remove_mito_ribo(data)
 
 }

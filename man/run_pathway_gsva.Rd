@@ -51,9 +51,8 @@ in a list format.
 }
 \examples{
 
- data <- readRDS(
-    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
- )[,1:20]
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq[, 1:20]
 
  feature_pathway_gsva <- run_pathway_gsva(
     data,

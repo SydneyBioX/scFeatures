@@ -24,9 +24,9 @@ The function supports scRNA-seq and spatial proteomics.
 The function returns a dataframe with samples as rows and cell types as columns.
 }
 \examples{
-data <- readRDS(
-    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-)[1:50, 1:20]
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq[1:50, 1:20]
+
 feature_proportion_logit <- run_proportion_logit(
     data,
     type = "scrna", ncores = 1

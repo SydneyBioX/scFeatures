@@ -17,9 +17,9 @@
 #' @return a dataframe of samples x features
 #'
 #' @examples
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' feature_proportion_raw <- run_proportion_raw(
 #'     data,
 #'     type = "scrna", ncores = 1
@@ -74,9 +74,9 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #' @return a dataframe of samples x features
 #'
 #' @examples
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' feature_proportion_logit <- run_proportion_logit(
 #'     data,
 #'     type = "scrna", ncores = 1
@@ -132,9 +132,9 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' feature_proportion_ratio <- run_proportion_ratio(
 #'     data,
 #'     type = "scrna", ncores = 1
@@ -191,9 +191,8 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #'
 #' @examples
 #'
-#'   data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'   )[,1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[, 1:20]
 #'
 #'   feature_gene_mean_celltype <- run_gene_mean_celltype(
 #'     data,
@@ -256,9 +255,8 @@ run_gene_mean_celltype <- function(data,
 #'
 #' @examples
 #'
-#'  data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )[,1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[, 1:20]
 #'
 #'  feature_gene_prop_celltype <- run_gene_prop_celltype(
 #'     data,
@@ -326,10 +324,8 @@ run_gene_prop_celltype <- function(data,
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata",
-#'    "example_scrnaseq.rds",
-#'     package = "scFeatures"
-#'  ))[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
 #' 
 #' 
 #'  feature_gene_cor_celltype <- run_gene_cor_celltype(
@@ -405,9 +401,8 @@ run_gene_cor_celltype <- function(data,
 #'
 #' @examples
 #' 
-#'  data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )[,1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[, 1:20]
 #' 
 #'  feature_pathway_gsva <- run_pathway_gsva(
 #'     data,
@@ -497,9 +492,9 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #'
 #' @examples
 #' 
-#'  data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #'  feature_pathway_mean <- run_pathway_mean(
 #'     data,
 #'     geneset = NULL, species = "Homo sapiens",
@@ -578,9 +573,9 @@ run_pathway_mean <- function(data, geneset = NULL,
 #'
 #' @examples
 #' 
-#'  data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )[1:30, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:30, 1:20]
+#' 
 #'  feature_pathway_prop <- run_pathway_prop(
 #'     data,
 #'     geneset = NULL, species = "Homo sapiens",
@@ -656,9 +651,9 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' 
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' feature_CCI <- run_CCI(data, type = "scrna" ,  ncores = 1 )
 #' 
 #' @import dplyr
@@ -715,9 +710,9 @@ run_CCI <- function( data, type = "scrna" , ncores = 1  ){
 #'
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq
+#' 
 #' feature_gene_mean <- run_gene_mean(
 #'     data,
 #'     type = "scrna", num_top_gene = 150, ncores = 1
@@ -776,9 +771,9 @@ run_gene_mean <- function(data,
 #'
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' feature_gene_prop <- run_gene_prop(data, type = "scrna", num_top_gene = 1500, ncores = 1)
 #'
 #' @importFrom proxyC simil
@@ -830,9 +825,9 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 #'
 #' @examples
 #'
-#'  data <- readRDS(
-#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #'  feature_gene_cor <- run_gene_cor(
 #'    data, type = "scrna", num_top_gene = 5, ncores = 1
 #'  )
@@ -878,9 +873,9 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #'
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq
+#' 
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' data <- makeSeurat(data, spatialCoords = list(x,y))
@@ -939,9 +934,9 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #' @examples
 #'
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' data <- makeSeurat(data, spatialCoords = list(x,y))
@@ -1001,9 +996,9 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' data <- makeSeurat(data, spatialCoords = list(x,y))
