@@ -184,10 +184,10 @@ Alternatively, users can provide their own gene of interest to the `features` ar
   * `Gene correlation celltype`: the features are in the form of gene 1 vs gene 2 cell type a , gene 1 vs gene 3 cell type b ... etc, with the numbers representing the correlation of the two given genes in the given cell type.   
 
 
-Note that mitochondria and ribosomal genes may not be as interesting to look at. Therefore, users can choose to remove these genes using the function `remove_mito`. This step is optional.  
+Note that mitochondria and ribosomal genes may not be as interesting to look at. Therefore, users can choose to remove these genes using the function `remove_mito_ribo`. This step is optional.  
 
 ```{r, include=TRUE}
-data_remove_mito <- remove_mito(data)
+data_remove_mito <- remove_mito_ribo(data)
 
 feature_gene_mean_celltype <- run_gene_mean_celltype(data_remove_mito, ncores = 2)
 
@@ -552,7 +552,7 @@ feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_t", ncore
 
 
 ```{r, eval=FALSE, include=TRUE }
-data_remove_mito <- remove_mito(data)
+data_remove_mito <- remove_mito_ribo(data)
 
 feature_gene_mean_celltype <- run_gene_mean_celltype(
     data_remove_mito,

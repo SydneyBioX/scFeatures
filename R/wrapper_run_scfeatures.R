@@ -83,7 +83,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
             }
 
 
-            data_remove_mito <- remove_mito(data)
+            data_remove_mito <- remove_mito_ribo(data)
 
             if (thisfeature == "gene_mean_celltype") {
                 message("generating gene mean celltype features")

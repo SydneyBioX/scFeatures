@@ -76,8 +76,8 @@ feature_proportion_ratio <- run_proportion_ratio(data)
 #---------------------------------------------------------------------------
 # cell type specific gene expressions
 #---------------------------------------------------------------------------
-# optional step, run if mitochondria amd ribosomal genes are not of interest
-data_remove_mito <- remove_mito(data)
+# optional step, run if mitochondria and ribosomal genes are not of interest
+data_remove_mito <- remove_mito_ribo(data)
 
 # by default, use the top variable genes
 # users can change the number of top variable genes by changing `num_top_gene`
@@ -264,7 +264,7 @@ feature_proportion_ratio <- run_proportion_ratio(data, type = "spatial_t")
 #---------------------------------------------------------------------------
 # cell type specific gene expressions
 #---------------------------------------------------------------------------
-data_remove_mito <- remove_mito(data)
+data_remove_mito <- remove_mito_ribo(data)
 feature_gene_mean_celltype <- run_gene_mean_celltype(
   data_remove_mito, type = "spatial_t", genes = rownames(data_remove_mito)[1:10] #to speed up example
 )
