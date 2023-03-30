@@ -15,9 +15,13 @@ run_L_function(data, type = "spatial_p", ncores = 1)
 }
 \value{
 a dataframe of samples x features
+The features are in the form of protein 1 vs protein 2, protein 1 vs protein 3 ...
+etc, with the numbers representing the L values.
 }
 \description{
 This function calculates L-statistics to measure spatial autocorrelation.
+L value greater than zero indicates spatial attraction of the pair of proteins
+whereas L value less than zero indicates spatial repulsion.
 The function supports  spatial proteomics and spatial transcriptomics.
 }
 \examples{

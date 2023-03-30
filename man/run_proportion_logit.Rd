@@ -15,6 +15,8 @@ run_proportion_logit(data, type = "scrna", ncores = 1)
 }
 \value{
 a dataframe of samples x features
+The features are in the form of celltype a, celltype b, with the number
+representing proportions.
 }
 \description{
 This function calculates the proportions of cells belonging to each cell type,

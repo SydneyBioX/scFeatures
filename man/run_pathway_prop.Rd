@@ -30,6 +30,9 @@ Default is "Homo sapiens".}
 }
 \value{
 a dataframe of samples x features
+The features are in the form of pathway 1 celltype a, pathway 2 celltype b ...
+etc, with the number representing the proportion of expression of a given pathway
+in cells from a given celltype.
 }
 \description{
 This function calculates pathway scores for a given input dataset and gene set
@@ -41,7 +44,7 @@ Alternatively, users can provide their own gene sets of interest in a list forma
 \examples{
 
 data("example_scrnaseq" , package = "scFeatures")
-data <- example_scrnaseq[1:30, 1:20]
+data <- example_scrnaseq[1:20, 1:20]
 
  feature_pathway_prop <- run_pathway_prop(
     data,

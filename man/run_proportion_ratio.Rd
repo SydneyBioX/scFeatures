@@ -14,7 +14,9 @@ run_proportion_ratio(data, type = "scrna", ncores = 1)
 \item{ncores}{Number of cores for parallel processing.}
 }
 \value{
-a dataframe of samples x features
+a dataframe of samples x features.
+The features are in the form of celltype a vs celltype b, celltype a vs celltype c,
+with the number representing the ratio between the two cell types.
 }
 \description{
 This function calculates pairwise cell type proportion ratio for each sample.

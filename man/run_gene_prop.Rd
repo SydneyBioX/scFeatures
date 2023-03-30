@@ -28,6 +28,8 @@ Defaults to 1500.}
 }
 \value{
 a dataframe of samples x features
+The features are in the form of gene 1 vs gene 2, gene 1 vs gene 3 ... etc,
+with the numbers representing correlation of gene expressions.
 }
 \description{
 This function computes the proportion of gene expression across samples. The user

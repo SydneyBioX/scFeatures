@@ -15,6 +15,8 @@ run_CCI(data, type = "scrna", ncores = 1)
 }
 \value{
 a matrix of samples x features
+The features are in the form of ligand 1 receptor 2 celltype a, ligand 1 receptor 2 celltype b ...
+etc, with the numbers representing cell-cell interaction probability.
 }
 \description{
 This function calculates the ligand receptor interaction score using SingleCellSignalR.

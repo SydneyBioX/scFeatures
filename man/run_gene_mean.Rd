@@ -28,6 +28,8 @@ Defaults to 1500.}
 }
 \value{
 a dataframe of samples x features
+The features are in the form of gene 1, gene 2 ... etc, with the numbers representing
+averaged gene expression across all cells.
 }
 \description{
 This function computes the mean expression of genes across samples. The user
