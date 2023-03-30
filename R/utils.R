@@ -218,9 +218,8 @@ bulk_sample <- function(data, ncores = 1) {
 #'
 #' @examples
 #'
-#' data <- readRDS(
-#' system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq
 #' data$celltype <- NULL
 #'
 #' data <- get_num_cell_per_spot(data)
@@ -346,10 +345,8 @@ L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
 #' @importFrom MatrixGenerics colSums
 #'
 #' @examples
-#' data <- readRDS(system.file(
-#'     "extdata", "example_scrnaseq.rds",
-#'     package = "scFeatures"
-#' ))
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq
 #' data <- process_data(data, normalise = FALSE)
 #'
 #' @export
@@ -411,9 +408,7 @@ process_data <- function(data, normalise = TRUE) {
 #' 
 #' @examples
 #' output_folder <- tempdir()
-#' scfeatures_result <- readRDS(
-#'    system.file("extdata", "scfeatures_result.rds", package = "scFeatures")
-#' )
+#' data("scfeatures_result" , package = "scFeatures")
 #' run_association_study_report(scfeatures_result, output_folder )
 #' 
 #' @import rmarkdown

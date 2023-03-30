@@ -7,20 +7,20 @@
 #'
 #' @param data A Seurat object containing expression data
 #'
-#' @return The Seurat object with the mito and rib genes and other highly
+#' @return The Seurat object with the mitochrondrial and ribosomal genes and other highly
 #' correlated genes removed
 #'
 #' @importFrom proxyC simil
 #'
 #' @examples
 #'
-#' data <- readRDS(
-#'   system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[,1:20]
-#' data <- remove_mito(data)
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[, 1:20]
+#' 
+#' data <- remove_mito_ribo(data)
 #'
 #' @export
-remove_mito <- function(data) {
+remove_mito_ribo <- function(data) {
   if (ncol(data) > 20000) {
     temp <- data[, sample(1:ncol(data), 20000)]
   } else {

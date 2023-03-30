@@ -14,12 +14,14 @@
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a dataframe of samples x features
+#' @return a dataframe of samples x features. 
+#' The features are in the form of celltype a, celltype b, with the number 
+#' representing proportions.
 #'
 #' @examples
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' feature_proportion_raw <- run_proportion_raw(
 #'     data,
 #'     type = "scrna", ncores = 1
@@ -72,11 +74,13 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #' @param ncores Number of cores for parallel processing.
 #'
 #' @return a dataframe of samples x features
-#'
+#' The features are in the form of celltype a, celltype b, with the number 
+#' representing proportions.
+#' 
 #' @examples
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' feature_proportion_logit <- run_proportion_logit(
 #'     data,
 #'     type = "scrna", ncores = 1
@@ -128,13 +132,15 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a dataframe of samples x features
+#' @return a dataframe of samples x features.
+#' The features are in the form of celltype a vs celltype b, celltype a vs celltype c, 
+#' with the number representing the ratio between the two cell types.  
 #'
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' feature_proportion_ratio <- run_proportion_ratio(
 #'     data,
 #'     type = "scrna", ncores = 1
@@ -187,13 +193,15 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #' Defaults to 100.
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a dataframe of samples x features
+#' @return a dataframe of samples x features.
+#' The features are in the form of gene 1 celltype a, gene 2 celltype b ... etc,  
+#' with the number representing average gene expression of the given gene across 
+#' the cells of the the given celltype. 
 #'
 #' @examples
 #'
-#'   data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'   )[,1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[, 1:20]
 #'
 #'   feature_gene_mean_celltype <- run_gene_mean_celltype(
 #'     data,
@@ -252,13 +260,15 @@ run_gene_mean_celltype <- function(data,
 #' Defaults to 100.
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a dataframe of samples x features
+#' @return a dataframe of samples x features.
+#' The features are in the form of gene 1 celltype a, gene 2 celltype b ... etc, 
+#' with the number representing proportion of gene expression of the given gene across 
+#' the cells of the the given celltype. 
 #'
 #' @examples
 #'
-#'  data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )[,1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[, 1:20]
 #'
 #'  feature_gene_prop_celltype <- run_gene_prop_celltype(
 #'     data,
@@ -322,15 +332,15 @@ run_gene_prop_celltype <- function(data,
 #' Defaults to 5.
 #' @param ncores Number of cores for parallel processing.
 #'
-#' @return a dataframe of samples x features
+#' @return a dataframe of samples x features. 
+#' The features are in the form of gene 1 vs gene 2 cell type a , 
+#' gene 1 vs gene 3 cell type b ... etc, with the numbers representing the 
+#' correlation of the two given genes in the given cell type.   
 #'
 #' @examples
 #'
-#' data <- readRDS(system.file("extdata",
-#'    "example_scrnaseq.rds",
-#'     package = "scFeatures"
-#'  ))[1:50, 1:20]
-#' 
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
 #' 
 #'  feature_gene_cor_celltype <- run_gene_cor_celltype(
 #'    data,
@@ -402,12 +412,14 @@ run_gene_cor_celltype <- function(data,
 #' @param ncores Number of cores for parallel processing.
 #'
 #' @return a dataframe of samples x features
-#'
+#' The features are in the form of pathway 1 celltype a, pathway 2 celltype b ... 
+#' etc, with the number representing the gene set enrichment score of a given 
+#' pathway in cells from a given celltype. 
+#' 
 #' @examples
 #' 
-#'  data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )[,1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[, 1:20]
 #' 
 #'  feature_pathway_gsva <- run_pathway_gsva(
 #'     data,
@@ -494,12 +506,15 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #' @param ncores Number of cores for parallel processing.
 #'
 #' @return a dataframe of samples x features
-#'
+#' The features are in the form of pathway 1 celltype a, pathway 2 celltype b ... 
+#' etc, with the number representing the averaged expression of a given pathway in 
+#' cells from a given celltype.  
+#' 
 #' @examples
 #' 
-#'  data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #'  feature_pathway_mean <- run_pathway_mean(
 #'     data,
 #'     geneset = NULL, species = "Homo sapiens",
@@ -575,12 +590,15 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' @param ncores Number of cores for parallel processing.
 #'
 #' @return a dataframe of samples x features
-#'
+#' The features are in the form of pathway 1 celltype a, pathway 2 celltype b ... 
+#' etc, with the number representing the proportion of expression of a given pathway 
+#' in cells from a given celltype.  
+#' 
 #' @examples
 #' 
-#'  data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )[1:30, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:20, 1:20]
+#' 
 #'  feature_pathway_prop <- run_pathway_prop(
 #'     data,
 #'     geneset = NULL, species = "Homo sapiens",
@@ -653,12 +671,14 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' @param ncores number of cores 
 #' 
 #' @return a matrix of samples x features 
+#' The features are in the form of ligand 1 receptor 2 celltype a, ligand 1 receptor 2 celltype b ... 
+#' etc, with the numbers representing cell-cell interaction probability.  
 #' 
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' feature_CCI <- run_CCI(data, type = "scrna" ,  ncores = 1 )
 #' 
 #' @import dplyr
@@ -712,12 +732,14 @@ run_CCI <- function( data, type = "scrna" , ncores = 1  ){
 #' @param ncores Number of cores for parallel processing.
 #'
 #' @return a dataframe of samples x features
-#'
+#' The features are in the form of gene 1, gene 2 ... etc, with the numbers representing 
+#' averaged gene expression across all cells.  
+#' 
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq
+#' 
 #' feature_gene_mean <- run_gene_mean(
 #'     data,
 #'     type = "scrna", num_top_gene = 150, ncores = 1
@@ -773,12 +795,14 @@ run_gene_mean <- function(data,
 #' @param ncores Number of cores for parallel processing.
 #' 
 #' @return a dataframe of samples x features
-#'
+#' The features are in the form of gene 1 vs gene 2, gene 1 vs gene 3 ... etc, 
+#' with the numbers representing correlation of gene expressions.   
+#' 
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' feature_gene_prop <- run_gene_prop(data, type = "scrna", num_top_gene = 1500, ncores = 1)
 #'
 #' @importFrom proxyC simil
@@ -827,12 +851,14 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 #' @param ncores Number of cores for parallel processing.
 #'
 #' @return a dataframe of samples x features
-#'
+#' The features are in the form of gene 1, gene 2 ... etc, with the numbers representing 
+#' the proportion that the gene is expressed across all cells.  
+#' 
 #' @examples
 #'
-#'  data <- readRDS(
-#'    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#'  )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #'  feature_gene_cor <- run_gene_cor(
 #'    data, type = "scrna", num_top_gene = 5, ncores = 1
 #'  )
@@ -868,6 +894,8 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #' 
 #' @description
 #' This function calculates L-statistics to measure spatial autocorrelation.
+#' L value greater than zero indicates spatial attraction of the pair of proteins 
+#' whereas L value less than zero indicates spatial repulsion. 
 #' The function supports  spatial proteomics and spatial transcriptomics.
 #' 
 #' @param data A Seurat object containing `celltype` and `sample` label
@@ -875,12 +903,14 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #' @param ncores Number of cores for parallel processing.
 #'
 #' @return a dataframe of samples x features
-#'
+#' The features are in the form of protein 1 vs protein 2, protein 1 vs protein 3 ... 
+#' etc, with the numbers representing the L values.  
+#' 
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq
+#' 
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' data <- makeSeurat(data, spatialCoords = list(x,y))
@@ -927,7 +957,10 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #'
 #' @description 
 #' This function calculates the pairwise distance between cell types
-#' for a sample by using the coordinates and cell types of the cells. 
+#' for a sample by using the coordinates and cell types of the cells.  
+#' We find the nearest neighbours of each cell and the cell types of these neighbours. 
+#' These are considered as spatial interaction pairs. The cell type composition of the 
+#' spatial interaction pairs are used as features.  
 #' The function supports spatial proteomics and spatial transcriptomics.
 #' 
 #' @param data A Seurat object containing `celltype` and `sample` label
@@ -935,13 +968,15 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #' @param ncores Number of cores for parallel processing.
 #'
 #' @return a dataframe of samples x features
-#'
+#' The features are in the form of protein 1 vs protein 2, protein 1 vs protein 3 ... 
+#' etc, with the numbers representing the proportion of each interaction pairs in a 
+#' give sample. 
+#' 
 #' @examples
 #'
-#'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' data <- makeSeurat(data, spatialCoords = list(x,y))
@@ -990,20 +1025,25 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #' @description 
 #' This function calculates Moran's I to measure spatial autocorrelation,
 #' which an indicattion of how strongly the feature(ie, genes/proteins) 
-#' expression values in a sample cluster or disperse. The function supports 
-#' spatial proteomics and spatial transcriptomics.
+#' expression values in a sample cluster or disperse. A value closer to 1 
+#' indicates clustering of similar values and a value closer to -1 indicates 
+#' clustering of dissimilar values. A value of 0 indicates no particular clustering 
+#' structure, ie, the values are spatially distributed randomly.   
+#' The function supports spatial proteomics and spatial transcriptomics.
 #'  
 #' @param data A Seurat object containing `celltype` and `sample` label
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
 #' @return a dataframe of samples x features
-#'
+#' The features are in the form of protein 1, protein 2 ... etc, with the numbers 
+#' representing Moran's value. 
+#' 
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
+#' 
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' data <- makeSeurat(data, spatialCoords = list(x,y))
@@ -1068,12 +1108,13 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #' not provided. Defaults to 1500.
 #' 
 #' @return a dataframe of samples x features
-#'
+#' The features are in the form of protein 1, protein 2 ... etc, with the numbers 
+#' representing Pearson's correlation.
+#' 
 #' @examples
 #'
-#' data <- readRDS(
-#'     system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-#' )[1:50, 1:20]
+#' data("example_scrnaseq" , package = "scFeatures")
+#' data <- example_scrnaseq[1:50, 1:20]
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' data <- makeSeurat(data, spatialCoords = list(x,y))

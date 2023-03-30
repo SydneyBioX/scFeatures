@@ -40,9 +40,9 @@ Alternatively, users can provide their own gene sets of interest in a list forma
 }
 \examples{
 
- data <- readRDS(
-    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
- )[1:50, 1:20]
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq[1:50, 1:20]
+
  feature_pathway_mean <- run_pathway_mean(
     data,
     geneset = NULL, species = "Homo sapiens",

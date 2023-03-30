@@ -65,10 +65,8 @@ containing single cell RNA-sequencing data. By default, all feature types will b
 and returned in a single list containing multiple data frames.
 }
 \examples{
-
-\dontrun{
- data <- readRDS(system.file("extdata", "example_scrnaseq.rds", package = "scFeatures"))
- scfeatures_result <- scFeatures(data, type = "scrna")
-}
+data("example_scrnaseq" , package = "scFeatures") 
+data <- example_scrnaseq
+scfeatures_result <- scFeatures(data, type = "scrna", feature_types = "proportion_raw")
 
 }

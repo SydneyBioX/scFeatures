@@ -24,10 +24,8 @@ If the \code{normalise} argument is set to \code{TRUE}, the function will normal
 the data using the \code{Seurat::NormalizeData} function.
 }
 \examples{
-data <- readRDS(system.file(
-    "extdata", "example_scrnaseq.rds",
-    package = "scFeatures"
-))
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq
 data <- process_data(data, normalise = FALSE)
 
 }

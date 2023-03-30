@@ -41,9 +41,8 @@ the num_top_gene parameter (defaults to 100).
 }
 \examples{
 
-  data <- readRDS(
-    system.file("extdata", "example_scrnaseq.rds", package = "scFeatures")
-  )[,1:20]
+data("example_scrnaseq" , package = "scFeatures")
+data <- example_scrnaseq[, 1:20]
 
   feature_gene_mean_celltype <- run_gene_mean_celltype(
     data,
