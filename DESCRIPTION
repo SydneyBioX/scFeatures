@@ -48,7 +48,8 @@ Imports:
     stats,
     BiocGenerics,
     cli,
-    SingleCellSignalR
+    SingleCellSignalR,
+    MatrixGenerics
 Suggests: 
     knitr,
     S4Vectors,

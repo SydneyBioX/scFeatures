@@ -327,6 +327,7 @@ format_pathway <- function(data, topMatrixGSVA, ncores) {
 #' 
 #' @importFrom glue glue
 #' @importFrom stats lm
+#' @importFrom MatrixGenerics colSums
 #' 
 #' @noRd
 helper_pathway_mean_st <- function(data, geneset, ncores = 1) {
@@ -401,7 +402,7 @@ helper_pathway_mean_st <- function(data, geneset, ncores = 1) {
         for (i in unique(celltype)) {
             thiscelltype <- which(ct == i)
             thiscelltype <- temp[thiscelltype, ]
-            this_val <- colSums(thiscelltype)
+            this_val <- MatrixGenerics::colSums(thiscelltype)
             final <- rbind(final, this_val)
         }
 
