@@ -1,7 +1,7 @@
 Package: scFeatures
 Title: scFeatures: Multi-view representations of single-cell and spatial data
        for disease outcome prediction
-Version: 0.99.26
+Version: 0.99.27
 Authors@R: 
     c(
     person(given = "Yue",family = "Cao", email = "yue.cao@sydney.edu.au",  role=c("aut", "cre")),
