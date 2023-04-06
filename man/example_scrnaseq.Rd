@@ -20,10 +20,12 @@ Some of the key metadata columns are:
 \url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE120575}
 }
 \usage{
-example_scrnaseq
+data("example_scrnaseq")
 }
 \description{
-This is a subsampled version of the melanoma patients dataset as used in our manuscript.
-The original dataset is available at \url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE120575}.
+This is a subsampled version of the melanoma patients dataset as used in our
+manuscript.
+The original dataset is available at:
+\url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE120575}.
 }
 \keyword{datasets}
