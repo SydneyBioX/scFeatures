@@ -46,7 +46,7 @@ Imports:
     rmarkdown,
     methods,
     stats,
-    BiocGenerics,
+    DT,
     cli,
     SingleCellSignalR,
     MatrixGenerics
