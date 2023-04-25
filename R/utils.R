@@ -214,7 +214,7 @@ bulk_sample <- function(data, ncores = 1) {
 #' @return the object with the relative number of cells/spot stored
 #' in the `number_cells` attribute. 
 #' 
-#' @importFrom BiocGenerics colSums
+#' @importFrom MatrixGenerics colSums2
 #'
 #' @examples
 #'
@@ -227,7 +227,7 @@ bulk_sample <- function(data, ncores = 1) {
 #'
 #' @export
 get_num_cell_per_spot <- function(data) {
-    readcount <- log2(BiocGenerics::colSums(data))
+    readcount <- log2(BiocGenerics::colSums2(data))
 
     linMap <- function(x, from, to) {
         (x - min(x)) / max(x - min(x)) * (to - from) + from
@@ -359,7 +359,7 @@ process_data <- function(data, normalise = TRUE) {
         # remove "small" patient that has less than 10 cells across all cell types
         celltype_per_patient <- table(data$celltype, data$sample)
         a <- celltype_per_patient <= 10
-        a <- colSums(a)
+        a <- colSums2(a)
         small_patient <- names(which(a == length(unique(data$celltype))))
 
         if (length(small_patient) > 0) {
