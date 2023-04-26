@@ -82,7 +82,7 @@ find_de_CCI <- function(data){
     
     tT <- tT[ tT$P.Value < 0.1, ]
     
-    celltype <- unlist(lapply ( strsplit( rownames(tT), split = "..", fixed=TRUE ), `[`, 1))
+    celltype <- unlist(lapply ( strsplit( rownames(tT), split = "--", fixed=TRUE ), `[`, 1))
     
     celltype <-  sort(table(celltype), decreasing = TRUE) 
     celltype <- celltype[1:min(length(celltype), 3)]
@@ -99,7 +99,7 @@ find_de_CCI <- function(data){
 
 find_de_pathway_specific <- function(data){
   
-    celltype <- unlist( lapply(strsplit(colnames(data) ,split = "..", fixed=TRUE ) , `[`, 2) )
+    celltype <- unlist( lapply(strsplit(colnames(data) ,split = "--", fixed=TRUE ) , `[`, 2) )
     df <- NULL
     for (thiscelltype in unique(celltype)){
       
@@ -118,12 +118,13 @@ find_de_pathway_specific <- function(data){
 
 find_de_celltype_specific <- function(data){
   
-    celltype <- unlist( lapply(strsplit(colnames(data) , split = "..", fixed=TRUE ) , `[`, 1) )
+    celltype <- unlist( lapply(strsplit(colnames(data) , split = "--", fixed=TRUE ) , `[`, 1) )
+    celltype <- gsub("[0-9]", "", celltype)
     df <- NULL
     for (thiscelltype in unique(celltype)){
       
       index <- which(celltype == thiscelltype)
-      thisdata <- data[, index ]
+      thisdata <- data[, index, drop=FALSE ]
       thisresult <- find_de_not_celltype_specific( thisdata )
      
       df <- rbind(df, data.frame( thiscelltype  , thisresult[[1]][1],  thisresult[[1]][1] / ncol(thisdata) ) )
@@ -728,12 +729,12 @@ if ("gene_mean_celltype" %in% names(scfeatures_result)){
   data <- t(data)
       
   
-  celltype <- rownames(data)
-  celltype <- unlist( lapply( strsplit(celltype,split = "..", fixed=TRUE  ), `[`, 1) )
-  
-  topcelltype <- strsplit( de_gene_mean_celltype[, 3] , ", ")[[1]][1]
-  
-  data <- data[ which(celltype == topcelltype ) , ]
+  # celltype <- rownames(data)
+  # celltype <- unlist( lapply( strsplit(celltype,split = "--", fixed=TRUE  ), `[`, 1) )
+  # 
+  # topcelltype <- strsplit( de_gene_mean_celltype[, 3] , ", ")[[1]][1]
+  # 
+  # data <- data[ which(celltype == topcelltype ) , ]
   
   result <- plot_heatmap_bulk(data , num_features = 20 )
   
@@ -799,7 +800,7 @@ if ("gene_mean_celltype" %in% names(scfeatures_result)){
 
 if ("gene_mean_celltype" %in% names(scfeatures_result)){
   
-  rownames( gene_output  ) <- unlist( lapply ( strsplit( rownames( gene_output  ) , split = "..", fixed=TRUE ), `[` , 2) )
+  rownames( gene_output  ) <- make.unique( unlist( lapply ( strsplit( rownames( gene_output  ) , split = "--", fixed=TRUE ), `[` , 2) ) )
   result <- plot_go_bulk(gene_output )
   
   print(result$dotplot)
@@ -894,7 +895,7 @@ plot_CCI <- function(data ){
     }
     
     condition <- unlist( lapply( strsplit( colnames(data), "_cond_"), `[`, 2) ) 
-    celltype <- unlist( lapply( strsplit( rownames(data), split = "..", fixed=TRUE ), `[`, 1) )
+    celltype <- unlist( lapply( strsplit( rownames(data), split = "--", fixed=TRUE ), `[`, 1) )
     
     thiscelltype <-  unique(celltype)[1]
     
@@ -907,8 +908,8 @@ plot_CCI <- function(data ){
        cond2_count <-data_thiscelltype[ , which( condition == unique( condition)[2])]
        cond2_count <- sum( cond2_count !=0 )/ncol(cond2_count)
        
-       temp <- data.frame(ligand  = strsplit( thiscelltype, split = "....", fixed=TRUE )[[1]][1],
-                          receptor = strsplit( thiscelltype, split = "....", fixed=TRUE )[[1]][2],
+       temp <- data.frame(ligand  = strsplit( thiscelltype, split = "->", fixed=TRUE )[[1]][1],
+                          receptor = strsplit( thiscelltype, split = "->", fixed=TRUE )[[1]][2],
                           diff = cond1_count - cond2_count )
        df <- rbind(df, temp)
     }
@@ -995,7 +996,7 @@ if ("CCI" %in% names(scfeatures_result)){
    data <- scfeatures_result$CCI
    data <- t(data)
    
-  data <- data[, -c( which( colnames(data) == "NA"))]
+  data <- data[, !colnames(data) == "NA"]
    
   result <- plot_heatmap_bulk(data,  num_feature = 20 )
       
