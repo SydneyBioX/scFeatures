@@ -739,6 +739,8 @@ if ("gene_mean_celltype" %in% names(scfeatures_result)){
   result <- plot_heatmap_bulk(data , num_features = 20 )
   
   gene_output <- result$gene_output
+  
+  result$p
 }
 
 ```
@@ -850,6 +852,7 @@ if ("pathway_gsva" %in% names(scfeatures_result)){
   data <- t(data)
       
   gene_output <- plot_heatmap_bulk(data )
+  gene_output$p
       
 } 
 ```
@@ -1002,6 +1005,7 @@ if ("CCI" %in% names(scfeatures_result)){
       
   gene_output <- result$gene_output
 
+  result$p
 }
 ```
 
@@ -1087,6 +1091,7 @@ if ("gene_mean_bulk" %in% names(scfeatures_result)){
   
   gene_output <- result$gene_output
 
+  result$p
 }
 
 ```
@@ -1188,6 +1193,7 @@ if ("morans_I" %in% names(scfeatures_result)){
       
   gene_output <- plot_heatmap_bulk(data,    num_features = 20 ) 
 
+  
 }
  
 ```
