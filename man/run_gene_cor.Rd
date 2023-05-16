@@ -28,6 +28,8 @@ Defaults to 5.}
 }
 \value{
 a dataframe of samples x features
+The features are in the form of gene 1, gene 2 ... etc, with the numbers representing
+the proportion that the gene is expressed across all cells.
 }
 \description{
 This function computes the correlation of gene expression across samples. The user

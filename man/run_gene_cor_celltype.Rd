@@ -30,7 +30,10 @@ Defaults to 5.}
 \item{ncores}{Number of cores for parallel processing.}
 }
 \value{
-a dataframe of samples x features
+a dataframe of samples x features.
+The features are in the form of gene 1 vs gene 2 cell type a ,
+gene 1 vs gene 3 cell type b ... etc, with the numbers representing the
+correlation of the two given genes in the given cell type.
 }
 \description{
 This function computes the correlation of expression of a set of genes
@@ -43,7 +46,6 @@ num_top_gene parameter (defaults to 100).
 
 data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq[1:50, 1:20]
-
 
  feature_gene_cor_celltype <- run_gene_cor_celltype(
    data,

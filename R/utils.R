@@ -227,7 +227,7 @@ bulk_sample <- function(data, ncores = 1) {
 #'
 #' @export
 get_num_cell_per_spot <- function(data) {
-    readcount <- log2(BiocGenerics::colSums2(data))
+    readcount <- log2(colSums2(data))
 
     linMap <- function(x, from, to) {
         (x - min(x)) / max(x - min(x)) * (to - from) + from

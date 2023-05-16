@@ -18,6 +18,8 @@ not provided. Defaults to 1500.}
 }
 \value{
 a dataframe of samples x features
+The features are in the form of protein 1, protein 2 ... etc, with the numbers
+representing Pearson's correlation.
 }
 \description{
 This function calculates the nearest neighbour correlation for each feature

@@ -15,14 +15,19 @@ run_celltype_interaction(data, type = "spatial_p", ncores = 1)
 }
 \value{
 a dataframe of samples x features
+The features are in the form of protein 1 vs protein 2, protein 1 vs protein 3 ...
+etc, with the numbers representing the proportion of each interaction pairs in a
+give sample.
 }
 \description{
 This function calculates the pairwise distance between cell types
 for a sample by using the coordinates and cell types of the cells.
+We find the nearest neighbours of each cell and the cell types of these neighbours.
+These are considered as spatial interaction pairs. The cell type composition of the
+spatial interaction pairs are used as features.
 The function supports spatial proteomics and spatial transcriptomics.
 }
 \examples{
-
 
 data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq[1:50, 1:20]

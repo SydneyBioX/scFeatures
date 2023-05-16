@@ -15,12 +15,17 @@ run_Morans_I(data, type = "spatial_p", ncores = 1)
 }
 \value{
 a dataframe of samples x features
+The features are in the form of protein 1, protein 2 ... etc, with the numbers
+representing Moran's value.
 }
 \description{
 This function calculates Moran's I to measure spatial autocorrelation,
 which an indicattion of how strongly the feature(ie, genes/proteins)
-expression values in a sample cluster or disperse. The function supports
-spatial proteomics and spatial transcriptomics.
+expression values in a sample cluster or disperse. A value closer to 1
+indicates clustering of similar values and a value closer to -1 indicates
+clustering of dissimilar values. A value of 0 indicates no particular clustering
+structure, ie, the values are spatially distributed randomly.
+The function supports spatial proteomics and spatial transcriptomics.
 }
 \examples{
 

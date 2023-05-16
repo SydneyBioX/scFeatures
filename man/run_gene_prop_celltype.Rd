@@ -30,7 +30,10 @@ Defaults to 100.}
 \item{ncores}{Number of cores for parallel processing.}
 }
 \value{
-a dataframe of samples x features
+a dataframe of samples x features.
+The features are in the form of gene 1 celltype a, gene 2 celltype b ... etc,
+with the number representing proportion of gene expression of the given gene across
+the cells of the the given celltype.
 }
 \description{
 This function computes the proportion of expression of a set of genes

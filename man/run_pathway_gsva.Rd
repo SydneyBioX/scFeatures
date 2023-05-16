@@ -39,6 +39,9 @@ speed.}
 }
 \value{
 a dataframe of samples x features
+The features are in the form of pathway 1 celltype a, pathway 2 celltype b ...
+etc, with the number representing the gene set enrichment score of a given
+pathway in cells from a given celltype.
 }
 \description{
 This function calculates pathway scores for a given input
