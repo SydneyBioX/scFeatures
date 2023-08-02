@@ -13,7 +13,7 @@ The second dataframe contains the feature type "proportion_logit".
 }
 }
 \usage{
-scfeatures_result
+data("scfeatures_result")
 }
 \description{
 This is an example output of the scFeatures() function for example_scrnaseq.

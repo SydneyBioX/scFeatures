@@ -123,7 +123,7 @@ find_de_celltype_specific <- function(data){
     for (thiscelltype in unique(celltype)){
       
       index <- which(celltype == thiscelltype)
-      thisdata <- data[, index ]
+      thisdata <- data[, index, drop=FALSE ]
       thisresult <- find_de_not_celltype_specific( thisdata )
      
       df <- rbind(df, data.frame( thiscelltype  , thisresult[[1]][1],  thisresult[[1]][1] / ncol(thisdata) ) )
@@ -279,7 +279,7 @@ if ("proportion_ratio" %in% names(scfeatures_result)){
 if ("gene_mean_celltype" %in% names(scfeatures_result)){
   data <- scfeatures_result$gene_mean_celltype
   de_gene_mean_celltype <- find_de_celltype_specific(data)
-  de_gene_mean_celltype    <- data.frame("gene_mean_celltype " ,
+  de_gene_mean_celltype   <- data.frame("gene_mean_celltype" ,
                                  sum( de_gene_mean_celltype$num_sig_features),
                    paste0( unlist( de_gene_mean_celltype$celltype ),   collapse=",  "  ) )
   df <- rbindlist(list(df , de_gene_mean_celltype ), use.names=FALSE )
@@ -290,7 +290,7 @@ if ("gene_mean_celltype" %in% names(scfeatures_result)){
 if ("gene_prop_celltype" %in% names(scfeatures_result)){
   data <- scfeatures_result$gene_prop_celltype
  de_gene_prop_celltype <- find_de_celltype_specific(data)
- de_gene_prop_celltype    <- data.frame("gene_prop_celltype " ,
+ de_gene_prop_celltype    <- data.frame("gene_prop_celltype" ,
                                  sum( de_gene_prop_celltype$num_sig_features),
                    paste0( unlist( de_gene_prop_celltype$celltype ),  collapse=",  "  ) )
  df <- rbindlist(list(df , de_gene_prop_celltype ), use.names=FALSE )
@@ -360,32 +360,32 @@ if ("CCI" %in% names(scfeatures_result)){
 } 
 
 
-if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+if ("gene_mean_bulk" %in% names(scfeatures_result)){
 
-  data <- scfeatures_result$gene_mean_aggregated
-  de_gene_mean_aggregated <-  find_de_not_celltype_specific(data)
-  de_gene_mean_aggregated    <- data.frame("gene_mean_aggregated" ,
-                       de_gene_mean_aggregated[[1]][1] ,
+  data <- scfeatures_result$gene_mean_bulk
+  de_gene_mean_bulk <-  find_de_not_celltype_specific(data)
+  de_gene_mean_bulk    <- data.frame("gene_mean_bulk" ,
+                       de_gene_mean_bulk[[1]][1] ,
                         "not applicable" )
-  df <- rbindlist(list(df , de_gene_mean_aggregated  ), use.names=FALSE )
+  df <- rbindlist(list(df , de_gene_mean_bulk  ), use.names=FALSE )
 } 
 
-if ("gene_cor_aggregated" %in% names(scfeatures_result)){
-  data <- scfeatures_result$gene_cor_aggregated
-  de_gene_cor_aggregated <-  find_de_not_celltype_specific(data)
-  de_gene_cor_aggregated    <- data.frame("gene_cor_aggregated" ,
-                      de_gene_cor_aggregated[[1]][1] ,
+if ("gene_cor_bulk" %in% names(scfeatures_result)){
+  data <- scfeatures_result$gene_cor_bulk
+  de_gene_cor_bulk <-  find_de_not_celltype_specific(data)
+  de_gene_cor_bulk    <- data.frame("gene_cor_bulk" ,
+                      de_gene_cor_bulk[[1]][1] ,
                         "not applicable" )
-  df <- rbindlist(list(df ,de_gene_cor_aggregated), use.names=FALSE )
+  df <- rbindlist(list(df ,de_gene_cor_bulk), use.names=FALSE )
 } 
 
-if ("gene_prop_aggregated" %in% names(scfeatures_result)){
-  data <- scfeatures_result$gene_prop_aggregated
-  de_gene_prop_aggregated <-  find_de_not_celltype_specific(data)
-  de_gene_prop_aggregated    <- data.frame("gene_prop_aggregated" ,
-                      de_gene_prop_aggregated[[1]][1] ,
+if ("gene_prop_bulk" %in% names(scfeatures_result)){
+  data <- scfeatures_result$gene_prop_bulk
+  de_gene_prop_bulk <-  find_de_not_celltype_specific(data)
+  de_gene_prop_bulk    <- data.frame("gene_prop_bulk" ,
+                      de_gene_prop_bulk[[1]][1] ,
                         "not applicable" )
-  df <- rbindlist(list(df , de_gene_prop_aggregated ), use.names=FALSE )
+  df <- rbindlist(list(df , de_gene_prop_bulk ), use.names=FALSE )
 
 } 
 
@@ -738,6 +738,8 @@ if ("gene_mean_celltype" %in% names(scfeatures_result)){
   result <- plot_heatmap_bulk(data , num_features = 20 )
   
   gene_output <- result$gene_output
+  
+  result$p
 }
 
 ```
@@ -849,6 +851,7 @@ if ("pathway_gsva" %in% names(scfeatures_result)){
   data <- t(data)
       
   gene_output <- plot_heatmap_bulk(data )
+  gene_output$p
       
 } 
 ```
@@ -995,12 +998,13 @@ if ("CCI" %in% names(scfeatures_result)){
    data <- scfeatures_result$CCI
    data <- t(data)
    
-  data <- data[, -c( which( colnames(data) == "NA"))]
+  data <- data[, !colnames(data) == "NA"]
    
   result <- plot_heatmap_bulk(data,  num_feature = 20 )
       
   gene_output <- result$gene_output
 
+  result$p
 }
 ```
 
@@ -1077,15 +1081,16 @@ knitr::include_graphics(  system.file("extdata/figure",
 ## Heatmap
 
 ```{r}
-if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+if ("gene_mean_bulk" %in% names(scfeatures_result)){
 
-  data <- as.matrix ( scfeatures_result$gene_mean_aggregated)
+  data <- as.matrix ( scfeatures_result$gene_mean_bulk)
   data <- t(data)
       
   result <- plot_heatmap_bulk(data ,  num_features = 20)
   
   gene_output <- result$gene_output
 
+  result$p
 }
 
 ```
@@ -1094,7 +1099,7 @@ if ("gene_mean_aggregated" %in% names(scfeatures_result)){
 
 ```{r}
 
-if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+if ("gene_mean_bulk" %in% names(scfeatures_result)){
   
   gene_output$gene <- rownames(gene_output)
    
@@ -1112,7 +1117,7 @@ if ("gene_mean_aggregated" %in% names(scfeatures_result)){
 
 ```{r}
 
-if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+if ("gene_mean_bulk" %in% names(scfeatures_result)){
   
   p <-  ggplot( gene_output , aes(logFC,-log10(P.Value) , text = gene) )+
       geom_point(aes(colour=-log10(P.Value)), alpha=1/3, size=1) +
@@ -1127,7 +1132,7 @@ if ("gene_mean_aggregated" %in% names(scfeatures_result)){
 ## PCA plot
 
 ```{r}
-if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+if ("gene_mean_bulk" %in% names(scfeatures_result)){
   plot_pca( t(data)  )  
 }
 ```
@@ -1136,7 +1141,7 @@ if ("gene_mean_aggregated" %in% names(scfeatures_result)){
 
 ```{r}
 
-if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+if ("gene_mean_bulk" %in% names(scfeatures_result)){
   result <- plot_go_bulk( gene_output  ) 
   
   print(result$dotplot)
@@ -1146,7 +1151,7 @@ if ("gene_mean_aggregated" %in% names(scfeatures_result)){
 ## Enrichment map
 
 ```{r}
-if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+if ("gene_mean_bulk" %in% names(scfeatures_result)){
   print(result$emapplot)
 }
 ```
@@ -1154,7 +1159,7 @@ if ("gene_mean_aggregated" %in% names(scfeatures_result)){
 ## Functional grouping
 
 ```{r}
-if ("gene_mean_aggregated" %in% names(scfeatures_result)){
+if ("gene_mean_bulk" %in% names(scfeatures_result)){
   print(result$treeplot)
 }
 ```
@@ -1187,6 +1192,7 @@ if ("morans_I" %in% names(scfeatures_result)){
       
   gene_output <- plot_heatmap_bulk(data,    num_features = 20 ) 
 
+  
 }
  
 ```
