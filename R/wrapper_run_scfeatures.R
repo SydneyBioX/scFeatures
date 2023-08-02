@@ -312,7 +312,6 @@ makeSeurat <- function(data,
             data <- Seurat::as.Seurat(df)
         }
         
-        data@assays$RNA <- data@assays$originalexp
 
         if (!is.null(spotProbability)) {
            data[["predictions"]] <-  predictions
@@ -349,8 +348,6 @@ makeSeurat <- function(data,
         }else{  
             data <- Seurat::as.Seurat(df)
         }
-
-        data@assays$RNA <- data@assays$originalexp
 
         if (!is.null(spotProbability)) {
            data[["predictions"]] <-  predictions
