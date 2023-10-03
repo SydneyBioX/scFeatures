@@ -227,18 +227,22 @@ bulk_sample <- function(data, ncores = 1) {
 #'
 #' @export
 get_num_cell_per_spot <- function(data) {
-    readcount <- log2(colSums2(data))
-
-    linMap <- function(x, from, to) {
-        (x - min(x)) / max(x - min(x)) * (to - from) + from
-    }
-
-    numberofcells <- linMap(readcount, 1, 100)
-
-    data$number_cells <- numberofcells
-
-    return(data)
+ 
+  data_cal <- logcounts(data)
+  
+  readcount <- log2(colSums2(data_cal))
+  
+  linMap <- function(x, from, to) {
+    (x - min(x)) / max(x - min(x)) * (to - from) + from
+  }
+  
+  numberofcells <- linMap(readcount, 1, 100)
+  
+  data$number_cells <- numberofcells
+  
+  return(data)
 }
+
 
 #' Rearrange string
 #' 
