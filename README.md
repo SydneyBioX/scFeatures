@@ -11,7 +11,7 @@ scFeatures is a tool that generates multi-view representations of single-cell an
 5. overall aggregated gene expressions
 6. spatial metrics
 
-![Overview](https://raw.githubusercontent.com/SydneyBioX/scFeatures/devel/inst/sticker.png)
+![Overview](https://github.com/SydneyBioX/scFeatures/blob/master/inst/overview.png?raw=true)
 
 ##  Installation 
 
