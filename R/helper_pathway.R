@@ -401,7 +401,7 @@ helper_pathway_mean_st <- function(data, geneset, ncores = 1) {
         for (i in unique(celltype)) {
             thiscelltype <- which(ct == i)
             thiscelltype <- temp[thiscelltype, ]
-            this_val <- colSums2(thiscelltype)
+            this_val <- colSums(thiscelltype)
             final <- rbind(final, this_val)
         }
 
