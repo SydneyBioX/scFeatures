@@ -845,9 +845,9 @@ knitr::include_graphics(  system.file("extdata/figure",  "pathway_example_figure
 
 ```{r}
 
-if ("pathway_gsva" %in% names(scfeatures_result)){
+if ("pathway_mean" %in% names(scfeatures_result)){
    
-  data <- scfeatures_result$pathway_gsva
+  data <- scfeatures_result$pathway_mean
   data <- t(data)
       
   gene_output <- plot_heatmap_bulk(data )
@@ -860,7 +860,7 @@ if ("pathway_gsva" %in% names(scfeatures_result)){
 ## Boxplot
 
 ```{r}
-if ("pathway_gsva" %in% names(scfeatures_result)){
+if ("pathway_mean" %in% names(scfeatures_result)){
       
   p <- plot_boxplot(t(data) )
   
@@ -874,7 +874,7 @@ if ("pathway_gsva" %in% names(scfeatures_result)){
 
 ```{r}
 
-if ("pathway_gsva" %in% names(scfeatures_result)){
+if ("pathway_mean" %in% names(scfeatures_result)){
    
   p <- plot_pca(t( data) )
   ggplotly(p)
