@@ -99,7 +99,7 @@ find_de_CCI <- function(data){
 
 find_de_pathway_specific <- function(data){
   
-    celltype <- unlist( lapply(strsplit(colnames(data) ,split = "..", fixed=TRUE ) , `[`, 2) )
+    celltype <- unlist( lapply(strsplit(colnames(data) ,split = "-", fixed=TRUE ) , `[`, 2) )
     df <- NULL
     for (thiscelltype in unique(celltype)){
       
@@ -118,7 +118,7 @@ find_de_pathway_specific <- function(data){
 
 find_de_celltype_specific <- function(data){
   
-    celltype <- unlist( lapply(strsplit(colnames(data) , split = "..", fixed=TRUE ) , `[`, 1) )
+    celltype <- unlist( lapply(strsplit(colnames(data) , split = "-", fixed=TRUE ) , `[`, 1) )
     df <- NULL
     for (thiscelltype in unique(celltype)){
       
@@ -729,7 +729,7 @@ if ("gene_mean_celltype" %in% names(scfeatures_result)){
       
   
   celltype <- rownames(data)
-  celltype <- unlist( lapply( strsplit(celltype,split = "..", fixed=TRUE  ), `[`, 1) )
+  celltype <- unlist( lapply( strsplit(celltype,split = "-", fixed=TRUE  ), `[`, 1) )
   
   topcelltype <- strsplit( de_gene_mean_celltype[, 3] , ", ")[[1]][1]
   
@@ -801,7 +801,7 @@ if ("gene_mean_celltype" %in% names(scfeatures_result)){
 
 if ("gene_mean_celltype" %in% names(scfeatures_result)){
   
-  rownames( gene_output  ) <- unlist( lapply ( strsplit( rownames( gene_output  ) , split = "..", fixed=TRUE ), `[` , 2) )
+  rownames( gene_output  ) <- make.unique(unlist( lapply ( strsplit( rownames( gene_output  ) , split = "-", fixed=TRUE ), `[` , 2) ))
   result <- plot_go_bulk(gene_output )
   
   print(result$dotplot)
@@ -1184,6 +1184,8 @@ knitr::include_graphics(  system.file("extdata/figure",
   
 ## Heatmap
 
+### Moran's I 
+
 ```{r}
 
 if ("morans_I" %in% names(scfeatures_result)){ 
@@ -1196,6 +1198,7 @@ if ("morans_I" %in% names(scfeatures_result)){
 }
  
 ```
+
 
 ## Boxplot
 
