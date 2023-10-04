@@ -247,114 +247,74 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 #' 
 #' @export
 makeSeurat <- function(data,
-    sample = NULL ,
-    celltype = NULL,
-    assay = NULL,
-    spatialCoords = NULL,
-    spotProbability = NULL) {
+                       sample = NULL ,
+                       celltype = NULL,
+                       select_assay = NULL,
+                       spatialCoords = NULL,
+                       spotProbability = NULL) {
   
   
-    if (!is.null(spotProbability)){
-        spotProbability  <- t(spotProbability )
-        predictions <- data.frame( 
-                          prediction.score = as.matrix(spotProbability ),
-                          row.names = colnames(data),  stringsAsFactors = FALSE )
-          
-        predictions <- Seurat::CreateAssayObject( data = t(x = as.matrix(x = predictions)), 
-                                                  check.matrix = FALSE )
+  if (!is.null(spotProbability)){
+    spotProbability  <- t(spotProbability )
+    predictions <- data.frame( 
+      prediction.score = as.matrix(spotProbability ),
+      row.names = colnames(data),  stringsAsFactors = FALSE )
+    
+    predictions <- Seurat::CreateAssayObject( data = t(x = as.matrix(x = predictions)), 
+                                              check.matrix = FALSE )
+  }
+  
+  
+  if (is(data, "Seurat")) {
+    if (!is.null(celltype)){
+      data$celltype <- celltype
+    }
+    if (!is.null(sample)){
+      data$sample <- sample
     }
     
-     
-    if (is(data, "Seurat")) {
-        if (!is.null(celltype)){
-            data$celltype <- celltype
-        }
-        if (!is.null(sample)){
-            data$sample <- sample
-        }
-
-        if (!is.null(spatialCoords)) {
-            data$x_cord <-  spatialCoords[1]
-            data$y_cord <-  spatialCoords[2]
-        }
-        if (!is.null(spotProbability)) {
-            data[["predictions"]] <-  predictions
-        }
-        return(data)
+    if (!is.null(spatialCoords)) {
+      data$x_cord <-  spatialCoords[1]
+      data$y_cord <-  spatialCoords[2]
     }
-
-    if (is(data, "SingleCellExperiment")) {
-        df <- data
-
-        if(!is.null(celltype)){
-            df$celltype <- celltype
-        }else{
-            df$celltype <- SummarizedExperiment::colData(df)[, "celltype"]
-        }
-
-        if(!is.null(sample)){
-            df$sample <- sample
-        }else{
-            df$sample <- SummarizedExperiment::colData(df)[, "sample"]
-        }
-        if (!is.null(spatialCoords)) {
-            df$x_cord <- spatialCoords[1]
-            df$y_cord <- spatialCoords[2]
-        }else{
-            df$x_cord <- SummarizedExperiment::colData(df)[, "x_cord"]
-            df$y_cord <- SummarizedExperiment::colData(df)[, "y_cord"]
-        }
-
-        
-        if (!is.null(assay)){
-            data <- Seurat::as.Seurat(df, data = assay)
-        }else{
-            data <- Seurat::as.Seurat(df)
-        }
-        
-
-        if (!is.null(spotProbability)) {
-           data[["predictions"]] <-  predictions
-        }
-        return(data)
+    if (!is.null(spotProbability)) {
+      data[["predictions"]] <-  predictions
     }
-
-
-    if (is(data, "SpatialExperiment")) {
-        df <- data
-
-        if(!is.null(celltype)){
-            df$celltype <- celltype
-        }else{
-            df$celltype <- SummarizedExperiment::colData(df)[, "celltype"]
-        }
-
-        if(!is.null(sample)){
-            df$sample <- sample
-        }else{
-            df$sample <- SummarizedExperiment::colData(df)[, "sample"]
-        }
-
-        if(!is.null(spatialCoords)){
-            df$x_cord <- spatialCoords[1]
-            df$y_cord <- spatialCoords[2]
-        }else{
-            df$x_cord <- SpatialExperiment::spatialCoords(df)[, 1]
-            df$y_cord <- SpatialExperiment::spatialCoords(df)[, 2]
-        }
-        
-        if (!is.null(assay)){
-            data <- Seurat::as.Seurat(df, data = assay)
-        }else{  
-            data <- Seurat::as.Seurat(df)
-        }
-
-        if (!is.null(spotProbability)) {
-           data[["predictions"]] <-  predictions
-        }
-
-        return(data)
+    return(data)
+  }
+  
+  if (is(data, "SingleCellExperiment")) {
+    df <- data
+    
+    if(!is.null(celltype)){
+      df$celltype <- celltype
+    } 
+    
+    if(!is.null(sample)){
+      df$sample <- sample
     }
+    
+    if (!is.null(spatialCoords)) {
+      df$x_cord <- spatialCoords[[1]]
+      df$y_cord <- spatialCoords[[2]]
+    } 
+    
+    
+    
+    if (!is.null(select_assay)){
+      data_seurat <-  CreateSeuratObject( counts = assay(df,  select_assay))
+    }else{
+      data_seurat <- CreateSeuratObject( counts = assay(df,  "logcounts"))
+    }
+    
+    
+    data_seurat@meta.data <-  data.frame( colData(df) )
 
-    data
+    if (!is.null(spotProbability)) {
+      data_seurat[["predictions"]] <-  predictions
+    }
+    return(data_seurat)
+  }
+
+ 
 }
