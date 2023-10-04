@@ -1,6 +1,6 @@
 # scFeatures: Multi-view representations of single-cell and spatial data for disease outcome prediction
 
-<img src="https://github.com/SydneyBioX/scFeatures/blob/master/inst/sticker.png?raw=true" align="right" width="200">
+<img src="https://raw.githubusercontent.com/SydneyBioX/scFeatures/devel/inst/sticker.png" align="right" width="200">
 
 scFeatures is a tool that generates multi-view representations of single-cell and spatial data through the construction of a total of 17 feature types belonging to the following six categories. 
 
@@ -11,7 +11,7 @@ scFeatures is a tool that generates multi-view representations of single-cell an
 5. overall aggregated gene expressions
 6. spatial metrics
 
-![Overview](https://github.com/SydneyBioX/scFeatures/blob/master/inst/overview.png?raw=true)
+![Overview](https://raw.githubusercontent.com/SydneyBioX/scFeatures/devel/inst/sticker.png)
 
 ##  Installation 
 
