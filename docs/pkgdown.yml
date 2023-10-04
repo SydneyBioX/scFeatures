@@ -1,9 +1,10 @@
-pandoc: '2.18'
-pkgdown: 2.0.6
+pandoc: 3.1.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
-  scFeatures_associationstudy: scFeatures_associationstudy.html
-  scFeatures_detail: scFeatures_detail.html
-  scFeatures_summary: scFeatures_summary.html
-last_built: 2022-12-14T08:10Z
+  scFeatures_overview: scFeatures_overview.html
+last_built: 2023-10-04T03:06Z
+urls:
+  reference: https://sydneybiox.github.io/scFeatures/reference
+  article: https://sydneybiox.github.io/scFeatures/articles
 

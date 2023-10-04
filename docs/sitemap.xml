@@ -1,120 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/404.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/scFeatures_associationstudy.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/articles/scFeatures_associationstudy.html</loc>
   </url>
   <url>
-    <loc>/articles/scFeatures_detail.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/articles/scFeatures_detail.html</loc>
   </url>
   <url>
-    <loc>/articles/scFeatures_summary.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/articles/scFeatures_overview.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/articles/scFeatures_summary.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/authors.html</loc>
   </url>
   <url>
-    <loc>/reference/L_stats.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/index.html</loc>
   </url>
   <url>
-    <loc>/reference/bulk_sample.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/L_stats.html</loc>
   </url>
   <url>
-    <loc>/reference/bulk_sample_celltype.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/bulk_sample.html</loc>
   </url>
   <url>
-    <loc>/reference/check_data.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/bulk_sample_celltype.html</loc>
   </url>
   <url>
-    <loc>/reference/generateBPParam.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/check_data.html</loc>
   </url>
   <url>
-    <loc>/reference/get_num_cell_per_celltype.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/example_scrnaseq.html</loc>
   </url>
   <url>
-    <loc>/reference/get_num_cell_per_spot.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/generateBPParam.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/get_num_cell_per_celltype.html</loc>
   </url>
   <url>
-    <loc>/reference/individual_geneset_proportion_celltype.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/get_num_cell_per_spot.html</loc>
   </url>
   <url>
-    <loc>/reference/makeSeurat.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/process_data.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/individual_geneset_proportion_celltype.html</loc>
   </url>
   <url>
-    <loc>/reference/rearrange_string.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/makeSeurat.html</loc>
   </url>
   <url>
-    <loc>/reference/remove_mito.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/process_data.html</loc>
   </url>
   <url>
-    <loc>/reference/run_CCI.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/rearrange_string.html</loc>
   </url>
   <url>
-    <loc>/reference/run_L_function.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/remove_mito.html</loc>
   </url>
   <url>
-    <loc>/reference/run_Morans_I.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/remove_mito_ribo.html</loc>
   </url>
   <url>
-    <loc>/reference/run_association_study_report.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_CCI.html</loc>
   </url>
   <url>
-    <loc>/reference/run_celltype_interaction.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_L_function.html</loc>
   </url>
   <url>
-    <loc>/reference/run_gene_cor.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_Morans_I.html</loc>
   </url>
   <url>
-    <loc>/reference/run_gene_cor_celltype.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_association_study_report.html</loc>
   </url>
   <url>
-    <loc>/reference/run_gene_mean.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_celltype_interaction.html</loc>
   </url>
   <url>
-    <loc>/reference/run_gene_mean_celltype.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_gene_cor.html</loc>
   </url>
   <url>
-    <loc>/reference/run_gene_prop.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_gene_cor_celltype.html</loc>
   </url>
   <url>
-    <loc>/reference/run_gene_prop_celltype.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_gene_mean.html</loc>
   </url>
   <url>
-    <loc>/reference/run_nn_correlation.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_gene_mean_celltype.html</loc>
   </url>
   <url>
-    <loc>/reference/run_pathway_gsva.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_gene_prop.html</loc>
   </url>
   <url>
-    <loc>/reference/run_pathway_mean.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_gene_prop_celltype.html</loc>
   </url>
   <url>
-    <loc>/reference/run_pathway_prop.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_nn_correlation.html</loc>
   </url>
   <url>
-    <loc>/reference/run_proportion_logit.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_pathway_gsva.html</loc>
   </url>
   <url>
-    <loc>/reference/run_proportion_ratio.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_pathway_mean.html</loc>
   </url>
   <url>
-    <loc>/reference/run_proportion_raw.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_pathway_prop.html</loc>
   </url>
   <url>
-    <loc>/reference/scFeatures.html</loc>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_proportion_logit.html</loc>
+  </url>
+  <url>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_proportion_ratio.html</loc>
+  </url>
+  <url>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/run_proportion_raw.html</loc>
+  </url>
+  <url>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/scFeatures.html</loc>
+  </url>
+  <url>
+    <loc>https://sydneybiox.github.io/scFeatures/reference/scfeatures_result.html</loc>
   </url>
 </urlset>
