@@ -935,9 +935,9 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
         ))
         return(NULL)
     } else if (type == "spatial_p") {
-        X <- helper_L_stat_sp(data)
+        X <- helper_L_stat_sp(data, ncores)
     } else if (type == "spatial_t") {
-        X <- helper_L_stat_st(data)
+        X <- helper_L_stat_st(data, ncores)
     } else {
         cli::cli_abort(c(
             "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
@@ -1004,9 +1004,9 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
         ))
         return(NULL)
     } else if (type == "spatial_p") {
-        X <- helper_celltype_interaction_sp(data)
+        X <- helper_celltype_interaction_sp(data, ncores)
     } else if (type == "spatial_t") {
-        X <- helper_celltype_interaction_st(data)
+        X <- helper_celltype_interaction_st(data, ncores)
     }
 
     X <- as.data.frame(X)
@@ -1073,7 +1073,7 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
         ))
         return(NULL)
     } else if (type %in% c("spatial_p", "spatial_t")) {
-        X <- helper_moran(data, num_top_gene = NULL, ncores = 1)
+        X <- helper_moran(data, num_top_gene = NULL, ncores)
     } else {
         cli::cli_abort(c(
             "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
