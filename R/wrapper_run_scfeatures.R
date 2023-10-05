@@ -257,7 +257,7 @@ makeSeurat <- function(data,
   if (!is.null(spotProbability)){
     spotProbability  <- t(spotProbability )
     predictions <- data.frame( 
-      prediction.score = as.matrix(spotProbability ),
+      as.matrix(spotProbability ),
       row.names = colnames(data),  stringsAsFactors = FALSE )
     
     predictions <- Seurat::CreateAssayObject( data = t(x = as.matrix(x = predictions)), 
