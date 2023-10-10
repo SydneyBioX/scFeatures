@@ -20,11 +20,12 @@
 #' data <- remove_mito_ribo(data)
 #'
 #' @export
-remove_mito_ribo <- function(data) {
-  if (ncol(data) > 20000) {
-    temp <- data[, sample(1:ncol(data), 20000)]
+remove_mito_ribo <- function(alldata) {
+  
+  if ( ncol( alldata$data ) > 20000) {
+    temp <- alldata$data[, sample(1:ncol(alldata$data), 20000)]
   } else {
-    temp <- data
+    temp <- alldata$data
   }
 
   nms <- rownames(temp)
@@ -46,25 +47,25 @@ remove_mito_ribo <- function(data) {
     )
   )
 
-  check <- sum(rownames(data) %in% bad_genes)
+  check <- sum(rownames(alldata$data) %in% bad_genes)
 
 
 
   if (check > 0) {
     gene_corMat <- proxyC::simil(
-      temp@assays$RNA@data[rownames(data) %in% bad_genes, ],
-      temp@assays$RNA@data[!rownames(data) %in% bad_genes, ],
+      temp[rownames(alldata$data) %in% bad_genes, ],
+      temp[!rownames(alldata$data) %in% bad_genes, ],
       method = "correlation"
     )
 
     gene_corMat_max <- apply(gene_corMat, 2, max, na.rm = TRUE)
     exclude_genes <- c(bad_genes, names(gene_corMat_max)[gene_corMat_max > 0.7])
 
-    data@assays$RNA@data <- data@assays$RNA@data[-c(which(rownames(data) %in% exclude_genes)), ]
+    alldata$data <- alldata$data[-c(which(rownames(alldata$data) %in% exclude_genes)), ]
   }
 
 
-  return(data)
+  return( alldata )
 }
 
 
@@ -73,40 +74,42 @@ remove_mito_ribo <- function(data) {
 #' Identify the highly variable genes (HVGs) in the input data. By default,
 #' the function calculates the HVG across the cells within each cell type,
 #' as well across all cells). This is done for each sample separately, then
-#' taking the union of the HVGs across all samples. The ouput is a daraframe
+#' taking the union of the HVGs across all samples. The ouput is a dataframe
 #' with two columns: marker and celltype. When celltype is set to FALSE, the
 #' function only calculates the HVG across all cells and returns a vector of HVGs.
 #' @noRd
-find_var_gene <- function(data, num_top_gene = 1500, ncores = 1, celltype = TRUE) {
+find_var_gene <- function(alldata, num_top_gene = 1500, ncores = 1, celltype = TRUE) {
   BPparam <- generateBPParam(ncores)
 
   if (celltype == TRUE) {
     # here calculates the HVG across all cells across all cell types
-
-    hvg_across_all_cells <- BiocParallel::bplapply(unique(data$sample), function(thissample) {
-      this <- data[, data$sample == thissample]
-      gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this@assays$RNA@data))
+    
+    # thissample <- unique(alldata$sample)[1]
+    hvg_across_all_cells <- BiocParallel::bplapply(unique(alldata$sample), function(thissample) {
+      this <- alldata$data[, alldata$sample == thissample]
+      gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this))
       top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
-      thisgene <- rownames(data)[top_gene]
+      thisgene <- rownames(alldata$data)[top_gene]
     }, BPPARAM = BPparam)
 
     hvg_across_all_cells <- unique(unlist(hvg_across_all_cells))
 
 
     # below calculates the HVG within each cell type
-    # thiscelltype <- unique( data$celltype)[1]
-    gene <- BiocParallel::bplapply(unique(data$celltype), function(thiscelltype) {
-      this_data <- data[, data$celltype == thiscelltype]
-
+    # thiscelltype <- unique( alldata$celltype)[1]
+    gene <- BiocParallel::bplapply(unique(alldata$celltype), function(thiscelltype) {
+      this_data <- alldata$data[, alldata$celltype == thiscelltype]
+      this_data_sample <-  alldata$sample[ alldata$celltype == thiscelltype]
       thisgene <- c()
 
-      #  thissample <-  unique( this_data$sample)
-      for (thissample in unique(this_data$sample)) {
-        this <- this_data[, this_data$sample == thissample]
-        if (ncol(this) > 1) {
-          gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this@assays$RNA@data))
+      #  thissample <-  unique( this_data_sample)[1]
+      for (thissample in unique(this_data_sample  )) {
+        this <- this_data[, this_data_sample == thissample , drop=FALSE ]
+        # to calculate hvg, we want at least 10 cells
+        if (ncol(this) > 10) {
+          gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this))
           top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
-          temp <- rownames(data)[top_gene]
+          temp <- rownames(alldata$data)[top_gene]
           thisgene <- c(thisgene, temp)
         }
       }
@@ -119,7 +122,7 @@ find_var_gene <- function(data, num_top_gene = 1500, ncores = 1, celltype = TRUE
       thisgene
     }, BPPARAM = BPparam)
 
-    names(gene) <- unique(data$celltype)
+    names(gene) <- unique(alldata$celltype)
 
     all_marker <- NULL
 
@@ -138,9 +141,11 @@ find_var_gene <- function(data, num_top_gene = 1500, ncores = 1, celltype = TRUE
 
     gene <- all_marker
   } else {
-    gene <- BiocParallel::bplapply(unique(data$sample), function(thissample) {
-      this <- data[, data$sample == thissample]
-      gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this@assays$RNA@data))
+    
+    # thissample <- unique(alldata$sample)[1]
+    gene <- BiocParallel::bplapply( unique(alldata$sample), function(thissample) {
+      this <- alldata$data[, alldata$sample == thissample]
+      gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this))
       top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
       thisgene <- rownames(data)[top_gene]
     }, BPPARAM = BPparam)
@@ -165,17 +170,17 @@ find_var_gene <- function(data, num_top_gene = 1500, ncores = 1, celltype = TRUE
 #' expression levels for these genes in their respective cell type.
 #' The output is a returns a matrix of samples by features.
 #' @noRd
-helper_gene_mean_celltype <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1) {
+helper_gene_mean_celltype <- function( alldata, genes = NULL, num_top_gene = NULL, ncores = 1) {
   BPparam <- generateBPParam(ncores)
 
 
   if (is.null(num_top_gene)) {
-    num_top_gene <- min(nrow(data), 100)
+    num_top_gene <- min(nrow( alldata$data), 100)
   }
 
 
   if (is.null(genes)) {
-    all_marker <- find_var_gene(data,
+    all_marker <- find_var_gene(alldata ,
       num_top_gene = num_top_gene,
       ncores = ncores, celltype = TRUE
     )
@@ -183,20 +188,21 @@ helper_gene_mean_celltype <- function(data, genes = NULL, num_top_gene = NULL, n
     all_marker <- genes
   }
 
-  # j <- unique(data$celltype)[15]
+  # j <- unique(all_marker$celltype)[1]
   final_matrix <- BiocParallel::bplapply(unique(all_marker$celltype), function(j) {
     #   i <- unique( data$sample) [1]
 
-    gene <- all_marker[all_marker$celltype == j, ]$marker
+    gene <- all_marker[ all_marker$celltype == j, ]$marker
 
-    X_this_celltype <- lapply(unique(data$sample), function(i) {
+    # i <- unique(alldata$sample)[1]
+    X_this_celltype <- lapply( unique(alldata$sample), function(i) {
       index <- intersect(
-        which(data$celltype == j),
-        which(data$sample == i)
+        which(alldata$celltype == j),
+        which(alldata$sample == i)
       )
 
       if (length(index) > 0) {
-        this_patient_data <- data[gene, index]@assays$RNA@data
+        this_patient_data <- alldata$data[gene, index] 
 
         if (length(index) == 1) {
           this_patient_prop <- as.numeric(this_patient_data)
@@ -211,7 +217,7 @@ helper_gene_mean_celltype <- function(data, genes = NULL, num_top_gene = NULL, n
 
 
     X_this_celltype <- do.call(cbind, X_this_celltype)
-    colnames(X_this_celltype) <- unique(data$sample)
+    colnames(X_this_celltype) <- unique(alldata$sample)
     rownames(X_this_celltype) <- paste0(j, "--", gene)
 
 
@@ -219,7 +225,7 @@ helper_gene_mean_celltype <- function(data, genes = NULL, num_top_gene = NULL, n
   }, BPPARAM = BPparam)
 
   final_matrix <- do.call(rbind, final_matrix)
-  colnames(final_matrix) <- unique(data$sample)
+  colnames(final_matrix) <- unique(alldata$sample)
 
   final_matrix <- t(final_matrix)
   # a <- CreateSeuratObject(  final_matrix)
@@ -242,15 +248,15 @@ helper_gene_mean_celltype <- function(data, genes = NULL, num_top_gene = NULL, n
 #' expression levels for these genes in their respective cell type.
 #' The output is a returns a matrix of samples by features.
 #' @noRd
-helper_gene_prop_celltype <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1) {
+helper_gene_prop_celltype <- function(alldata, genes = NULL, num_top_gene = NULL, ncores = 1) {
   BPparam <- generateBPParam(ncores)
 
   if (is.null(num_top_gene)) {
-    num_top_gene <- min(nrow(data), 100)
+    num_top_gene <- min(nrow(alldata$data), 100)
   }
 
   if (is.null(genes)) {
-    all_marker <- find_var_gene(data,
+    all_marker <- find_var_gene(alldata,
       num_top_gene = num_top_gene,
       ncores = ncores, celltype = TRUE
     )
@@ -264,14 +270,14 @@ helper_gene_prop_celltype <- function(data, genes = NULL, num_top_gene = NULL, n
 
     gene <- all_marker[all_marker$celltype == j, ]$marker
 
-    X_this_celltype <- lapply(unique(data$sample), function(i) {
+    X_this_celltype <- lapply(unique( alldata$sample), function(i) {
       index <- intersect(
-        which(data$celltype == j),
-        which(data$sample == i)
+        which(alldata$celltype == j),
+        which(alldata$sample == i)
       )
 
       if (length(index) > 0) {
-        this_patient_data <- data[gene, index]@assays$RNA@data
+        this_patient_data <- alldata$data[gene, index] 
         this_patient_data <- +(this_patient_data > 1)
         if (length(index) == 1) {
           this_patient_prop <- as.numeric(this_patient_data)
@@ -286,7 +292,7 @@ helper_gene_prop_celltype <- function(data, genes = NULL, num_top_gene = NULL, n
 
 
     X_this_celltype <- do.call(cbind, X_this_celltype)
-    colnames(X_this_celltype) <- unique(data$sample)
+    colnames(X_this_celltype) <- unique(alldata$sample)
     rownames(X_this_celltype) <- paste0(j, "--", gene)
 
 
@@ -295,7 +301,7 @@ helper_gene_prop_celltype <- function(data, genes = NULL, num_top_gene = NULL, n
 
   final_matrix <- do.call(rbind, final_matrix)
 
-  colnames(final_matrix) <- unique(data$sample)
+  colnames(final_matrix) <- unique(alldata$sample)
 
   final_matrix <- t(final_matrix)
   #
@@ -319,15 +325,15 @@ helper_gene_prop_celltype <- function(data, genes = NULL, num_top_gene = NULL, n
 #' expression levels for these genes in their respective cell type.
 #' The output is a returns a matrix of samples by features.
 #' @noRd
-helper_gene_cor_celltype <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1) {
+helper_gene_cor_celltype <- function(alldata, genes = NULL, num_top_gene = NULL, ncores = 1) {
   BPparam <- generateBPParam(ncores)
 
   if (is.null(num_top_gene)) {
-    num_top_gene <- min(nrow(data), 5)
+    num_top_gene <- min(nrow(alldata$data), 5)
   }
 
   if (is.null(genes)) {
-    all_marker <- find_var_gene(data,
+    all_marker <- find_var_gene(alldata,
       num_top_gene = num_top_gene,
       ncores = ncores, celltype = TRUE
     )
@@ -337,24 +343,25 @@ helper_gene_cor_celltype <- function(data, genes = NULL, num_top_gene = NULL, nc
 
   # for each cell type, get the top 100 most variable correlation pair
 
-  #  thiscelltype <- unique( data$celltype) [13]
+  #  thiscelltype <- unique( alldata$celltype) [1]
 
   cor_thiscelltype <- BiocParallel::bplapply(unique(all_marker$celltype), function(thiscelltype) {
-    thisdata <- data[, data$celltype == thiscelltype]
+    thisdata <- alldata$data[, alldata$celltype == thiscelltype]
+    thisdata_sample <- alldata$sample[alldata$celltype == thiscelltype]
     gene <- all_marker[all_marker$celltype == thiscelltype, ]$marker
     thisdata <- thisdata[gene, ]
 
 
-    x <- unique(data$sample)[13]
+    # x <- unique(alldata$sample)[1]
 
-    cor_data <- lapply(unique(data$sample), function(x) {
-      index <- which(thisdata$sample == x)
+    cor_data <- lapply(unique(alldata$sample), function(x) {
+      index <- which(thisdata_sample == x)
 
       if (length(index) > 1) {
         thispatient <- thisdata[, index]
         # cor_data <-  cor( as.matrix( t(  as.matrix( thispatient@assays$RNA@data) )))
 
-        cor_data <- proxyC::simil(thispatient@assays$RNA@data, method = "correlation")
+        cor_data <- proxyC::simil(thispatient, method = "correlation")
         cor_data <- as.matrix(cor_data)
 
         cor_data[is.na(cor_data)] <- 0
@@ -375,7 +382,7 @@ helper_gene_cor_celltype <- function(data, genes = NULL, num_top_gene = NULL, nc
     })
 
     cor_data <- do.call(cbind, cor_data)
-    colnames(cor_data) <- unique(data$sample)
+    colnames(cor_data) <- unique(alldata$sample)
 
 
     cor_data
@@ -384,7 +391,7 @@ helper_gene_cor_celltype <- function(data, genes = NULL, num_top_gene = NULL, nc
 
 
   cor_thiscelltype <- do.call(rbind, cor_thiscelltype)
-  colnames(cor_thiscelltype) <- unique(data$sample)
+  colnames(cor_thiscelltype) <- unique(alldata$sample)
 
   cor_thiscelltype <- t(cor_thiscelltype)
   # a <- CreateSeuratObject( cor_thiscelltype)
@@ -416,23 +423,20 @@ helper_gene_cor_celltype <- function(data, genes = NULL, num_top_gene = NULL, nc
 #' @importFrom stats lm
 #'
 #' @noRd
-helper_gene_mean_celltype_st <- function(data, genes = NULL, num_top_gene = NULL, ncores = 1) {
+helper_gene_mean_celltype_st <- function( alldata, genes = NULL, num_top_gene = NULL, ncores = 1) {
   BPparam <- generateBPParam(ncores)
 
   if (is.null(num_top_gene)) {
-    num_top_gene <- min(nrow(data), 1500)
+    num_top_gene <- min(nrow(alldata$data), 1500)
   }
 
-  prob <- as.matrix(data@assays$predictions@data)
-  prob <- prob[!rownames(prob) == "max", ]
+  prob <- as.matrix(alldata$predictions)
   zero_celltype <- names(which(rowSums(prob) == 0))
   prob <- prob[!rownames(prob) %in% zero_celltype, ]
 
-
-
-
+ 
   if (is.null(genes)) {
-    top_gene <- find_var_gene(data,
+    top_gene <- find_var_gene(alldata,
       num_top_gene = num_top_gene,
       ncores = ncores, celltype = FALSE
     )
@@ -442,20 +446,20 @@ helper_gene_mean_celltype_st <- function(data, genes = NULL, num_top_gene = NULL
 
 
 
-  data@assays$RNA@data <- data@assays$RNA@data[rownames(data@assays$RNA@data) %in% top_gene, ]
+  alldata$data <- alldata$data[rownames( alldata$data) %in% top_gene, ]
 
   rownames(prob) <- make.names(rownames(prob))
 
   celltype <- sort(rownames(prob))
 
 
-  s <- unique(data$sample)[1]
+  # s <- unique(alldata$sample)[1]
 
-  temp <- BiocParallel::bplapply(unique(data$sample), function(s) {
-    index <- which(data$sample == s)
-    thispatient <- data[, index]
+  temp <- BiocParallel::bplapply(unique(alldata$sample), function(s) {
+    index <- which(alldata$sample == s)
+    thispatient <- alldata$data[, index]
 
-    gene_count <- as.matrix(data@assays$RNA@data[, index])
+    gene_count <- as.matrix(alldata$data[, index])
     gene_name <- rownames(gene_count)
 
     thisprob <- prob[, index]
@@ -510,7 +514,7 @@ helper_gene_mean_celltype_st <- function(data, genes = NULL, num_top_gene = NULL
 
   result_coef <- lapply(temp, `[[`, 2)
   result_coef <- do.call(cbind, result_coef)
-  colnames(result_coef) <- unique(data$sample)
+  colnames(result_coef) <- unique(alldata$sample)
 
   result_coef <- t(result_coef)
   # final <- CreateSeuratObject(   result_coef)

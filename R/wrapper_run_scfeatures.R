@@ -42,12 +42,16 @@
 #' scfeatures_result <- scFeatures(data, type = "scrna", feature_types = "proportion_raw")
 #' 
 #' @export
-scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
-    species = "Homo sapiens", celltype_genes = NULL, aggregated_genes = NULL, geneset = NULL,
-    sample = NULL, celltype = NULL, assay = NULL, spatialCoords = NULL) {
+scFeatures <- function(data = NULL, sample = NULL ,  celltype = NULL, 
+                       spatialCoords = NULL,  spotProbability = NULL , 
+                       feature_types = NULL, type = "scrna", ncores = 1,
+    species = "Homo sapiens", celltype_genes = NULL, aggregated_genes = NULL, geneset = NULL ) {
   
-    data <- makeSeurat(data, sample, celltype, assay, spatialCoords)
-
+    # data <- makeSeurat(data, sample, celltype, assay, spatialCoords)
+    
+    alldata <- formatData( data, sample, celltype,  spatialCoords , spotProbability)
+  
+    
     return_list <- list()
 
     # if null, generate everything
@@ -67,21 +71,21 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
         try({
             if (thisfeature == "proportion_raw") {
                 message("generating proportion raw features")
-                return_list[["proportion_raw"]] <- run_proportion_raw(data = data, type = type, ncores = ncores)
+                return_list[["proportion_raw"]] <- run_proportion_raw(data = alldata, type = type, ncores = ncores)
             }
 
             if (thisfeature == "proportion_logit") {
                 message("generating proportion logit features")
-                return_list[["proportion_logit"]] <- run_proportion_logit(data = data, type = type, ncores = ncores)
+                return_list[["proportion_logit"]] <- run_proportion_logit(data = alldata, type = type, ncores = ncores)
             }
 
             if (thisfeature == "proportion_ratio") {
                 message("generating proportion ratio features")
-                return_list[["proportion_ratio"]] <- run_proportion_ratio(data = data, type = type, ncores = ncores)
+                return_list[["proportion_ratio"]] <- run_proportion_ratio(data = alldata, type = type, ncores = ncores)
             }
 
 
-            data_remove_mito <- remove_mito_ribo(data)
+            data_remove_mito <- remove_mito_ribo(alldata)
 
             if (thisfeature == "gene_mean_celltype") {
                 message("generating gene mean celltype features")
@@ -110,7 +114,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 
             if (thisfeature == "pathway_gsva") {
                 message("generating pathway GSVA features")
-                return_list[["pathway_gsva"]] <- run_pathway_gsva(data,
+                return_list[["pathway_gsva"]] <- run_pathway_gsva(alldata,
                     type = type, ncores = ncores,
                     species = species, geneset = geneset
                 )
@@ -118,7 +122,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 
             if (thisfeature == "pathway_mean") {
                 message("generating pathway mean features")
-                return_list[["pathway_mean"]] <- run_pathway_mean(data,
+                return_list[["pathway_mean"]] <- run_pathway_mean(alldata,
                     type = type, ncores = ncores,
                     species = species, geneset = geneset
                 )
@@ -126,7 +130,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 
             if (thisfeature == "pathway_prop") {
                 message("generating pathway prop features")
-                return_list[["pathway_prop"]] <- run_pathway_prop(data,
+                return_list[["pathway_prop"]] <- run_pathway_prop(alldata,
                     type = type, ncores = ncores,
                     species = species, geneset = geneset
                 )
@@ -134,8 +138,8 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 
             
             if (thisfeature == "CCI"){
-                print("generating CCI features")
-                 return_list[["CCI"]] <- run_CCI(data , 
+                message("generating CCI features")
+                 return_list[["CCI"]] <- run_CCI(alldata , 
                       type = type, ncores = ncores 
                 )
             }
@@ -143,7 +147,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
             
             if (thisfeature == "gene_mean_aggregated") {
                 message("generating gene mean aggregated features")
-                return_list[["gene_mean_bulk"]] <- run_gene_mean(data,
+                return_list[["gene_mean_bulk"]] <- run_gene_mean(alldata,
                     type = type, ncores = ncores,
                     genes = aggregated_genes
                 )
@@ -151,7 +155,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 
             if (thisfeature == "gene_prop_aggregated") {
                 message("generating gene prop aggregated features")
-                return_list[["gene_prop_bulk"]] <- run_gene_prop(data,
+                return_list[["gene_prop_bulk"]] <- run_gene_prop(alldata,
                     type = type, ncores = ncores,
                     genes = aggregated_genes
                 )
@@ -159,7 +163,7 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 
             if (thisfeature == "gene_cor_aggregated") {
                 message("generating gene cor aggregated features")
-                return_list[["gene_cor_bulk"]] <- run_gene_cor(data,
+                return_list[["gene_cor_bulk"]] <- run_gene_cor(alldata,
                     type = type, ncores = ncores,
                     genes = aggregated_genes
                 )
@@ -167,22 +171,22 @@ scFeatures <- function(data, feature_types = NULL, type = "scrna", ncores = 1,
 
             if (thisfeature == "L_stats") {
                 message("generating L function features")
-                return_list[["L_stats"]] <- run_L_function(data, type = type, ncores = ncores)
+                return_list[["L_stats"]] <- run_L_function(alldata, type = type, ncores = ncores)
             }
 
             if (thisfeature == "celltype_interaction") {
                 message("generating cell type interaction features")
-                return_list[["celltype_interaction"]] <- run_celltype_interaction(data, type = type, ncores = ncores)
+                return_list[["celltype_interaction"]] <- run_celltype_interaction(alldata, type = type, ncores = ncores)
             }
 
             if (thisfeature == "morans_I") {
                 message("generating Moran's I features")
-                return_list[["morans_I"]] <- run_Morans_I(data, type = type, ncores = ncores)
+                return_list[["morans_I"]] <- run_Morans_I(alldata, type = type, ncores = ncores)
             }
 
             if (thisfeature == "nn_correlation") {
                 message("generating nearest neighbour correlation features")
-                return_list[["nn_correlation"]] <- run_nn_correlation(data, type = type, ncores = ncores)
+                return_list[["nn_correlation"]] <- run_nn_correlation(alldata, type = type, ncores = ncores)
             }
         })
     }
@@ -318,3 +322,51 @@ makeSeurat <- function(data,
 
  
 }
+
+formatData <- function(data = NULL,
+                       sample = NULL ,
+                       celltype = NULL,
+                       spatialCoords = NULL,
+                       spotProbability = NULL) {
+  
+  alldata <- list()
+  
+  if (is.null(data)){
+    print("Please provide data as gene x cell matrix")
+  }else{
+    alldata$data <- data
+  }
+  if (is.null(sample)){
+    print("Please provide the sample name of each cell")
+  }else{
+    alldata$sample <- sample
+  }
+  
+  
+  if (is.null(celltype)){
+    
+  }else{
+    alldata$celltype <- celltype
+  }
+  
+ 
+  if (is.null(spatialCoords)) {
+    
+  }else{
+    alldata$x_cord <- spatialCoords[[1]]
+    alldata$y_cord <- spatialCoords[[2]]
+  }
+ 
+  if (is.null( spotProbability)){
+    
+  }else{
+    alldata$predictions <- spotProbability
+  }
+  
+ return(alldata) 
+}
+  
+
+ 
+
+

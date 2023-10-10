@@ -8,6 +8,7 @@
 #' This function is designed for spatial proteomics. 
 #' @noRd
 individual_celltype_interaction_sp <- function(this_sample) {
+  
     cell_points <- spatstat.geom::ppp(
         x = this_sample$x_cord,
         y = this_sample$y_cord,
@@ -54,14 +55,26 @@ individual_celltype_interaction_sp <- function(this_sample) {
 #' It applies the individual_celltype_interaction_sp function to each sample,
 #' then merges the results from each sample. 
 #' @noRd
-helper_celltype_interaction_sp <- function(data, ncores = 1) {
+helper_celltype_interaction_sp <- function( alldata, ncores = 1) {
+  
     BPparam <- generateBPParam(ncores)
 
-    s <- unique(data$sample)[1]
+    # s <- unique( alldata$sample)[1]
 
-    nn_list_cellTypes <- BiocParallel::bplapply(unique(data$sample), function(s) {
-        this_sample <- data[, data$sample == s]
+    nn_list_cellTypes <- BiocParallel::bplapply(unique( alldata$sample), function(s) {
+      
+        this_sample_data <- alldata$data[, alldata$sample == s]
+        this_sample_x_cord <- alldata$x_cord[ alldata$sample == s]
+        this_sample_y_cord <- alldata$y_cord[ alldata$sample == s]
+        this_sample_celltype <- alldata$celltype[ alldata$sample == s]
+        
+        this_sample <- list( data = this_sample_data , 
+                           x_cord = this_sample_x_cord , 
+                           y_cord =  this_sample_y_cord , 
+                           celltype =  this_sample_celltype )
+        
         nn_list_cellTypes <- individual_celltype_interaction_sp(this_sample)
+        
     }, BPPARAM = BPparam)
 
 
@@ -101,7 +114,7 @@ helper_celltype_interaction_sp <- function(data, ncores = 1) {
     rownames(temp) <- temp$nn_list_cellTypes
     temp <- temp[, -1]
 
-    colnames(temp) <- unique(data$sample)
+    colnames(temp) <- unique(alldata$sample)
 
     temp <- t(temp)
 
@@ -147,27 +160,24 @@ individual_celltype_interaction_st <- function(thisprob) {
 #' It applies the individual_celltype_interaction_st function to each sample,
 #' then merges the results from each sample. 
 #' @noRd
-helper_celltype_interaction_st <- function(data, ncores = 1) {
+helper_celltype_interaction_st <- function(alldata, ncores = 1) {
+  
     BPparam <- generateBPParam(ncores)
 
-    s <- unique(data$sample)[1]
-
-    prob <- data@assays$predictions
-    prob <- as.matrix(prob@data)
-    prob <- prob[!rownames(prob) == "max", ]
+    prob <- alldata$predictions
     zero_celltype <- names(which(rowSums(prob) == 0))
     prob <- prob[!rownames(prob) %in% zero_celltype, ]
 
-
-    nn_list_cellTypes <- BiocParallel::bplapply(unique(data$sample), function(s) {
-        index <- which(data$sample == s)
+    # s <- unique(alldata$sample)[1]
+    nn_list_cellTypes <- BiocParallel::bplapply(unique(alldata$sample), function(s) {
+        index <- which(alldata$sample == s)
         thisprob <- prob[, index]
         nn_list_cellTypes <- individual_celltype_interaction_st(thisprob)
     }, BPPARAM = BPparam)
 
 
     nn_list_cellTypes <- do.call(cbind, nn_list_cellTypes)
-    colnames(nn_list_cellTypes) <- unique(data$sample)
+    colnames(nn_list_cellTypes) <- unique(alldata$sample)
 
     nn_list_cellTypes <- t(nn_list_cellTypes)
 
@@ -203,8 +213,8 @@ individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
     gap_y <- (max(y_c <- thissample$y_cord) - min(y_c)) / length(y_c) / 2
 
 
-    for (i in seq_len(ncol(thissample))) {
-        thisspot <- thissample[, i]
+    for (i in seq_len(ncol(thissample$data))) {
+        thisspot <- thissample$data[, i]
         thisspot_num_cell <- this_num_cell_per_spot[, i]
 
         total_num_cell <- sum(thisspot_num_cell)
@@ -270,18 +280,24 @@ individual_L_stat_st <- function(thissample, this_num_cell_per_spot) {
 #' It applies the individual_L_stat_st function to each sample,
 #' then merges the results from each sample. 
 #' @noRd
-helper_L_stat_st <- function(data, ncores = 1) {
+helper_L_stat_st <- function(alldata, ncores = 1) {
+  
     BPparam <- generateBPParam(ncores)
 
-    num_cell_per_spot <- get_num_cell_per_celltype(data)
+    num_cell_per_spot <- get_num_cell_per_celltype(alldata)
 
-    s <- unique(data$sample)[1]
+    #s <- unique(alldata$sample)[1]
+    L_stats <- BiocParallel::bplapply(unique(alldata$sample), function(s) {
+        index <- which(alldata$sample == s)
 
-
-    L_stats <- BiocParallel::bplapply(unique(data$sample), function(s) {
-        index <- which(data$sample == s)
-
-        thissample <- data[, index]
+        thissample_data <- alldata$data[, index]
+        thissample_x_cord <- alldata$x_cord[index]
+        thissample_y_cord <- alldata$y_cord[ index]
+        
+        thissample <- list(data = thissample_data, 
+                           x_cord =  thissample_x_cord , 
+                           y_cord =    thissample_y_cord) 
+        
         this_num_cell_per_spot <- num_cell_per_spot[, index]
 
         L_patient <- individual_L_stat_st(thissample, this_num_cell_per_spot)
@@ -320,7 +336,7 @@ helper_L_stat_st <- function(data, ncores = 1) {
     rownames(temp) <- temp$rowname
     temp <- temp[, -1]
 
-    colnames(temp) <- unique(data$sample)
+    colnames(temp) <- unique(alldata$sample)
 
     temp <- t(temp)
 
@@ -338,8 +354,9 @@ helper_L_stat_st <- function(data, ncores = 1) {
 #' The output vector represents the L-statistic for a pair of cell types.
 #' @noRd
 individual_L_stat_sp <- function(this_sample) {
+  
     cell_points <- spatstat.geom::ppp(
-        x = this_sample$x_cord,
+        x = this_sample$x_cord ,
         y = this_sample$y_cord,
         check = FALSE,
         yrange = c(0, max(this_sample$y_cord)),
@@ -354,8 +371,6 @@ individual_L_stat_sp <- function(this_sample) {
         stringsAsFactors = FALSE
     )
 
-
-
     L_patient <- list()
     for (i in seq_len(nrow(cellTypes_pair))) {
         L_patient[[i]] <- L_stats(cell_points,
@@ -365,7 +380,8 @@ individual_L_stat_sp <- function(this_sample) {
         )
     }
 
-    L_patient <- do.call(c, L_patient)
+    # L_patient <- do.call(c, L_patient)
+    L_patient <- unlist( L_patient)
     names(L_patient) <- paste(cellTypes_pair[, 1], cellTypes_pair[, 2], sep = "_")
 
     return(L_patient)
@@ -375,18 +391,25 @@ individual_L_stat_sp <- function(this_sample) {
 #' It applies the individual_L_stat_sp function to each sample,
 #' then merges the results from each sample. 
 #' @noRd
-helper_L_stat_sp <- function(data, ncores = 1) {
+helper_L_stat_sp <- function( alldata, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
-    s <- unique(data$sample)[1]
+    # s <- unique(alldata$sample)[1]
+    L_stats_result <- BiocParallel::bplapply(unique( alldata$sample), function(s) {
+        index <- which( alldata$sample == s)
 
-
-    L_stats_result <- BiocParallel::bplapply(unique(data$sample), function(s) {
-        index <- which(data$sample == s)
-
-        thissample <- data[, index]
-
+        thissample_data <- alldata$data[, index]
+        thissample_x_cord <- alldata$x_cord[index] 
+        thissample_y_cord <- alldata$y_cord[ index]
+        thissample_celltype <- alldata$celltype[index]
+        
+        thissample <- list(data = thissample_data,
+                           x_cord =   thissample_x_cord  ,
+                           y_cord =   thissample_y_cord,
+                           celltype = thissample_celltype)
+        
         L_patient <- individual_L_stat_sp(thissample)
+        
     }, BPPARAM = BPparam)
 
 
@@ -422,7 +445,7 @@ helper_L_stat_sp <- function(data, ncores = 1) {
     rownames(temp) <- temp$rowname
     temp <- temp[, -1]
 
-    colnames(temp) <- unique(data$sample)
+    colnames(temp) <- unique(alldata$sample)
 
     temp <- t(temp)
 
@@ -447,7 +470,7 @@ helper_L_stat_sp <- function(data, ncores = 1) {
 #' function to generate the nearest neighbor correlation for all samples.
 #' @noRd
 individual_nncorr_protein <- function(thissample) {
-    exprsMat <- thissample@assays$RNA@data
+    exprsMat <- thissample$data
 
     cell_points_cts <- spatstat.geom::ppp(
         x = as.numeric(thissample$x_cord), y = as.numeric(thissample$y_cord),
@@ -485,25 +508,34 @@ individual_nncorr_protein <- function(thissample) {
 #' @importFrom methods is
 #' 
 #' @noRd
-helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
+helper_nncorr_protein <- function(alldata, num_top_gene = NULL, ncores = 1) {
+  
     BPparam <- generateBPParam(ncores)
 
     if (is.null(num_top_gene)) {
-        num_top_gene <- min(nrow(data), 1500)
+        num_top_gene <- min(nrow(alldata$data), 1500)
     }
 
-    top_gene <- find_var_gene(data,
+    top_gene <- find_var_gene(alldata,
         num_top_gene = num_top_gene,
         ncores = ncores, celltype = FALSE
     )
 
-    data@assays$RNA@data <- data@assays$RNA@data[rownames(data@assays$RNA@data) %in% top_gene, ]
+    alldata$data <- alldata$data[rownames( alldata$data ) %in% top_gene, ]
 
-
-    s <- unique(data$sample)[1]
-
-    nncorr_protein <- BiocParallel::bplapply(unique(data$sample), function(s) {
-        thissample <- data[, data$sample == s]
+ 
+    # s <- unique(alldata$sample)[1]
+    nncorr_protein <- BiocParallel::bplapply( unique( alldata$sample), function(s) {
+ 
+        thissample_data <- alldata$data[, alldata$sample == s]
+        thissample_x_cord <- alldata$x_cord[  alldata$sample == s ] 
+        thissample_y_cord <- alldata$y_cord[ alldata$sample == s]
+ 
+        
+        thissample <- list(data = thissample_data,
+                           x_cord =   thissample_x_cord  ,
+                           y_cord =   thissample_y_cord)
+        
         L_patient <- individual_nncorr_protein(thissample)
     }, BPPARAM = BPparam)
 
@@ -540,7 +572,7 @@ helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
     rownames(temp) <- temp$rowname
     temp <- temp[, -1]
 
-    colnames(temp) <- unique(data$sample)
+    colnames(temp) <- unique(alldata$sample)
 
     temp <- t(temp)
 
@@ -559,10 +591,14 @@ helper_nncorr_protein <- function(data, num_top_gene = NULL, ncores = 1) {
 #' how strongly the gene expression values in a sample cluster or disperse. 
 #' @noRd
 individual_moran_cor <- function(thissample) {
-    exprsMat <- thissample@assays$RNA@data
+  
+    exprsMat <- thissample$data
 
     cell_points_cts <- spatstat.geom::ppp(
-        x = as.numeric(thissample$x_cord), y = as.numeric(thissample$y_cord),
+      
+        x = as.numeric(thissample$x_cord), 
+        y = as.numeric(thissample$y_cord),
+        
         check = FALSE,
         xrange = c(
             min(as.numeric(thissample$x_cord)),
@@ -604,27 +640,33 @@ individual_moran_cor <- function(thissample) {
 #' It applies the individual_moran_cor function to each sample,
 #' then merges the results from each sample. 
 #' @noRd
-helper_moran <- function(data, num_top_gene = NULL, ncores = 1) {
+helper_moran <- function( alldata, num_top_gene = NULL, ncores = 1) {
+  
     BPparam <- generateBPParam(ncores)
 
     if (is.null(num_top_gene)) {
-        num_top_gene <- min(nrow(data), 1500)
+        num_top_gene <- min(nrow(alldata$data), 1500)
     }
 
-    top_gene <- find_var_gene(data,
+    top_gene <- find_var_gene(alldata,
         num_top_gene = num_top_gene,
         ncores = ncores, celltype = FALSE
     )
 
-    data@assays$RNA@data <- data@assays$RNA@data[
-        rownames(data@assays$RNA@data) %in% top_gene,
-    ]
+    alldata$data <- alldata$data[ rownames(alldata$data) %in% top_gene,  ]
 
 
-    s <- unique(data$sample)[1]
+   # s <- unique(alldata$sample)[1]
 
-    moran_cor <- BiocParallel::bplapply(unique(data$sample), function(s) {
-        thissample <- data[, data$sample == s]
+    moran_cor <- BiocParallel::bplapply(unique(alldata$sample), function(s) {
+      
+        thissample_data <- alldata$data[, alldata$sample == s]
+        thissample_x_cord <- alldata$x_cord[ alldata$sample == s]
+        thissample_y_cord <- alldata$y_cord[ alldata$sample == s]
+        thissample <- list( data =  thissample_data , 
+                            x_cord =   thissample_x_cord,
+                            y_cord = thissample_y_cord)
+          
         moran_cor <- individual_moran_cor(thissample)
     }, BPPARAM = BPparam)
 
@@ -660,7 +702,7 @@ helper_moran <- function(data, num_top_gene = NULL, ncores = 1) {
     rownames(temp) <- temp$rowname
     temp <- temp[, -1]
 
-    colnames(temp) <- unique(data$sample)
+    colnames(temp) <- unique(alldata$sample)
 
     temp <- t(temp)
 

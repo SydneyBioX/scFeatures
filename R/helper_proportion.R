@@ -5,9 +5,9 @@
 #' spatial proteomics. It also takes an optional logit argument 
 #' that specifies whether the proportions should be logit-transformed.
 #' @noRd
-helper_proportion_raw <- function(data, logit = TRUE) {
-    df <- data@meta.data
-    df <- table(df$sample, data$celltype)
+helper_proportion_raw <- function( alldata, logit = TRUE) {
+  
+    df <- table(alldata$sample, alldata$celltype)
     df <- df / rowSums(df)
 
     # if logit transformation is needed,
@@ -30,7 +30,7 @@ helper_proportion_raw <- function(data, logit = TRUE) {
     rownames(df) <- df$sample
     df <- df[, -1]
 
-    df <- df[unique(data$sample), ]
+    df <- df[unique(alldata$sample), ]
 
     return(df)
 }
@@ -41,15 +41,16 @@ helper_proportion_raw <- function(data, logit = TRUE) {
 #' two cell types in each sample, applicable to scRNA-seq and spatial
 #' proteomics. The ratio is log2 transformed. 
 #' @noRd
-helper_proportion_ratio <- function(data, ncores = 1) {
+helper_proportion_ratio <- function( alldata, ncores = 1) {
+  
     BPparam <- generateBPParam(ncores)
 
-    allcelltype <- unique(data$celltype)
+    allcelltype <- unique( alldata$celltype)
 
-    #  x = "Pre_P1"
-    df <- BiocParallel::bplapply(unique(data$sample), function(x) {
+    #  x =  unique( alldata$sample)
+    df <- BiocParallel::bplapply(unique( alldata$sample), function(x) {
         # loop through each sample
-        this_sample <- data@meta.data[data$sample == x, ]
+        this_sample_celltype <- alldata$celltype[alldata$sample == x ]
 
         # keep track of ratio for this sample
         temp_df <- NULL
@@ -59,8 +60,8 @@ helper_proportion_ratio <- function(data, ncores = 1) {
                     celltype1 <- allcelltype[i]
                     celltype2 <- allcelltype[j]
 
-                    celltype_1 <- sum(this_sample$celltype %in% celltype1)
-                    celltype_2 <- sum(this_sample$celltype %in% celltype2)
+                    celltype_1 <- sum(this_sample_celltype %in% celltype1)
+                    celltype_2 <- sum(this_sample_celltype %in% celltype2)
 
 
                     # if one of the cell type is missing,  add 1
@@ -101,7 +102,7 @@ helper_proportion_ratio <- function(data, ncores = 1) {
     rownames(df) <- df$sample
     df <- df[, -1, drop = FALSE]
 
-    df <- df[unique(data$sample), , drop = FALSE]
+    df <- df[unique(alldata$sample), , drop = FALSE]
 
 
     return(df)
@@ -126,13 +127,14 @@ helper_proportion_ratio <- function(data, ncores = 1) {
 #' should be logit-transformed.
 #' @noRd
 #' 
-helper_proportion_raw_st <- function(data, logit = TRUE, ncores = 1) {
+helper_proportion_raw_st <- function(alldata, logit = TRUE, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
-    num_cell_spot <- get_num_cell_per_celltype(data)
+ 
+    num_cell_spot <- get_num_cell_per_celltype(alldata)
 
-    prop_table <- BiocParallel::bplapply(unique(data$sample), function(s) {
-        index <- which(data$sample == s)
+    prop_table <- BiocParallel::bplapply(unique(alldata$sample), function(s) {
+        index <- which(alldata$sample == s)
         celltype <- num_cell_spot[, index]
         celltype <- rowSums(celltype) / sum(celltype)
         data.frame(sample = s, celltype = names(celltype), proportion = celltype)
@@ -161,7 +163,7 @@ helper_proportion_raw_st <- function(data, logit = TRUE, ncores = 1) {
     rownames(tab) <- tab$sample
     tab <- tab[, -1]
 
-    tab <- tab[unique(data$sample), ]
+    tab <- tab[unique(alldata$sample), ]
 
     return(tab)
 }
@@ -173,17 +175,17 @@ helper_proportion_raw_st <- function(data, logit = TRUE, ncores = 1) {
 #' two cell types in each sample, applicable to spatial transcriptomics. 
 #' The ratio is log2 transformed. 
 #' @noRd
-helper_proportion_ratio_st <- function(data, ncores = 1) {
+helper_proportion_ratio_st <- function(alldata, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
-    num_cell_spot <- get_num_cell_per_celltype(data)
+    num_cell_spot <- get_num_cell_per_celltype(alldata)
     allcelltype <- rownames(num_cell_spot)
 
-    x <- unique(data$sample)[1]
-    df <- BiocParallel::bplapply(unique(data$sample), function(x) {
+    # x <- unique(alldata$sample)[1]
+    df <- BiocParallel::bplapply(unique(alldata$sample), function(x) {
         # loop through each sample
 
-        index <- which(data$sample == x)
+        index <- which(alldata$sample == x)
         ct <- num_cell_spot[, index]
         ct <- rowSums(ct)
 
@@ -233,7 +235,7 @@ helper_proportion_ratio_st <- function(data, ncores = 1) {
     rownames(tab) <- tab$sample
     tab <- tab[, -1]
 
-    tab <- tab[unique(data$sample), ]
+    tab <- tab[unique(alldata$sample), ]
 
 
     return(tab)

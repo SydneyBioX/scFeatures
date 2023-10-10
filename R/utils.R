@@ -20,13 +20,13 @@
 #' @importFrom methods is
 #' 
 #' @noRd
-check_data <- function(data, type = "scrna") {
-    if (!is(data, "Seurat")) {
-        # TODO: Should this be a warning/error?
-        warning("please make sure the data is in a Seurat object")
+check_data <- function(alldata, type = "scrna") {
+  
+    if ( !"data" %in% names(alldata)) {
+        stop("Please make sure you provide the data")
     }
 
-    if (!"sample" %in% names(data@meta.data)) {
+    if (!"sample" %in% names(alldata)) {
         stop(
             "For scRNA-seq and spatial proteomics, ",
             "please make sure the data contains celltype and sample label. ",
@@ -35,13 +35,13 @@ check_data <- function(data, type = "scrna") {
     }
 
     if (type %in% c("spatial_t", "spatial_p")) {
-        if (!"y_cord" %in% names(data@meta.data) || !"x_cord" %in% names(data@meta.data)) {
+        if (!"y_cord" %in% names(alldata) || !"x_cord" %in% names(alldata)) {
             stop("Please ensure the data contain x_cord and y_cord.")
         }
     }
 
     if (type == "spatial_t") {
-        if (!"predictions" %in% names(data@assays)) {
+        if (!"predictions" %in% names(alldata)) {
             stop(
                 "Please make sure the data contain a predictions assay.\n",
                 "See vignette's section on spatial transcriptomics for details."
@@ -112,52 +112,50 @@ generateBPParam <- function(cores = 1) {
 #'  of each sample. 
 #' 
 #' @noRd
-bulk_sample_celltype <- function(data, ncores = 1) {
+bulk_sample_celltype <- function(alldata, ncores = 1) {
+  
     BPparam <- generateBPParam(ncores)
 
-    # x <- unique( data$sample)[1]
-    bulk <- BiocParallel::bplapply(unique(data$sample), function(x) {
+    # x <- unique( alldata$sample)[1]
+    bulk <- BiocParallel::bplapply(unique(alldata$sample), function(x) {
         # for this patient
-        this_sample <- data[, data$sample == x]
+        this_sample <- alldata$data[, alldata$sample == x]
+        this_sample_celltype <- alldata$celltype[alldata$sample == x]
 
         # loop through each cell type
-        this_sample_bulk <- lapply(unique(data$celltype), function(y) {
-            index <- which(this_sample$celltype == y)
+        # y <-unique(alldata$celltype)[1]
+        this_sample_bulk <- lapply(unique(alldata$celltype), function(y) {
+            index <- which(this_sample_celltype == y)
 
             # if cell type does not exist in patient, expression is 0 for all genes
             if (length(index) == 0) {
-                temp <- rep(0, nrow(data))
+                temp <- rep(0, nrow(alldata$data))
                 # if there is only 1 cell, do not need to take mean
             } else if (length(index) == 1) {
-                temp <- this_sample@assays$RNA@data[, index]
+                temp <- this_sample[, index]
                 # if multiple cells, average across all cells
             } else {
                 temp <- DelayedMatrixStats::rowMeans2(
-                    DelayedArray(this_sample@assays$RNA@data[, index])
+                    DelayedArray(this_sample[, index])
                 )
             }
 
             temp <- as.matrix(temp)
-            rownames(temp) <- rownames(data)
+            rownames(temp) <- rownames(alldata$data)
             temp
         })
 
         this_sample_bulk <- as.data.frame(do.call(cbind, this_sample_bulk))
 
-        colnames(this_sample_bulk) <- paste0(x, "--", unique(data$celltype))
+        colnames(this_sample_bulk) <- paste0(x, "--", unique(alldata$celltype))
         this_sample_bulk
     }, BPPARAM = BPparam)
 
     bulk <- as.data.frame(do.call(cbind, bulk))
-    bulk <- CreateSeuratObject(bulk)
 
-    sample <- unlist(lapply(strsplit(colnames(bulk), "--"), `[`, 1))
-    celltype <- unlist(lapply(strsplit(colnames(bulk), "--"), `[`, 2))
-    # condition <- unlist( lapply( strsplit(  colnames(bulk), "--") , `[`, 3))
-    bulk$sample <- sample
-    bulk$celltype <- celltype
-    # bulk$condition <- condition
-
+    #sample <- unlist(lapply(strsplit(colnames(bulk), "--"), `[`, 1))
+    #celltype <- unlist(lapply(strsplit(colnames(bulk), "--"), `[`, 2))
+ 
     return(bulk)
 }
 
@@ -179,22 +177,21 @@ bulk_sample_celltype <- function(data, ncores = 1) {
 bulk_sample <- function(data, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
-    bulk <- BiocParallel::bplapply(unique(data$sample), function(x) {
-        index <- which(data$sample == x)
+    
+    # x <- unique(alldata$sample)[1]
+    bulk <- BiocParallel::bplapply( unique(alldata$sample) , function(x) {
+        index <- which( alldata$sample == x)
         temp <- DelayedMatrixStats::rowMeans2(
-            DelayedArray(data@assays$RNA@data[, index])
+            DelayedArray(alldata$data[, index])
         )
         temp <- as.matrix(temp)
     }, BPPARAM = BPparam)
 
     bulk <- as.data.frame(do.call(cbind, bulk))
-    rownames(bulk) <- rownames(data)
-    colnames(bulk) <- unique(data$sample)
-    bulk <- CreateSeuratObject(bulk)
-
-    bulk$sample <- unique(data$sample)
-    # bulk$condition <- data[ , match( bulk$sample, data$sample)]$condition
-
+    rownames(bulk) <- rownames(alldata$data)
+    colnames(bulk) <- unique(alldata$sample)
+  
+   
     return(bulk)
 }
 
@@ -226,21 +223,17 @@ bulk_sample <- function(data, ncores = 1) {
 #'
 #'
 #' @export
-get_num_cell_per_spot <- function(data) {
+get_num_cell_per_spot <- function(alldata) {
  
-  data_cal <- logcounts(data)
-  
-  readcount <- log2(colSums2(data_cal))
+  readcount <- log2(colSums(alldata$data))
   
   linMap <- function(x, from, to) {
     (x - min(x)) / max(x - min(x)) * (to - from) + from
   }
   
   numberofcells <- linMap(readcount, 1, 100)
-  
-  data$number_cells <- numberofcells
-  
-  return(data)
+ 
+  return(numberofcells)
 }
 
 
@@ -276,16 +269,18 @@ rearrange_string <- function(str) {
 #' @return A matrix with the number of cells per cell type at each spot.
 #' 
 #' @noRd
-get_num_cell_per_celltype <- function(data) {
-    prob <- data@assays$predictions
-    prob <- as.matrix(prob@data)
-    prob <- prob[!rownames(prob) == "max", ]
+get_num_cell_per_celltype <- function(alldata) {
+  
+  
+    number_cells <-  get_num_cell_per_spot(alldata)
+    alldata$number_cells <- number_cells
+    
+    prob <- as.matrix(alldata$predictions)
     zero_celltype <- names(which(rowSums(prob) == 0))
     prob <- prob[!rownames(prob) %in% zero_celltype, ]
 
-    MultVec <- data$number_cells
+    MultVec <- alldata$number_cells
     num_cell_per_spot <- mapply(FUN = "*", as.data.frame(prob), MultVec)
-
 
     num_cell_per_spot <- round(num_cell_per_spot, 0)
     mode(num_cell_per_spot) <- "integer"
@@ -353,39 +348,40 @@ L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
 #' data <- process_data(data, normalise = FALSE)
 #'
 #' @export
-process_data <- function(data, normalise = TRUE) {
-    if (!is.null(data@meta.data$celltype)) {
-        data$celltype <- gsub("\\+", "plus", data$celltype)
-        data$celltype <- gsub("\\-", "minus", data$celltype)
-
-        data$celltype <- as.character(data$celltype)
-
-        # remove "small" patient that has less than 10 cells across all cell types
-        celltype_per_patient <- table(data$celltype, data$sample)
-        a <- celltype_per_patient <= 10
-        a <- colSums2(a)
-        small_patient <- names(which(a == length(unique(data$celltype))))
-
-        if (length(small_patient) > 0) {
-            data <- data[, -c(which(data$sample %in% small_patient))]
-        }
-    }
-
-    if (!is.null(data@meta.data$sample)) {
-        data$sample <- as.character(data$sample)
-    }
-
-    if (!is.null(data@meta.data$condition)) {
-        data$condition <- as.character(data$condition)
-    }
-
-
-    if (normalise) {
-        data <- Seurat::NormalizeData(data)
-    }
-
-    return(data)
-}
+# process_data <- function(data, normalise = TRUE) {
+#   
+#     if (!is.null(data@meta.data$celltype)) {
+#         data$celltype <- gsub("\\+", "plus", data$celltype)
+#         data$celltype <- gsub("\\-", "minus", data$celltype)
+# 
+#         data$celltype <- as.character(data$celltype)
+# 
+#         # remove "small" patient that has less than 10 cells across all cell types
+#         celltype_per_patient <- table(data$celltype, data$sample)
+#         a <- celltype_per_patient <= 10
+#         a <- colSums2(a)
+#         small_patient <- names(which(a == length(unique(data$celltype))))
+# 
+#         if (length(small_patient) > 0) {
+#             data <- data[, -c(which(data$sample %in% small_patient))]
+#         }
+#     }
+# 
+#     if (!is.null(data@meta.data$sample)) {
+#         data$sample <- as.character(data$sample)
+#     }
+# 
+#     if (!is.null(data@meta.data$condition)) {
+#         data$condition <- as.character(data$condition)
+#     }
+# 
+# 
+#     if (normalise) {
+#         data <- Seurat::NormalizeData(data)
+#     }
+# 
+#     return(data)
+# }
 
 # TODO: check if return value is html file.
 
