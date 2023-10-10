@@ -348,40 +348,40 @@ L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
 #' data <- process_data(data, normalise = FALSE)
 #'
 #' @export
-# process_data <- function(data, normalise = TRUE) {
-#   
-#     if (!is.null(data@meta.data$celltype)) {
-#         data$celltype <- gsub("\\+", "plus", data$celltype)
-#         data$celltype <- gsub("\\-", "minus", data$celltype)
-# 
-#         data$celltype <- as.character(data$celltype)
-# 
-#         # remove "small" patient that has less than 10 cells across all cell types
-#         celltype_per_patient <- table(data$celltype, data$sample)
-#         a <- celltype_per_patient <= 10
-#         a <- colSums2(a)
-#         small_patient <- names(which(a == length(unique(data$celltype))))
-# 
-#         if (length(small_patient) > 0) {
-#             data <- data[, -c(which(data$sample %in% small_patient))]
-#         }
-#     }
-# 
-#     if (!is.null(data@meta.data$sample)) {
-#         data$sample <- as.character(data$sample)
-#     }
-# 
-#     if (!is.null(data@meta.data$condition)) {
-#         data$condition <- as.character(data$condition)
-#     }
-# 
-# 
-#     if (normalise) {
-#         data <- Seurat::NormalizeData(data)
-#     }
-# 
-#     return(data)
-# }
+process_data <- function(data, normalise = TRUE) {
+
+    if (!is.null(data@meta.data$celltype)) {
+        data$celltype <- gsub("\\+", "plus", data$celltype)
+        data$celltype <- gsub("\\-", "minus", data$celltype)
+
+        data$celltype <- as.character(data$celltype)
+
+        # remove "small" patient that has less than 10 cells across all cell types
+        celltype_per_patient <- table(data$celltype, data$sample)
+        a <- celltype_per_patient <= 10
+        a <- colSums2(a)
+        small_patient <- names(which(a == length(unique(data$celltype))))
+
+        if (length(small_patient) > 0) {
+            data <- data[, -c(which(data$sample %in% small_patient))]
+        }
+    }
+
+    if (!is.null(data@meta.data$sample)) {
+        data$sample <- as.character(data$sample)
+    }
+
+    if (!is.null(data@meta.data$condition)) {
+        data$condition <- as.character(data$condition)
+    }
+
+
+    if (normalise) {
+        data <- Seurat::NormalizeData(data)
+    }
+
+    return(data)
+}
 
 # TODO: check if return value is html file.
 
