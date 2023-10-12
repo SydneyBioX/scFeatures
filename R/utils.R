@@ -1,9 +1,9 @@
 
 
-#' Check if required metadata is in the Seurat object
+#' Check if required metadata is in the object
 #'
 #' @description 
-#' This function checks that the Seurat object contains all the 
+#' This function checks that the object contains all the 
 #' necessary metadata for functions in scFeatures. 
 #' For scRNA-seq, it must contain `sample` and `celltype`.
 #' For spatial proteomics, it must contain `sample`, `celltype` and 
@@ -12,7 +12,7 @@
 #' For spatial transcriptomics data, it must contain `sample`, `x_cord`
 #' `y_cord` and a `predictions` assay.
 #' 
-#' @param data A Seurat object containing expression. 
+#' @param alldata A list object. 
 #' @param type Type of dataset, either "scrna" (for scRNA-seq), "spatial_t" 
 #' (for spatial transcriptomics) or "spatial_p" (for spatial proteomics). 
 #'
@@ -97,18 +97,18 @@ generateBPParam <- function(cores = 1) {
 
 
 
-#' Create pseudo-bulk for each cell type of each sample in a Seurat object
+#' Create pseudo-bulk for each cell type of each sample
 #'
 #' @description 
-#' This function takes a Seurat object as input and creates a pseudo-bulk 
+#' This function takes a list object as input and creates a pseudo-bulk 
 #' for each cell type of each sample in the object. This is computed by
 #' taking the row means of the expression for each cell type of each sample 
 #' If a cell type does not exist in a sample, the expression values for that 
 #' cell type will be 0 for all genes.
 #'
-#' @param data A Seurat object containing expression. 
+#' @param alldata A list object. 
 #' @param ncores Number of cores for parallel computation.
-#' @return A Seurat object containing the pseudo-bulks for each cell type
+#' @return A matrix containing the pseudo-bulks for each cell type
 #'  of each sample. 
 #' 
 #' @noRd
@@ -153,24 +153,21 @@ bulk_sample_celltype <- function(alldata, ncores = 1) {
 
     bulk <- as.data.frame(do.call(cbind, bulk))
 
-    #sample <- unlist(lapply(strsplit(colnames(bulk), "--"), `[`, 1))
-    #celltype <- unlist(lapply(strsplit(colnames(bulk), "--"), `[`, 2))
- 
     return(bulk)
 }
 
 
 
-#' Create pseudo-bulk for each sample in a Seurat object
+#' Create pseudo-bulk for each sample in a list object
 #'
 #' @description  
-#' This function takes a Seurat object as input and creates 
+#' This function takes a list object as input and creates 
 #' a pseudo-bulk for each sample in the object. This is calculated by
 #' taking row means of the expression for each sample. 
 #'
-#' @param data A Seurat object containing expression. 
+#' @param alldata A list object. 
 #' @param ncores Number of cores for parallel computation. 
-#' @return A Seurat object containing the pseudo-bulks for each sample 
+#' @return A matrix containing the pseudo-bulks for each sample 
 #' in the input data. 
 #' 
 #' @noRd
@@ -200,16 +197,15 @@ bulk_sample <- function(alldata, ncores = 1) {
 #' Estimate a relative number of cells per spot for
 #' spatial transcriptomics data
 #'
-#' This function takes a spatial transcriptomics data as input 
+#' This function takes a list object containing spatial transcriptomics matrix as input 
 #' and estimates the relative number of cells per spot in the data. 
 #' The number of cells is estimated as the library size scaled to 
 #' the range from 1 to 100.
 #' This value stored in the `number_cells` attribute.
 #' 
-#' @param data spatial transcriptomics data in Seurat object. 
+#' @param alldata A list object containing spatial transcriptomics
 #'
-#' @return the object with the relative number of cells/spot stored
-#' in the `number_cells` attribute. 
+#' @return a vector with the relative number of cells in each spot. 
 #' 
 #' @importFrom MatrixGenerics colSums2
 #'
@@ -219,7 +215,7 @@ bulk_sample <- function(alldata, ncores = 1) {
 #' data <- example_scrnaseq
 #' data$celltype <- NULL
 #'
-#' data <- get_num_cell_per_spot(data)
+#' number_of_cells <- get_num_cell_per_spot(data)
 #'
 #'
 #' @export
@@ -264,7 +260,7 @@ rearrange_string <- function(str) {
 #' relative number of cells in each spot. The relative number of cells
 #' are estimated using library size of each spot. See get_num_cell_per_spot().
 #' 
-#' @param data a spatial transcriptomics dataset in the form of a Seurat object.
+#' @param alldata A list object containing spatial transcriptomics. 
 #' 
 #' @return A matrix with the number of cells per cell type at each spot.
 #' 
@@ -322,66 +318,6 @@ L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
 }
 
 
-
-
-
-#' data pre-processing
-#' 
-#' @description This function takes a Seurat object as input and does data
-#' cleaning and pre-processing. For example, it replaces the "+" and "-" 
-#' signs in the `celltype` column with "plus" and "minus", respectively.
-#' It also removes patients that have less than 10 cells across all cell types.
-#' If the `normalise` argument is set to `TRUE`, the function will normalize 
-#' the data using the `Seurat::NormalizeData` function.
-#'
-#' @param data input data, a Seurat object. 
-#' @param normalise a logical value indicating whether to normalize the data 
-#' or not. Default value is `TRUE`.
-#'
-#' @return a Seurat object
-#'
-#' @import Seurat
-#'
-#' @examples
-#' data("example_scrnaseq" , package = "scFeatures")
-#' data <- example_scrnaseq
-#' data <- process_data(data, normalise = FALSE)
-#'
-#' @export
-process_data <- function(data, normalise = TRUE) {
-
-    if (!is.null(data@meta.data$celltype)) {
-        data$celltype <- gsub("\\+", "plus", data$celltype)
-        data$celltype <- gsub("\\-", "minus", data$celltype)
-
-        data$celltype <- as.character(data$celltype)
-
-        # remove "small" patient that has less than 10 cells across all cell types
-        celltype_per_patient <- table(data$celltype, data$sample)
-        a <- celltype_per_patient <= 10
-        a <- colSums2(a)
-        small_patient <- names(which(a == length(unique(data$celltype))))
-
-        if (length(small_patient) > 0) {
-            data <- data[, -c(which(data$sample %in% small_patient))]
-        }
-    }
-
-    if (!is.null(data@meta.data$sample)) {
-        data$sample <- as.character(data$sample)
-    }
-
-    if (!is.null(data@meta.data$condition)) {
-        data$condition <- as.character(data$condition)
-    }
-
-
-    if (normalise) {
-        data <- Seurat::NormalizeData(data)
-    }
-
-    return(data)
-}
 
 # TODO: check if return value is html file.
 

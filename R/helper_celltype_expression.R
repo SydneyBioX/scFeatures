@@ -5,9 +5,9 @@
 #' highly correlated with these genes, as mitochondria and ribosomal
 #' genes are typically not  interesting to look at.
 #'
-#' @param data A Seurat object containing expression data
+#' @param data A list object containing expression data
 #'
-#' @return The Seurat object with the mitochrondrial and ribosomal genes and other highly
+#' @return The list object with the mitochrondrial and ribosomal genes and other highly
 #' correlated genes removed
 #'
 #' @importFrom proxyC simil
@@ -164,7 +164,7 @@ find_var_gene <- function(alldata, num_top_gene = 1500, ncores = 1, celltype = T
 
 
 
-#' This function is used to calculate gene expression levels in a Seurat object
+#' This function is used to calculate gene expression levels in a list object
 #' containing expression values. By default, the function first finds the variable
 #' genes per cell type using the find_var_gene function, then calculates the gene
 #' expression levels for these genes in their respective cell type.
@@ -228,10 +228,6 @@ helper_gene_mean_celltype <- function( alldata, genes = NULL, num_top_gene = NUL
   colnames(final_matrix) <- unique(alldata$sample)
 
   final_matrix <- t(final_matrix)
-  # a <- CreateSeuratObject(  final_matrix)
-  # a$sample <- unique(data$sample)
-  # a$condition <- data[ , match( a$sample, data$sample)]$condition
-
 
   return(final_matrix)
 }
@@ -242,7 +238,7 @@ helper_gene_mean_celltype <- function( alldata, genes = NULL, num_top_gene = NUL
 
 
 
-#' This function is used to calculate the proportion of gene expression levels in a Seurat object
+#' This function is used to calculate the proportion of gene expression levels in a list object
 #' containing expression values. By default, the function first finds the variable
 #' genes per cell type using the find_var_gene function, then calculates the gene
 #' expression levels for these genes in their respective cell type.
@@ -304,12 +300,7 @@ helper_gene_prop_celltype <- function(alldata, genes = NULL, num_top_gene = NULL
   colnames(final_matrix) <- unique(alldata$sample)
 
   final_matrix <- t(final_matrix)
-  #
-  # final_matrix <- CreateSeuratObject(  final_matrix  )
-  #
-  # final_matrix$sample <- unique(data$sample)
-  # final_matrix$condition <- data[ , match(   final_matrix$sample, data$sample)]$condition
-  #
+
   return(final_matrix)
 }
 
@@ -319,7 +310,7 @@ helper_gene_prop_celltype <- function(alldata, genes = NULL, num_top_gene = NULL
 
 
 
-#' This function is used to calculate the gene expression correlation in a Seurat object
+#' This function is used to calculate the gene expression correlation in a list object
 #' containing expression values. By default, the function first finds the variable
 #' genes per cell type using the find_var_gene function, then calculates the gene
 #' expression levels for these genes in their respective cell type.
@@ -394,10 +385,7 @@ helper_gene_cor_celltype <- function(alldata, genes = NULL, num_top_gene = NULL,
   colnames(cor_thiscelltype) <- unique(alldata$sample)
 
   cor_thiscelltype <- t(cor_thiscelltype)
-  # a <- CreateSeuratObject( cor_thiscelltype)
-  # a$sample <- unique(data$sample)
-  # a$condition <- data[ , match( a$sample, data$sample)]$condition
-  #
+
   return(cor_thiscelltype)
 }
 
@@ -413,7 +401,7 @@ helper_gene_cor_celltype <- function(alldata, genes = NULL, num_top_gene = NULL,
 
 
 #' This function is used to calculate the expression of genes in each cell type
-#' in a Seurat object containing expression values for spatial transcriptomics.
+#' in a list object containing expression values for spatial transcriptomics.
 #' It performs a linear regression on the gene expression and cell type composition
 #' at each spot to obtain regression coefficients and p-values. The regression
 #' coefficients is considered as the cell type's contribution to the expression the gene.
@@ -517,11 +505,6 @@ helper_gene_mean_celltype_st <- function( alldata, genes = NULL, num_top_gene = 
   colnames(result_coef) <- unique(alldata$sample)
 
   result_coef <- t(result_coef)
-  # final <- CreateSeuratObject(   result_coef)
-  # final <- CreateSeuratObject(final)
-  #
-  # final$sample <- unique(data$sample)
-  # final$condition <- data[ , match(  final$sample, data$sample)]$condition
-  #
+
   return(result_coef)
 }

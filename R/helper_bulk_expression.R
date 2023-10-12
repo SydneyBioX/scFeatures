@@ -1,6 +1,6 @@
 
 #' This function calculates the mean expression of genes in each sample in 
-#' a Seurat object. If no list of genes is provided, it will use find_var_gene 
+#' a list object. If no list of genes is provided, it will use find_var_gene 
 #' function to select the top variable genes. 
 #' 
 #' @noRd
@@ -30,7 +30,7 @@ helper_gene_mean <- function(alldata, genes = NULL, num_top_gene = NULL, ncores 
 
   
 #' This function calculates the proportion of expression of genes in 
-#' each sample in a Seurat object. If no list of genes is provided, it will 
+#' each sample in a list object. If no list of genes is provided, it will 
 #' use find_var_gene function to select the top variable genes. 
 #' @noRd
 helper_gene_prop <- function( alldata, genes = NULL, num_top_gene = NULL, ncores = 1) {
@@ -84,7 +84,7 @@ helper_gene_prop <- function( alldata, genes = NULL, num_top_gene = NULL, ncores
 
 
 #' This function calculates the correlation of gene expression in 
-#' each sample in a Seurat object. If no list of genes is provided, it will 
+#' each sample in a list object. If no list of genes is provided, it will 
 #' use find_var_gene function to select the top variable genes. 
 #' @noRd
 helper_gene_cor <- function(alldata,  genes = NULL,   num_top_gene = NULL,   ncores = 1) {

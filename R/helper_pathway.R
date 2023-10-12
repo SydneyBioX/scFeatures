@@ -33,7 +33,7 @@ get_geneset <- function( species = "Homo sapiens") {
 
 
 
-#' This function performs gene set enrichment analysis on a Seurat object
+#' This function performs gene set enrichment analysis on a list object
 #' containing expression data to generate pathway score. The type of pathway 
 #' analysis method currently supported are ssgsea and aucell. The function 
 #' returns a matrix of samples x features with the pathway scores.
@@ -106,7 +106,7 @@ helper_pathway_gsva <- function(alldata, method = "aucell", geneset, ncores = 1)
 
 
 #' The helper_pathway_mean function use the mean expression of genes in a 
-#' gene set as the basis of pathway score. The input is a Seurat object 
+#' gene set as the basis of pathway score. The input is a list object 
 #' containing the gene expression data, the gene set of interest. Frist 
 #' compute the mean expression of each gene in the gene set. This is 
 #' done on each cell. The mean expression values are then subtracted from 

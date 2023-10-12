@@ -10,7 +10,7 @@
 #' The function supports scRNA-seq and spatial proteomics.
 #' The function returns a dataframe with samples as rows and cell types as columns.
 #' 
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
@@ -22,8 +22,14 @@
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
 #' 
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
+#' 
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' 
 #' feature_proportion_raw <- run_proportion_raw(
-#'     data,
+#'     alldata,
 #'     type = "scrna", ncores = 1
 #' )
 #'
@@ -68,7 +74,7 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #' The function supports scRNA-seq and spatial proteomics.
 #' The function returns a dataframe with samples as rows and cell types as columns.
 #' 
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
@@ -79,9 +85,14 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #' @examples
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
+#' 
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
 #' 
 #' feature_proportion_logit <- run_proportion_logit(
-#'     data,
+#'     alldata,
 #'     type = "scrna", ncores = 1
 #' )
 #'
@@ -127,7 +138,7 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #' The function supports scRNA-seq and spatial proteomics.
 #' The function returns a dataframe with samples as rows and cell types as columns.
 #' 
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
@@ -140,8 +151,14 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
 #' 
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
+#' 
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' 
 #' feature_proportion_ratio <- run_proportion_ratio(
-#'     data,
+#'     alldata,
 #'     type = "scrna", ncores = 1
 #' )
 #'
@@ -180,7 +197,7 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #' rovided by the user, the top variable genes will be selected based on 
 #' the num_top_gene parameter (defaults to 100). 
 #' 
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param genes Optional dataframe with 2 columns: 'marker' and 'celltype'.
 #' The 'marker' column should contain the genes of interest (e.g. 'S100A11', 'CCL4'), 
@@ -201,9 +218,14 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[, 1:20]
-#'
-#'   feature_gene_mean_celltype <- run_gene_mean_celltype(
-#'     data,
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
+#' 
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' 
+#' feature_gene_mean_celltype <- run_gene_mean_celltype(
+#'     alldata,
 #'     type = "scrna", num_top_gene = 100, ncores = 1
 #'   )
 #'
@@ -246,7 +268,7 @@ run_gene_mean_celltype <- function(data,
 #' by the user, the top variable genes will be selected based on the 
 #' num_top_gene parameter (defaults to 100). 
 #' 
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param genes Optional dataframe with 2 columns: 'marker' and 'celltype'.
 #' The 'marker' column should contain the genes of interest (e.g. 'S100A11', 'CCL4'), 
@@ -267,9 +289,14 @@ run_gene_mean_celltype <- function(data,
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[, 1:20]
-#'
-#'  feature_gene_prop_celltype <- run_gene_prop_celltype(
-#'     data,
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
+#' 
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' 
+#' feature_gene_prop_celltype <- run_gene_prop_celltype(
+#'     alldata,
 #'     type = "scrna", num_top_gene = 100, ncores = 1
 #'  )
 #'
@@ -315,7 +342,7 @@ run_gene_prop_celltype <- function(data,
 #' by the user, the top variable genes will be selected based on the 
 #' num_top_gene parameter (defaults to 100). 
 #' 
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param genes Optional dataframe with 2 columns: 'marker' and 'celltype'.
 #' The 'marker' column should contain the genes of interest (e.g. 'S100A11', 'CCL4'), 
@@ -336,9 +363,14 @@ run_gene_prop_celltype <- function(data,
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
 #' 
-#'  feature_gene_cor_celltype <- run_gene_cor_celltype(
-#'    data,
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' 
+#' feature_gene_cor_celltype <- run_gene_cor_celltype(
+#'    alldata,
 #'    type = "scrna", num_top_gene = 5, ncores = 1
 #'  )
 #'
@@ -387,7 +419,7 @@ run_gene_cor_celltype <- function(data,
 #' Alternatively, users can provide their own gene sets of interest 
 #' in a list format.
 #' 
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param method Type of pathway analysis method, currently support `ssgsea`
 #'  and `aucell`
@@ -412,9 +444,14 @@ run_gene_cor_celltype <- function(data,
 #' 
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[, 1:20]
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
 #' 
-#'  feature_pathway_gsva <- run_pathway_gsva(
-#'     data,
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' 
+#' feature_pathway_gsva <- run_pathway_gsva(
+#'     alldata,
 #'     geneset = NULL, species = "Homo sapiens",
 #'     type = "scrna", subsample = FALSE, ncores = 1
 #'  )
@@ -481,7 +518,7 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #' By default, it uses the 50 hallmark gene sets from msigdb. 
 #' Alternatively, users can provide their own gene sets of interest in a list format.
 #' 
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param geneset By default (when the `geneset` argument is not specified),
 #'  we use the 50 hallmark gene set from msigdb.
@@ -501,7 +538,11 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #' 
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
 #' 
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
 #'  feature_pathway_mean <- run_pathway_mean(
 #'     data,
 #'     geneset = NULL, species = "Homo sapiens",
@@ -562,7 +603,7 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' By default, it uses the 50 hallmark gene sets from msigdb. 
 #' Alternatively, users can provide their own gene sets of interest in a list format.
 #' 
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param geneset By default (when the `geneset` argument is not specified),
 #'  we use the 50 hallmark gene set from msigdb.
@@ -582,9 +623,14 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' 
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:20, 1:20]
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
 #' 
-#'  feature_pathway_prop <- run_pathway_prop(
-#'     data,
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' 
+#' feature_pathway_prop <- run_pathway_prop(
+#'     alldata,
 #'     geneset = NULL, species = "Homo sapiens",
 #'     type = "scrna", ncores = 1
 #'  )
@@ -645,7 +691,7 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' 
 #' It supports scRNA-seq. 
 #' 
-#' @param data input data, a Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type input data type, either scrna, spatial_p, or spatial_t
 #' @param ncores number of cores 
 #' 
@@ -657,8 +703,12 @@ run_pathway_prop <- function(data, geneset = NULL,
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
 #' 
-#' feature_CCI <- run_CCI(data, type = "scrna" ,  ncores = 1 )
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' feature_CCI <- run_CCI(alldata, type = "scrna" ,  ncores = 1 )
 #' 
 #' @import dplyr
 #' @import DelayedArray
@@ -701,7 +751,7 @@ run_CCI <- function( data, type = "scrna" , ncores = 1  ){
 #' genes by default. The function supports scRNA-seq, spatial proteomics, 
 #' and spatial transcriptomics.
 #'
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param genes Default to NULL, in which case the top variable genes will be
 #'  used. If provided by user, need to be in the format of a list containing the
@@ -718,9 +768,13 @@ run_CCI <- function( data, type = "scrna" , ncores = 1  ){
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
 #' 
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
 #' feature_gene_mean <- run_gene_mean(
-#'     data,
+#'     alldata,
 #'     type = "scrna", num_top_gene = 150, ncores = 1
 #' )
 #'
@@ -764,7 +818,7 @@ run_gene_mean <- function(data,
 #' genes by default. The function supports scRNA-seq, spatial proteomics, 
 #' and spatial transcriptomics.
 #'
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param genes Default to NULL, in which case the top variable genes will be
 #'  used. If provided by user, need to be in the format of a list containing the
@@ -781,8 +835,12 @@ run_gene_mean <- function(data,
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
 #' 
-#' feature_gene_prop <- run_gene_prop(data, type = "scrna", num_top_gene = 1500, ncores = 1)
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' feature_gene_prop <- run_gene_prop(alldata, type = "scrna", num_top_gene = 1500, ncores = 1)
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowMeans2
@@ -820,7 +878,7 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 #' genes by default. The function supports scRNA-seq, spatial proteomics, 
 #' and spatial transcriptomics.
 #'
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param genes Default to NULL, in which case the top variable genes will be
 #'  used. If provided by user, need to be in the format of a list containing the
@@ -837,9 +895,13 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
 #' 
+#' alldata <- list(data = data, celltype = celltype, sample = sample )
 #'  feature_gene_cor <- run_gene_cor(
-#'    data, type = "scrna", num_top_gene = 5, ncores = 1
+#'    alldata, type = "scrna", num_top_gene = 5, ncores = 1
 #'  )
 #'
 #' @importFrom proxyC simil
@@ -877,7 +939,7 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #' whereas L value less than zero indicates spatial repulsion. 
 #' The function supports  spatial proteomics and spatial transcriptomics.
 #' 
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
@@ -888,14 +950,17 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #' @examples
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
-#' data <- example_scrnaseq
-#' 
+#' celltype <- example_scrnaseq$celltype 
+#' data <- example_scrnaseq@assays$RNA@data
+#' sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
-#' data <- makeSeurat(data, spatialCoords = list(x,y))
-#' data$sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
+#' spatialCoords <- list( x , y)
+ 
+#' alldata <- list(data = data, sample = sample, celltype = celltype, 
+#' spatialCoords  = spatialCoords )
 #' 
-#' feature_L_function <- run_L_function(data, type = "spatial_p", ncores = 1)
+#' feature_L_function <- run_L_function(alldata, type = "spatial_p", ncores = 1)
 #'
 #' @importFrom spatstat.geom ppp pairdist
 #' @importFrom BiocParallel SerialParam bplapply
@@ -939,7 +1004,7 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #' spatial interaction pairs are used as features.  
 #' The function supports spatial proteomics and spatial transcriptomics.
 #' 
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
@@ -952,15 +1017,17 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
-#' 
+#' celltype <- data$celltype 
+#' data <- data@assays$RNA@data
+#' sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
-#' data <- makeSeurat(data, spatialCoords = list(x,y))
-#' data$sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
-#'
+#' spatialCoords <- list( x , y)
+#' alldata <- list(data = data, sample = sample, celltype = celltype, 
+#' spatialCoords  = spatialCoords )
+#' 
 #' feature_celltype_interaction <- run_celltype_interaction(
-#'     data,
-#'     type = "spatial_p", ncores = 1
+#'     alldata, type = "spatial_p", ncores = 1
 #' )
 #'
 #' @importFrom spatstat.geom ppp pairdist
@@ -1004,7 +1071,7 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #' structure, ie, the values are spatially distributed randomly.   
 #' The function supports spatial proteomics and spatial transcriptomics.
 #'  
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #'
@@ -1016,18 +1083,16 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
-#' 
+#' celltype <- data$celltype 
+#' data <- data@assays$RNA@data
+#' sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
-#' data <- makeSeurat(data, spatialCoords = list(x,y))
-#' data$sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
-#' 
-#' feature_celltype_interaction <- run_celltype_interaction(
-#'     data,
-#'     type = "spatial_p", ncores = 1
-#' )
+#' spatialCoords <- list( x , y)
+#' alldata <- list(data = data, sample = sample, celltype = celltype, 
+#' spatialCoords  = spatialCoords )
 #'
-#' feature_Morans_I <- run_Morans_I(data, type = "spatial_p", ncores = 1)
+#' feature_Morans_I <- run_Morans_I(alldata, type = "spatial_p", ncores = 1)
 #'
 #' @importFrom spatstat.geom ppp pairdist
 #' @importFrom BiocParallel SerialParam bplapply
@@ -1071,7 +1136,7 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #' between each cell and its nearest neighbours cell for a particular feature.  
 #' This function supports spatial proteomics, and spatial transcriptomics.
 #'
-#' @param data A Seurat object containing `celltype` and `sample` label
+#' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param ncores Number of cores for parallel processing.
 #' @param num_top_gene Number of top variable genes to use when genes is 
@@ -1085,14 +1150,16 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
+#' celltype <- data$celltype 
+#' data <- data@assays$RNA@data
+#' sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
-#' data <- makeSeurat(data, spatialCoords = list(x,y))
-#' data$sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
-#' 
+#' spatialCoords <- list( x , y)
+#' alldata <- list(data = data, sample = sample, celltype = celltype, 
+#' spatialCoords  = spatialCoords )
 #' feature_nn_correlation <- run_nn_correlation(
-#'     data,
-#'     type = "spatial_p", ncores = 1
+#'     alldata, type = "spatial_p", ncores = 1
 #' )
 #'
 #' @importFrom spatstat.geom ppp pairdist
