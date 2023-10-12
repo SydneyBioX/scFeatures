@@ -174,7 +174,7 @@ bulk_sample_celltype <- function(alldata, ncores = 1) {
 #' in the input data. 
 #' 
 #' @noRd
-bulk_sample <- function(data, ncores = 1) {
+bulk_sample <- function(alldata, ncores = 1) {
     BPparam <- generateBPParam(ncores)
 
     

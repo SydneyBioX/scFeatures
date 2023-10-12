@@ -147,7 +147,7 @@ find_var_gene <- function(alldata, num_top_gene = 1500, ncores = 1, celltype = T
       this <- alldata$data[, alldata$sample == thissample]
       gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this))
       top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
-      thisgene <- rownames(data)[top_gene]
+      thisgene <- rownames(alldata$data)[top_gene]
     }, BPPARAM = BPparam)
 
     gene <- unique(unlist(gene))
