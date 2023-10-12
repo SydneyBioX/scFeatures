@@ -7,7 +7,7 @@
 run_Morans_I(data, type = "spatial_p", ncores = 1)
 }
 \arguments{
-\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
+\item{data}{A list object containing \code{data} matrix and \code{celltype} and \code{sample} vector.}
 
 \item{type}{The type of dataset, either "scrna", "spatial_t", or "spatial_p".}
 
@@ -31,17 +31,15 @@ The function supports spatial proteomics and spatial transcriptomics.
 
 data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq[1:50, 1:20]
-
+celltype <- data$celltype 
+data <- data@assays$RNA@data
+sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
 x <- sample(1:100, ncol(data) , replace = TRUE)
 y <- sample(1:100, ncol(data) , replace = TRUE)
-data <- makeSeurat(data, spatialCoords = list(x,y))
-data$sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
+spatialCoords <- list( x , y)
+alldata <- list(data = data, sample = sample, celltype = celltype, 
+spatialCoords  = spatialCoords )
 
-feature_celltype_interaction <- run_celltype_interaction(
-    data,
-    type = "spatial_p", ncores = 1
-)
-
-feature_Morans_I <- run_Morans_I(data, type = "spatial_p", ncores = 1)
+feature_Morans_I <- run_Morans_I(alldata, type = "spatial_p", ncores = 1)
 
 }

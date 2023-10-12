@@ -4,13 +4,13 @@
 \alias{remove_mito_ribo}
 \title{Remove mitochondrial and ribosomal genes, and other highly correlated genes}
 \usage{
-remove_mito_ribo(data)
+remove_mito_ribo(alldata)
 }
 \arguments{
-\item{data}{A Seurat object containing expression data}
+\item{data}{A list object containing expression data}
 }
 \value{
-The Seurat object with the mitochrondrial and ribosomal genes and other highly
+The list object with the mitochrondrial and ribosomal genes and other highly
 correlated genes removed
 }
 \description{

@@ -5,17 +5,16 @@
 \title{Estimate a relative number of cells per spot for
 spatial transcriptomics data}
 \usage{
-get_num_cell_per_spot(data)
+get_num_cell_per_spot(alldata)
 }
 \arguments{
-\item{data}{spatial transcriptomics data in Seurat object.}
+\item{alldata}{A list object containing spatial transcriptomics}
 }
 \value{
-the object with the relative number of cells/spot stored
-in the \code{number_cells} attribute.
+a vector with the relative number of cells in each spot.
 }
 \description{
-This function takes a spatial transcriptomics data as input
+This function takes a list object containing spatial transcriptomics matrix as input
 and estimates the relative number of cells per spot in the data.
 The number of cells is estimated as the library size scaled to
 the range from 1 to 100.
@@ -27,7 +26,7 @@ data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq
 data$celltype <- NULL
 
-data <- get_num_cell_per_spot(data)
+number_of_cells <- get_num_cell_per_spot(data)
 
 
 }

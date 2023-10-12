@@ -7,7 +7,7 @@
 run_CCI(data, type = "scrna", ncores = 1)
 }
 \arguments{
-\item{data}{input data, a Seurat object containing \code{celltype} and \code{sample} label}
+\item{data}{A list object containing \code{data} matrix and \code{celltype} and \code{sample} vector.}
 
 \item{type}{input data type, either scrna, spatial_p, or spatial_t}
 
@@ -29,7 +29,11 @@ It supports scRNA-seq.
 
 data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq[1:50, 1:20]
+celltype <- data$celltype
+sample <- data$sample
+data <- data@assays$RNA@data
 
-feature_CCI <- run_CCI(data, type = "scrna" ,  ncores = 1 )
+alldata <- list(data = data, celltype = celltype, sample = sample )
+feature_CCI <- run_CCI(alldata, type = "scrna" ,  ncores = 1 )
 
 }

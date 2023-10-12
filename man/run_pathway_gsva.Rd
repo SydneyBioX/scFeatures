@@ -15,7 +15,7 @@ run_pathway_gsva(
 )
 }
 \arguments{
-\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
+\item{data}{A list object containing \code{data} matrix and \code{celltype} and \code{sample} vector.}
 
 \item{method}{Type of pathway analysis method, currently support \code{ssgsea}
 and \code{aucell}}
@@ -56,9 +56,14 @@ in a list format.
 
 data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq[, 1:20]
+celltype <- data$celltype
+sample <- data$sample
+data <- data@assays$RNA@data
 
- feature_pathway_gsva <- run_pathway_gsva(
-    data,
+alldata <- list(data = data, celltype = celltype, sample = sample )
+
+feature_pathway_gsva <- run_pathway_gsva(
+    alldata,
     geneset = NULL, species = "Homo sapiens",
     type = "scrna", subsample = FALSE, ncores = 1
  )

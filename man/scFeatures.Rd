@@ -5,23 +5,29 @@
 \title{Wrapper function to run all feature types in scFeatures}
 \usage{
 scFeatures(
-  data,
+  data = NULL,
+  sample = NULL,
+  celltype = NULL,
+  spatialCoords = NULL,
+  spotProbability = NULL,
   feature_types = NULL,
   type = "scrna",
   ncores = 1,
   species = "Homo sapiens",
   celltype_genes = NULL,
   aggregated_genes = NULL,
-  geneset = NULL,
-  sample = NULL,
-  celltype = NULL,
-  assay = NULL,
-  spatialCoords = NULL
+  geneset = NULL
 )
 }
 \arguments{
 \item{data}{input data, a Seurat object containing "sample" and "celltype" column.
 "x_cord" and "y_cord" is also required for constructing the features in the spatial metrics category.}
+
+\item{sample}{the sample identifier if using a SingleCellExperiment}
+
+\item{celltype}{the celltype identifier if using a SingleCellExperiment}
+
+\item{spatialCoords}{the spatialCoords identifiers if using a SingleCellExperiment}
 
 \item{feature_types}{vector containing the name of the feature types to generate,
 options are "proportion_raw", "proportion_logit" , "proportion_ratio",
@@ -48,13 +54,7 @@ If no value is provided, the top variable genes will be used}
 \item{geneset}{the geneset of interest for celltype specific pathway feature category
 If no value is provided, the 50 hallmark pathways will be used}
 
-\item{sample}{the sample identifier if using a SingleCellExperiment}
-
-\item{celltype}{the celltype identifier if using a SingleCellExperiment}
-
 \item{assay}{the assay identifier if using a SingleCellExperiment}
-
-\item{spatialCoords}{the spatialCoords identifiers if using a SingleCellExperiment}
 }
 \value{
 a list of dataframes containing the generated feature matrix in the form of sample x features

@@ -13,7 +13,7 @@ run_gene_cor(
 )
 }
 \arguments{
-\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
+\item{data}{A list object containing \code{data} matrix and \code{celltype} and \code{sample} vector.}
 
 \item{type}{The type of dataset, either "scrna", "spatial_t", or "spatial_p".}
 
@@ -41,9 +41,13 @@ and spatial transcriptomics.
 
 data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq[1:50, 1:20]
+celltype <- data$celltype
+sample <- data$sample
+data <- data@assays$RNA@data
 
+alldata <- list(data = data, celltype = celltype, sample = sample )
  feature_gene_cor <- run_gene_cor(
-   data, type = "scrna", num_top_gene = 5, ncores = 1
+   alldata, type = "scrna", num_top_gene = 5, ncores = 1
  )
 
 }

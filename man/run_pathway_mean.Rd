@@ -13,7 +13,7 @@ run_pathway_mean(
 )
 }
 \arguments{
-\item{data}{A Seurat object containing \code{celltype} and \code{sample} label}
+\item{data}{A list object containing \code{data} matrix and \code{celltype} and \code{sample} vector.}
 
 \item{geneset}{By default (when the \code{geneset} argument is not specified),
 we use the 50 hallmark gene set from msigdb.
@@ -45,7 +45,11 @@ Alternatively, users can provide their own gene sets of interest in a list forma
 
 data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq[1:50, 1:20]
+celltype <- data$celltype
+sample <- data$sample
+data <- data@assays$RNA@data
 
+alldata <- list(data = data, celltype = celltype, sample = sample )
  feature_pathway_mean <- run_pathway_mean(
     data,
     geneset = NULL, species = "Homo sapiens",
