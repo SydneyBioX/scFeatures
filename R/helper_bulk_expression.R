@@ -38,7 +38,7 @@ helper_gene_prop <- function( alldata, genes = NULL, num_top_gene = NULL, ncores
     BPparam <- generateBPParam(ncores)
 
     if (is.null(num_top_gene)) {
-        num_top_gene <- min(nrow(data), 1500)
+        num_top_gene <- min(nrow(alldata$data), 1500)
     }
 
 
