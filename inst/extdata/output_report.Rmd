@@ -645,9 +645,9 @@ plot_heatmap_bulk <- function(data , num_features = 20  ){
    if (length(top_gene ) == 0){
           
     }else if (length(top_gene) == 1){
-             pheatmap( thiscelltype[top_gene, , drop=FALSE]  ,   
+             pheatmap( data[top_gene, , drop=FALSE]  ,   
                   annotation = condition,
-                 main = label , cluster_rows = FALSE  , color=colorRampPalette(c("navy", "white", "red"))(50) )
+                   cluster_rows = FALSE  , color=colorRampPalette(c("navy", "white", "red"))(50) )
    }else{
 
         p <-  pheatmap( data[top_gene, ]  ,  annotation = condition,
