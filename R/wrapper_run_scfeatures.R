@@ -7,9 +7,12 @@
 #' containing single cell RNA-sequencing data. By default, all feature types will be generated 
 #' and returned in a single list containing multiple data frames.  
 #' 
-#' @param data input data, a Seurat object containing "sample" and "celltype" column.
-#'  "x_cord" and "y_cord" is also required for constructing the features in the spatial metrics category.
-#'
+#' @param data input data, a matrix of genes by cells 
+#' @param sample a vector of sample information
+#' @param celltype a vector of cell type information
+#' @param spatialCoords a list of two vectors containing the x and y coordinates of each cell   
+#' @param spotProbability a matrix of spot probability, each row represents a celltype and each column represents a spot  
+#' 
 #' @param feature_types vector containing the name of the feature types to generate,
 #' options are "proportion_raw", "proportion_logit" , "proportion_ratio",
 #' "gene_mean_celltype", "gene_prop_celltype", "gene_cor_celltype",
@@ -18,10 +21,10 @@
 #' "gene_mean_aggregated", "gene_prop_aggregated", 'gene_cor_aggregated',
 #' "L_stats" , "celltype_interaction" , "morans_I", "nn_correlation".
 #'  If no value is provided, all the above feature types will be generated.
-#'
 #' @param type input data type, either "scrna" (stands for single-cell RNA-sequencing data),
 #' "spatial_p" (stands for spatial proteomics data), or "spatial_t" (stands for single cell spatial data )
 #' @param ncores number of cores , default to 1
+#' 
 #' @param species either "Homo sapiens" or "Mus musculus". Defaults to "Homo sapiens" if no value provided
 #' @param celltype_genes the genes of interest for celltype specific gene expression feature category
 #' If no value is provided, the top variable genes will be used
@@ -29,17 +32,17 @@
 #' If no value is provided, the top variable genes will be used
 #' @param geneset the geneset of interest for celltype specific pathway feature category
 #' If no value is provided, the 50 hallmark pathways will be used
-#' @param sample the sample identifier if using a SingleCellExperiment
-#' @param celltype the celltype identifier if using a SingleCellExperiment
-#' @param assay the assay identifier if using a SingleCellExperiment
-#' @param spatialCoords the spatialCoords identifiers if using a SingleCellExperiment
+
 #'
 #' @return a list of dataframes containing the generated feature matrix in the form of sample x features
 #'
 #' @examples
 #' data("example_scrnaseq" , package = "scFeatures") 
 #' data <- example_scrnaseq
-#' scfeatures_result <- scFeatures(data, type = "scrna", feature_types = "proportion_raw")
+#' celltype <- data$celltype
+#' sample <- data$sample
+#' data <- data@assays$RNA@data
+#' scfeatures_result <- scFeatures(data, celltype = celltype, sample = sample, type = "scrna", feature_types = "proportion_raw")
 #' 
 #' @export
 scFeatures <- function(data = NULL, sample = NULL ,  celltype = NULL, 

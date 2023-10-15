@@ -20,14 +20,15 @@ scFeatures(
 )
 }
 \arguments{
-\item{data}{input data, a Seurat object containing "sample" and "celltype" column.
-"x_cord" and "y_cord" is also required for constructing the features in the spatial metrics category.}
+\item{data}{input data, a matrix of genes by cells}
 
-\item{sample}{the sample identifier if using a SingleCellExperiment}
+\item{sample}{a vector of sample information}
 
-\item{celltype}{the celltype identifier if using a SingleCellExperiment}
+\item{celltype}{a vector of cell type information}
 
-\item{spatialCoords}{the spatialCoords identifiers if using a SingleCellExperiment}
+\item{spatialCoords}{a list of two vectors containing the x and y coordinates of each cell}
+
+\item{spotProbability}{a matrix of spot probability, each row represents a celltype and each column represents a spot}
 
 \item{feature_types}{vector containing the name of the feature types to generate,
 options are "proportion_raw", "proportion_logit" , "proportion_ratio",
@@ -53,8 +54,6 @@ If no value is provided, the top variable genes will be used}
 
 \item{geneset}{the geneset of interest for celltype specific pathway feature category
 If no value is provided, the 50 hallmark pathways will be used}
-
-\item{assay}{the assay identifier if using a SingleCellExperiment}
 }
 \value{
 a list of dataframes containing the generated feature matrix in the form of sample x features
@@ -67,6 +66,9 @@ and returned in a single list containing multiple data frames.
 \examples{
 data("example_scrnaseq" , package = "scFeatures") 
 data <- example_scrnaseq
-scfeatures_result <- scFeatures(data, type = "scrna", feature_types = "proportion_raw")
+celltype <- data$celltype
+sample <- data$sample
+data <- data@assays$RNA@data
+scfeatures_result <- scFeatures(data, celltype = celltype, sample = sample, type = "scrna", feature_types = "proportion_raw")
 
 }
