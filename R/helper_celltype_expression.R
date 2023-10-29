@@ -79,7 +79,7 @@ remove_mito_ribo <- function(alldata) {
 #' function only calculates the HVG across all cells and returns a vector of HVGs.
 #' @noRd
 find_var_gene <- function(alldata, num_top_gene = 1500, ncores = 1, celltype = TRUE) {
-  BPparam <- generateBPParam(ncores)
+  BPparam <- scFeatures:::generateBPParam(ncores)
 
   if (celltype == TRUE) {
     # here calculates the HVG across all cells across all cell types
@@ -96,9 +96,9 @@ find_var_gene <- function(alldata, num_top_gene = 1500, ncores = 1, celltype = T
 
 
     # below calculates the HVG within each cell type
-    # thiscelltype <- unique( alldata$celltype)[1]
+    # thiscelltype <- unique( alldata$celltype)[28]
     gene <- BiocParallel::bplapply(unique(alldata$celltype), function(thiscelltype) {
-      this_data <- alldata$data[, alldata$celltype == thiscelltype]
+      this_data <- alldata$data[, alldata$celltype == thiscelltype, drop=FALSE ]
       this_data_sample <-  alldata$sample[ alldata$celltype == thiscelltype]
       thisgene <- c()
 
@@ -171,7 +171,7 @@ find_var_gene <- function(alldata, num_top_gene = 1500, ncores = 1, celltype = T
 #' The output is a returns a matrix of samples by features.
 #' @noRd
 helper_gene_mean_celltype <- function( alldata, genes = NULL, num_top_gene = NULL, ncores = 1) {
-  BPparam <- generateBPParam(ncores)
+  BPparam <- scFeatures:::generateBPParam(ncores)
 
 
   if (is.null(num_top_gene)) {
@@ -180,7 +180,7 @@ helper_gene_mean_celltype <- function( alldata, genes = NULL, num_top_gene = NUL
 
 
   if (is.null(genes)) {
-    all_marker <- find_var_gene(alldata ,
+    all_marker <-  find_var_gene(alldata ,
       num_top_gene = num_top_gene,
       ncores = ncores, celltype = TRUE
     )
@@ -337,8 +337,8 @@ helper_gene_cor_celltype <- function(alldata, genes = NULL, num_top_gene = NULL,
   #  thiscelltype <- unique( alldata$celltype) [1]
 
   cor_thiscelltype <- BiocParallel::bplapply(unique(all_marker$celltype), function(thiscelltype) {
-    thisdata <- alldata$data[, alldata$celltype == thiscelltype]
-    thisdata_sample <- alldata$sample[alldata$celltype == thiscelltype]
+    thisdata <- alldata$data[, alldata$celltype == thiscelltype , drop = FALSE ]
+    thisdata_sample <- alldata$sample[alldata$celltype == thiscelltype   ]
     gene <- all_marker[all_marker$celltype == thiscelltype, ]$marker
     thisdata <- thisdata[gene, ]
 

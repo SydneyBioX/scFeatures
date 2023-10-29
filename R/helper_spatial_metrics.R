@@ -42,7 +42,7 @@ individual_celltype_interaction_sp <- function(this_sample) {
     })
 
     nn_list_cellTypes <- unlist(nn_list_cellTypes)
-    nn_list_cellTypes <- rearrange_string(nn_list_cellTypes)
+    nn_list_cellTypes <- scFeatures:::rearrange_string(nn_list_cellTypes)
     nn_list_cellTypes <- table(nn_list_cellTypes)
 
     return(nn_list_cellTypes)
@@ -57,7 +57,7 @@ individual_celltype_interaction_sp <- function(this_sample) {
 #' @noRd
 helper_celltype_interaction_sp <- function( alldata, ncores = 1) {
   
-    BPparam <- generateBPParam(ncores)
+    BPparam <- scFeatures:::generateBPParam(ncores)
 
     # s <- unique( alldata$sample)[1]
 
@@ -111,9 +111,10 @@ helper_celltype_interaction_sp <- function( alldata, ncores = 1) {
     }
 
 
+    
     rownames(temp) <- temp$nn_list_cellTypes
-    temp <- temp[, -1]
-
+    temp <- temp[, -1, drop=FALSE]
+ 
     colnames(temp) <- unique(alldata$sample)
 
     temp <- t(temp)
@@ -332,10 +333,13 @@ helper_L_stat_st <- function(alldata, ncores = 1) {
         colnames(temp) <- make.names(colnames(temp), unique = TRUE)
     }
 
-
-    rownames(temp) <- temp$rowname
-    temp <- temp[, -1]
-
+    if (ncol(temp == 2)){
+      temp <- temp[, -2, drop=FALSE]
+    }else{
+      rownames(temp) <- temp$rowname
+      temp <- temp[, -1]
+    } 
+     
     colnames(temp) <- unique(alldata$sample)
 
     temp <- t(temp)
@@ -373,7 +377,7 @@ individual_L_stat_sp <- function(this_sample) {
 
     L_patient <- list()
     for (i in seq_len(nrow(cellTypes_pair))) {
-        L_patient[[i]] <- L_stats(cell_points,
+        L_patient[[i]] <- scFeatures:::L_stats(cell_points,
             from = cellTypes_pair[i, 1],
             to = cellTypes_pair[i, 2],
             L_dist = 50
@@ -442,15 +446,21 @@ helper_L_stat_sp <- function( alldata, ncores = 1) {
     }
 
 
-    rownames(temp) <- temp$rowname
-    temp <- temp[, -1]
+    
+    if (ncol(temp == 2)){
+      temp <- temp[, -2, drop=FALSE]
+    }else{
+      rownames(temp) <- temp$rowname
+      temp <- temp[, -1]
+    } 
+      colnames(temp) <- unique(alldata$sample)
+      
+      temp <- t(temp)
+      
+      temp[is.na(temp)] <- 0
+      L_patient <- temp
 
-    colnames(temp) <- unique(alldata$sample)
 
-    temp <- t(temp)
-
-    temp[is.na(temp)] <- 0
-    L_patient <- temp
 
     return(L_patient)
 }
@@ -569,9 +579,14 @@ helper_nncorr_protein <- function(alldata, num_top_gene = NULL, ncores = 1) {
     }
 
 
-    rownames(temp) <- temp$rowname
-    temp <- temp[, -1]
-
+    if (ncol(temp == 2)){
+      temp <- temp[, -2, drop=FALSE]
+    }else{
+      rownames(temp) <- temp$rowname
+      temp <- temp[, -1]
+    } 
+    
+ 
     colnames(temp) <- unique(alldata$sample)
 
     temp <- t(temp)
@@ -698,10 +713,14 @@ helper_moran <- function( alldata, num_top_gene = NULL, ncores = 1) {
         colnames(temp) <- make.names(colnames(temp), unique = TRUE)
     }
 
-
-    rownames(temp) <- temp$rowname
-    temp <- temp[, -1]
-
+    if (ncol(temp == 2)){
+      temp <- temp[, -2, drop=FALSE]
+    }else{
+      rownames(temp) <- temp$rowname
+      temp <- temp[, -1]
+    } 
+    
+ 
     colnames(temp) <- unique(alldata$sample)
 
     temp <- t(temp)

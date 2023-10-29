@@ -48,9 +48,9 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
                 "for feature `proportion_raw`"
             )
         }
-        X <- helper_proportion_raw(data, logit = FALSE)
+        X <- scFeatures:::helper_proportion_raw(data, logit = FALSE)
     } else if (type == "spatial_t") {
-        X <- helper_proportion_raw_st(data, logit = FALSE, ncores)
+        X <- scFeatures:::helper_proportion_raw_st(data, logit = FALSE, ncores)
     } else {
         cli::cli_abort(c(
             "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
@@ -112,7 +112,7 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
                 "for feature proportion_logit."
             )
         }
-        X <- helper_proportion_raw(data, logit = TRUE)
+        X <- scFeatures:::helper_proportion_raw(data, logit = TRUE)
     } else if (type == "spatial_t") {
         X <- helper_proportion_raw_st(data, logit = TRUE, ncores)
     } else {
