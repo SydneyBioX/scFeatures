@@ -333,7 +333,7 @@ helper_L_stat_st <- function(alldata, ncores = 1) {
         colnames(temp) <- make.names(colnames(temp), unique = TRUE)
     }
 
-    if (ncol(temp == 2)){
+    if (ncol(temp ) == 2){
       temp <- temp[, -2, drop=FALSE]
     }else{
       rownames(temp) <- temp$rowname
@@ -447,7 +447,7 @@ helper_L_stat_sp <- function( alldata, ncores = 1) {
 
 
     
-    if (ncol(temp == 2)){
+    if (ncol(temp) == 2){
       temp <- temp[, -2, drop=FALSE]
     }else{
       rownames(temp) <- temp$rowname
@@ -579,7 +579,7 @@ helper_nncorr_protein <- function(alldata, num_top_gene = NULL, ncores = 1) {
     }
 
 
-    if (ncol(temp == 2)){
+    if (ncol(temp) == 2){
       temp <- temp[, -2, drop=FALSE]
     }else{
       rownames(temp) <- temp$rowname
@@ -657,13 +657,13 @@ individual_moran_cor <- function(thissample) {
 #' @noRd
 helper_moran <- function( alldata, num_top_gene = NULL, ncores = 1) {
   
-    BPparam <- generateBPParam(ncores)
+    BPparam <- scFeatures:::generateBPParam(ncores)
 
     if (is.null(num_top_gene)) {
         num_top_gene <- min(nrow(alldata$data), 1500)
     }
 
-    top_gene <- find_var_gene(alldata,
+    top_gene <- scFeatures:::find_var_gene(alldata,
         num_top_gene = num_top_gene,
         ncores = ncores, celltype = FALSE
     )
@@ -713,7 +713,7 @@ helper_moran <- function( alldata, num_top_gene = NULL, ncores = 1) {
         colnames(temp) <- make.names(colnames(temp), unique = TRUE)
     }
 
-    if (ncol(temp == 2)){
+    if (ncol(temp) == 2){
       temp <- temp[, -2, drop=FALSE]
     }else{
       rownames(temp) <- temp$rowname
