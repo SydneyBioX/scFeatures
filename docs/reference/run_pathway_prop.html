@@ -78,7 +78,7 @@ Alternatively, users can provide their own gene sets of interest in a list forma
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data</dt>
-<dd><p>A Seurat object containing <code>celltype</code> and <code>sample</code> label</p></dd>
+<dd><p>A list object containing <code>data</code> matrix and <code>celltype</code> and <code>sample</code> vector.</p></dd>
 
 
 <dt>geneset</dt>
@@ -117,12 +117,22 @@ in cells from a given celltype.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"example_scrnaseq"</span> , package <span class="op">=</span> <span class="st">"scFeatures"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">example_scrnaseq</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">celltype</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">celltype</span></span></span>
+<span class="r-in"><span><span class="va">sample</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">sample</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">@</span><span class="va">assays</span><span class="op">$</span><span class="va">RNA</span><span class="op">@</span><span class="va">data</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span> <span class="va">feature_pathway_prop</span> <span class="op">&lt;-</span> <span class="fu">run_pathway_prop</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">data</span>,</span></span>
+<span class="r-in"><span><span class="va">alldata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, celltype <span class="op">=</span> <span class="va">celltype</span>, sample <span class="op">=</span> <span class="va">sample</span> <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">feature_pathway_prop</span> <span class="op">&lt;-</span> <span class="fu">run_pathway_prop</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">alldata</span>,</span></span>
 <span class="r-in"><span>    geneset <span class="op">=</span> <span class="cn">NULL</span>, species <span class="op">=</span> <span class="st">"Homo sapiens"</span>,</span></span>
 <span class="r-in"><span>    type <span class="op">=</span> <span class="st">"scrna"</span>, ncores <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span> <span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> BiocParallel errors</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>   1 remote errors, element index: 2</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>   48 unevaluated and other errors</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>   first remote error:</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> Error in quantile.default(expression_level, 0.75): missing values and NaN's not allowed if 'na.rm' is FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

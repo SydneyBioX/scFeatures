@@ -69,7 +69,7 @@ The function returns a dataframe with samples as rows and cell types as columns.
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data</dt>
-<dd><p>A Seurat object containing <code>celltype</code> and <code>sample</code> label</p></dd>
+<dd><p>A list object containing <code>data</code> matrix and <code>celltype</code> and <code>sample</code> vector.</p></dd>
 
 
 <dt>type</dt>
@@ -94,8 +94,14 @@ representing proportions.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"example_scrnaseq"</span> , package <span class="op">=</span> <span class="st">"scFeatures"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">example_scrnaseq</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">celltype</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">celltype</span></span></span>
+<span class="r-in"><span><span class="va">sample</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">sample</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">@</span><span class="va">assays</span><span class="op">$</span><span class="va">RNA</span><span class="op">@</span><span class="va">data</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">alldata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, celltype <span class="op">=</span> <span class="va">celltype</span>, sample <span class="op">=</span> <span class="va">sample</span> <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">feature_proportion_raw</span> <span class="op">&lt;-</span> <span class="fu">run_proportion_raw</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">data</span>,</span></span>
+<span class="r-in"><span>    <span class="va">alldata</span>,</span></span>
 <span class="r-in"><span>    type <span class="op">=</span> <span class="st">"scrna"</span>, ncores <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
