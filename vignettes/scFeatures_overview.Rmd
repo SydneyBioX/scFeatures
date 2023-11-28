@@ -43,9 +43,9 @@ scFeatures can be run using one line of code `scfeatures_result <- scFeatures(da
 ```{r}
 data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq
-data <- process_data(data, normalise = TRUE) #  perform normalisation
 
-scfeatures_result <- scFeatures(data, feature_types = "gene_mean_celltype")
+scfeatures_result <- scFeatures(data = data@assays$RNA@data, sample = data$sample, celltype = data$celltype,
+                                feature_types = "gene_mean_celltype")
 ```
 
   
