@@ -213,8 +213,7 @@ bulk_sample <- function(alldata, ncores = 1) {
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq
-#' data$celltype <- NULL
-#'
+#' data <- list(data = data)
 #' number_of_cells <- get_num_cell_per_spot(data)
 #'
 #'
