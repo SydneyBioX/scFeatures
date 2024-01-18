@@ -56,7 +56,7 @@ helper_gene_prop <- function( alldata, genes = NULL, num_top_gene = NULL, ncores
 
     # thispatient  <- unique( alldata$sample )[1]
     gene_prop <- BiocParallel::bplapply(  unique(alldata$sample), function(thispatient) {
-            this_patient_data <- alldata$data[, alldata$sample == thispatient]
+            this_patient_data <- alldata$data[, alldata$sample == thispatient, drop= FALSE]
             this_patient_data <- this_patient_data 
             this_patient_data <- +(this_patient_data > 1)
             this_patient_prop <- DelayedMatrixStats::rowMeans2(
@@ -112,7 +112,7 @@ helper_gene_cor <- function(alldata,  genes = NULL,   num_top_gene = NULL,   nco
     #  x <- unique(alldata$sample) [1]
     cor_data <- BiocParallel::bplapply(unique(alldata$sample), function(x) {
       
-        thisdata <- alldata$data[, alldata$sample == x]
+        thisdata <- alldata$data[, alldata$sample == x, drop=FALSE]
 
         cor_data <- proxyC::simil( thisdata ,   method = "correlation"    )
         cor_data <- as.matrix(cor_data)

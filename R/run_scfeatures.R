@@ -26,7 +26,7 @@
 #' sample <- data$sample
 #' data <- data@assays$RNA@data
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 #' 
 #' feature_proportion_raw <- run_proportion_raw(
 #'     alldata,
@@ -48,9 +48,9 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
                 "for feature `proportion_raw`"
             )
         }
-        X <- scFeatures:::helper_proportion_raw(data, logit = FALSE)
+        X <- helper_proportion_raw(data, logit = FALSE)
     } else if (type == "spatial_t") {
-        X <- scFeatures:::helper_proportion_raw_st(data, logit = FALSE, ncores)
+        X <- helper_proportion_raw_st(data, logit = FALSE, ncores)
     } else {
         cli::cli_abort(c(
             "Parameter {.var type} must be 'scrna', 'spatial_p' or 'spatial_t'",
@@ -89,7 +89,7 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #' sample <- data$sample
 #' data <- data@assays$RNA@data
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 #' 
 #' feature_proportion_logit <- run_proportion_logit(
 #'     alldata,
@@ -112,7 +112,7 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
                 "for feature proportion_logit."
             )
         }
-        X <- scFeatures:::helper_proportion_raw(data, logit = TRUE)
+        X <- helper_proportion_raw(data, logit = TRUE)
     } else if (type == "spatial_t") {
         X <- helper_proportion_raw_st(data, logit = TRUE, ncores)
     } else {
@@ -155,7 +155,7 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #' sample <- data$sample
 #' data <- data@assays$RNA@data
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 #' 
 #' feature_proportion_ratio <- run_proportion_ratio(
 #'     alldata,
@@ -217,12 +217,12 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #' @examples
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
-#' data <- example_scrnaseq[, 1:20]
+#' data <- example_scrnaseq[1:200, 1:200]
 #' celltype <- data$celltype
 #' sample <- data$sample
 #' data <- data@assays$RNA@data
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 #' 
 #' feature_gene_mean_celltype <- run_gene_mean_celltype(
 #'     alldata,
@@ -293,7 +293,7 @@ run_gene_mean_celltype <- function(data,
 #' sample <- data$sample
 #' data <- data@assays$RNA@data
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 #' 
 #' feature_gene_prop_celltype <- run_gene_prop_celltype(
 #'     alldata,
@@ -367,7 +367,7 @@ run_gene_prop_celltype <- function(data,
 #' sample <- data$sample
 #' data <- data@assays$RNA@data
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 #' 
 #' feature_gene_cor_celltype <- run_gene_cor_celltype(
 #'    alldata,
@@ -448,7 +448,7 @@ run_gene_cor_celltype <- function(data,
 #' sample <- data$sample
 #' data <- data@assays$RNA@data
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 #' 
 #' feature_pathway_gsva <- run_pathway_gsva(
 #'     alldata,
@@ -537,14 +537,14 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #' @examples
 #' 
 #' data("example_scrnaseq" , package = "scFeatures")
-#' data <- example_scrnaseq[1:50, 1:20]
+#' data <- example_scrnaseq[1:500, 1:200]
 #' celltype <- data$celltype
 #' sample <- data$sample
 #' data <- data@assays$RNA@data
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 #'  feature_pathway_mean <- run_pathway_mean(
-#'     data,
+#'     alldata ,
 #'     geneset = NULL, species = "Homo sapiens",
 #'     type = "scrna", ncores = 1
 #'  )
@@ -622,12 +622,12 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' @examples
 #' 
 #' data("example_scrnaseq" , package = "scFeatures")
-#' data <- example_scrnaseq[1:20, 1:20]
+#' data <- example_scrnaseq[1:100, 1:100]
 #' celltype <- data$celltype
 #' sample <- data$sample
 #' data <- data@assays$RNA@data
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 #' 
 #' feature_pathway_prop <- run_pathway_prop(
 #'     alldata,
@@ -702,12 +702,12 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' @examples
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
-#' data <- example_scrnaseq[1:50, 1:20]
+#' data <- example_scrnaseq[1:1000, 1:100]
 #' celltype <- data$celltype
 #' sample <- data$sample
-#' data <- data@assays$RNA@data
+#' data <- as.matrix(data@assays$RNA@data)
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 #' feature_CCI <- run_CCI(alldata, type = "scrna" ,  ncores = 1 )
 #' 
 #' @import dplyr
@@ -772,7 +772,7 @@ run_CCI <- function( data, type = "scrna" , ncores = 1  ){
 #' sample <- data$sample
 #' data <- data@assays$RNA@data
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 #' feature_gene_mean <- run_gene_mean(
 #'     alldata,
 #'     type = "scrna", num_top_gene = 150, ncores = 1
@@ -839,8 +839,8 @@ run_gene_mean <- function(data,
 #' sample <- data$sample
 #' data <- data@assays$RNA@data
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
-#' feature_gene_prop <- run_gene_prop(alldata, type = "scrna", num_top_gene = 1500, ncores = 1)
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
+#' feature_gene_prop <- run_gene_prop(alldata, type = "scrna", num_top_gene = 10, ncores = 1)
 #'
 #' @importFrom proxyC simil
 #' @importFrom DelayedMatrixStats rowMeans2
@@ -894,12 +894,12 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 #' @examples
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
-#' data <- example_scrnaseq[1:50, 1:20]
+#' data <- example_scrnaseq[1:100, 1:200]
 #' celltype <- data$celltype
 #' sample <- data$sample
 #' data <- data@assays$RNA@data
 #' 
-#' alldata <- list(data = data, celltype = celltype, sample = sample )
+#' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 #'  feature_gene_cor <- run_gene_cor(
 #'    alldata, type = "scrna", num_top_gene = 5, ncores = 1
 #'  )
@@ -957,7 +957,7 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' spatialCoords <- list( x , y)
  
-#' alldata <- list(data = data, sample = sample, celltype = celltype, 
+#' alldata <- scFeatures:::formatData(data = data, sample = sample, celltype = celltype, 
 #' spatialCoords  = spatialCoords )
 #' 
 #' feature_L_function <- run_L_function(alldata, type = "spatial_p", ncores = 1)
@@ -1023,7 +1023,7 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' spatialCoords <- list( x , y)
-#' alldata <- list(data = data, sample = sample, celltype = celltype, 
+#' alldata <- scFeatures:::formatData(data = data, sample = sample, celltype = celltype, 
 #' spatialCoords  = spatialCoords )
 #' 
 #' feature_celltype_interaction <- run_celltype_interaction(
@@ -1089,7 +1089,7 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' spatialCoords <- list( x , y)
-#' alldata <- list(data = data, sample = sample, celltype = celltype, 
+#' alldata <- scFeatures:::formatData(data = data, sample = sample, celltype = celltype, 
 #' spatialCoords  = spatialCoords )
 #'
 #' feature_Morans_I <- run_Morans_I(alldata, type = "spatial_p", ncores = 1)
@@ -1156,7 +1156,7 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #' x <- sample(1:100, ncol(data) , replace = TRUE)
 #' y <- sample(1:100, ncol(data) , replace = TRUE)
 #' spatialCoords <- list( x , y)
-#' alldata <- list(data = data, sample = sample, celltype = celltype, 
+#' alldata <- scFeatures:::formatData(data = data, sample = sample, celltype = celltype, 
 #' spatialCoords  = spatialCoords )
 #' feature_nn_correlation <- run_nn_correlation(
 #'     alldata, type = "spatial_p", ncores = 1

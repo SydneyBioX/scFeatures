@@ -50,7 +50,7 @@ celltype <- data$celltype
 sample <- data$sample
 data <- data@assays$RNA@data
 
-alldata <- list(data = data, celltype = celltype, sample = sample )
+alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 
 feature_gene_prop_celltype <- run_gene_prop_celltype(
     alldata,

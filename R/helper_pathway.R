@@ -121,7 +121,7 @@ helper_pathway_mean <- function(alldata, geneset, ncores = 1) {
 
     geneset_score_all <- BiocParallel::bplapply(geneset, function(x) {
       
-        exprsMat_geneset <- alldata$data[rownames(alldata$data) %in% x, ]
+        exprsMat_geneset <- alldata$data[rownames(alldata$data) %in% x, , drop=FALSE]
 
         geneset <- DelayedMatrixStats::colMeans2(
             DelayedArray::DelayedArray(exprsMat_geneset)
@@ -172,11 +172,11 @@ helper_pathway_mean <- function(alldata, geneset, ncores = 1) {
 individual_geneset_proportion_celltype <- function(alldata, this_geneset) {
     # first find the average expression of the genes across cells
     expression_level <- DelayedMatrixStats::colMeans2(DelayedArray::DelayedArray(
-        alldata$data[rownames(alldata$data) %in% this_geneset, ] 
+        alldata$data[rownames(alldata$data) %in% this_geneset, , drop=FALSE] 
     ))
 
     # find the third quantile as the threshold
-    third_quantile <- as.numeric(quantile(expression_level, 0.75))
+    third_quantile <- as.numeric(quantile(expression_level, 0.75, na.rm=T))
     # if the expression is higher than the third quantile,
     # this gene is expressed
     expression_level <- as.numeric(expression_level >= third_quantile)

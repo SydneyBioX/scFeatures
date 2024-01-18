@@ -37,7 +37,7 @@ sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= T
 x <- sample(1:100, ncol(data) , replace = TRUE)
 y <- sample(1:100, ncol(data) , replace = TRUE)
 spatialCoords <- list( x , y)
-alldata <- list(data = data, sample = sample, celltype = celltype, 
+alldata <- scFeatures:::formatData(data = data, sample = sample, celltype = celltype, 
 spatialCoords  = spatialCoords )
 
 feature_Morans_I <- run_Morans_I(alldata, type = "spatial_p", ncores = 1)

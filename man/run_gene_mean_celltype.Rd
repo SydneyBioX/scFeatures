@@ -45,12 +45,12 @@ the num_top_gene parameter (defaults to 100).
 \examples{
 
 data("example_scrnaseq" , package = "scFeatures")
-data <- example_scrnaseq[, 1:20]
+data <- example_scrnaseq[1:200, 1:200]
 celltype <- data$celltype
 sample <- data$sample
 data <- data@assays$RNA@data
 
-alldata <- list(data = data, celltype = celltype, sample = sample )
+alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 
 feature_gene_mean_celltype <- run_gene_mean_celltype(
     alldata,

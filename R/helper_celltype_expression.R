@@ -5,7 +5,7 @@
 #' highly correlated with these genes, as mitochondria and ribosomal
 #' genes are typically not  interesting to look at.
 #'
-#' @param data A list object containing expression data
+#' @param alldata A list object containing expression data
 #'
 #' @return The list object with the mitochrondrial and ribosomal genes and other highly
 #' correlated genes removed
@@ -15,8 +15,8 @@
 #' @examples
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
-#' data <- example_scrnaseq[, 1:20]
-#' 
+#' data <- example_scrnaseq
+#' data <- list(data = data@assays$RNA@data)
 #' data <- remove_mito_ribo(data)
 #'
 #' @export
@@ -79,14 +79,14 @@ remove_mito_ribo <- function(alldata) {
 #' function only calculates the HVG across all cells and returns a vector of HVGs.
 #' @noRd
 find_var_gene <- function(alldata, num_top_gene = 1500, ncores = 1, celltype = TRUE) {
-  BPparam <- scFeatures:::generateBPParam(ncores)
+  BPparam <- generateBPParam(ncores)
 
   if (celltype == TRUE) {
     # here calculates the HVG across all cells across all cell types
     
     # thissample <- unique(alldata$sample)[1]
     hvg_across_all_cells <- BiocParallel::bplapply(unique(alldata$sample), function(thissample) {
-      this <- alldata$data[, alldata$sample == thissample]
+      this <- alldata$data[, alldata$sample == thissample, drop=FALSE]
       gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this))
       top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
       thisgene <- rownames(alldata$data)[top_gene]
@@ -144,7 +144,7 @@ find_var_gene <- function(alldata, num_top_gene = 1500, ncores = 1, celltype = T
     
     # thissample <- unique(alldata$sample)[1]
     gene <- BiocParallel::bplapply( unique(alldata$sample), function(thissample) {
-      this <- alldata$data[, alldata$sample == thissample]
+      this <- alldata$data[, alldata$sample == thissample, drop=FALSE]
       gene_var <- DelayedMatrixStats::rowVars(DelayedArray::DelayedArray(this))
       top_gene <- order(gene_var, decreasing = TRUE)[1:num_top_gene]
       thisgene <- rownames(alldata$data)[top_gene]
@@ -171,7 +171,7 @@ find_var_gene <- function(alldata, num_top_gene = 1500, ncores = 1, celltype = T
 #' The output is a returns a matrix of samples by features.
 #' @noRd
 helper_gene_mean_celltype <- function( alldata, genes = NULL, num_top_gene = NULL, ncores = 1) {
-  BPparam <- scFeatures:::generateBPParam(ncores)
+  BPparam <- generateBPParam(ncores)
 
 
   if (is.null(num_top_gene)) {
@@ -445,7 +445,7 @@ helper_gene_mean_celltype_st <- function( alldata, genes = NULL, num_top_gene = 
 
   temp <- BiocParallel::bplapply(unique(alldata$sample), function(s) {
     index <- which(alldata$sample == s)
-    thispatient <- alldata$data[, index]
+    thispatient <- alldata$data[, index, drop=FALSE]
 
     gene_count <- as.matrix(alldata$data[, index])
     gene_name <- rownames(gene_count)

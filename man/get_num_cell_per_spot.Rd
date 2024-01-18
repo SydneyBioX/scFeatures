@@ -23,7 +23,7 @@ This value stored in the \code{number_cells} attribute.
 \examples{
 
 data("example_scrnaseq" , package = "scFeatures")
-data <- example_scrnaseq
+data <- example_scrnaseq@assays$RNA@data
 data <- list(data = data)
 number_of_cells <- get_num_cell_per_spot(data)
 

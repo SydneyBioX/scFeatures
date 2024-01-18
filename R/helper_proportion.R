@@ -43,7 +43,7 @@ helper_proportion_raw <- function( alldata, logit = TRUE) {
 #' @noRd
 helper_proportion_ratio <- function( alldata, ncores = 1) {
   
-    BPparam <- scFeatures:::generateBPParam(ncores)
+    BPparam <- generateBPParam(ncores)
 
     allcelltype <- unique( alldata$celltype)
 
@@ -128,10 +128,10 @@ helper_proportion_ratio <- function( alldata, ncores = 1) {
 #' @noRd
 #' 
 helper_proportion_raw_st <- function(alldata, logit = TRUE, ncores = 1) {
-    BPparam <- scFeatures:::generateBPParam(ncores)
+    BPparam <- generateBPParam(ncores)
 
  
-    num_cell_spot <- scFeatures:::get_num_cell_per_celltype(alldata)
+    num_cell_spot <- get_num_cell_per_celltype(alldata)
 
     prop_table <- BiocParallel::bplapply(unique(alldata$sample), function(s) {
         index <- which(alldata$sample == s)

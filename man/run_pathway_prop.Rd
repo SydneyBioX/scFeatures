@@ -44,12 +44,12 @@ Alternatively, users can provide their own gene sets of interest in a list forma
 \examples{
 
 data("example_scrnaseq" , package = "scFeatures")
-data <- example_scrnaseq[1:20, 1:20]
+data <- example_scrnaseq[1:100, 1:100]
 celltype <- data$celltype
 sample <- data$sample
 data <- data@assays$RNA@data
 
-alldata <- list(data = data, celltype = celltype, sample = sample )
+alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 
 feature_pathway_prop <- run_pathway_prop(
     alldata,

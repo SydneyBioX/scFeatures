@@ -119,8 +119,8 @@ bulk_sample_celltype <- function(alldata, ncores = 1) {
     # x <- unique( alldata$sample)[1]
     bulk <- BiocParallel::bplapply(unique(alldata$sample), function(x) {
         # for this patient
-        this_sample <- alldata$data[, alldata$sample == x]
-        this_sample_celltype <- alldata$celltype[alldata$sample == x]
+        this_sample <- alldata$data[, alldata$sample == x, drop=FALSE]
+        this_sample_celltype <- alldata$celltype[alldata$sample == x, drop=FALSE]
 
         # loop through each cell type
         # y <-unique(alldata$celltype)[1]
@@ -179,7 +179,7 @@ bulk_sample <- function(alldata, ncores = 1) {
     bulk <- BiocParallel::bplapply( unique(alldata$sample) , function(x) {
         index <- which( alldata$sample == x)
         temp <- DelayedMatrixStats::rowMeans2(
-            DelayedArray(alldata$data[, index])
+            DelayedArray(alldata$data[, index, drop=FALSE])
         )
         temp <- as.matrix(temp)
     }, BPPARAM = BPparam)
@@ -212,7 +212,7 @@ bulk_sample <- function(alldata, ncores = 1) {
 #' @examples
 #'
 #' data("example_scrnaseq" , package = "scFeatures")
-#' data <- example_scrnaseq
+#' data <- example_scrnaseq@assays$RNA@data
 #' data <- list(data = data)
 #' number_of_cells <- get_num_cell_per_spot(data)
 #'

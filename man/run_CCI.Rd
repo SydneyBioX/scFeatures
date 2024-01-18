@@ -28,12 +28,12 @@ It supports scRNA-seq.
 \examples{
 
 data("example_scrnaseq" , package = "scFeatures")
-data <- example_scrnaseq[1:50, 1:20]
+data <- example_scrnaseq[1:1000, 1:100]
 celltype <- data$celltype
 sample <- data$sample
-data <- data@assays$RNA@data
+data <- as.matrix(data@assays$RNA@data)
 
-alldata <- list(data = data, celltype = celltype, sample = sample )
+alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 feature_CCI <- run_CCI(alldata, type = "scrna" ,  ncores = 1 )
 
 }

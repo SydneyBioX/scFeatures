@@ -45,7 +45,7 @@ celltype <- data$celltype
 sample <- data$sample
 data <- data@assays$RNA@data
 
-alldata <- list(data = data, celltype = celltype, sample = sample )
-feature_gene_prop <- run_gene_prop(alldata, type = "scrna", num_top_gene = 1500, ncores = 1)
+alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
+feature_gene_prop <- run_gene_prop(alldata, type = "scrna", num_top_gene = 10, ncores = 1)
 
 }

@@ -45,7 +45,7 @@ celltype <- data$celltype
 sample <- data$sample
 data <- data@assays$RNA@data
 
-alldata <- list(data = data, celltype = celltype, sample = sample )
+alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
 feature_gene_mean <- run_gene_mean(
     alldata,
     type = "scrna", num_top_gene = 150, ncores = 1

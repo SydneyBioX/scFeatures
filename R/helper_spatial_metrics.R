@@ -42,7 +42,7 @@ individual_celltype_interaction_sp <- function(this_sample) {
     })
 
     nn_list_cellTypes <- unlist(nn_list_cellTypes)
-    nn_list_cellTypes <- scFeatures:::rearrange_string(nn_list_cellTypes)
+    nn_list_cellTypes <- rearrange_string(nn_list_cellTypes)
     nn_list_cellTypes <- table(nn_list_cellTypes)
 
     return(nn_list_cellTypes)
@@ -57,7 +57,7 @@ individual_celltype_interaction_sp <- function(this_sample) {
 #' @noRd
 helper_celltype_interaction_sp <- function( alldata, ncores = 1) {
   
-    BPparam <- scFeatures:::generateBPParam(ncores)
+    BPparam <- generateBPParam(ncores)
 
     # s <- unique( alldata$sample)[1]
 
@@ -377,7 +377,7 @@ individual_L_stat_sp <- function(this_sample) {
 
     L_patient <- list()
     for (i in seq_len(nrow(cellTypes_pair))) {
-        L_patient[[i]] <- scFeatures:::L_stats(cell_points,
+        L_patient[[i]] <- L_stats(cell_points,
             from = cellTypes_pair[i, 1],
             to = cellTypes_pair[i, 2],
             L_dist = 50
@@ -657,13 +657,13 @@ individual_moran_cor <- function(thissample) {
 #' @noRd
 helper_moran <- function( alldata, num_top_gene = NULL, ncores = 1) {
   
-    BPparam <- scFeatures:::generateBPParam(ncores)
+    BPparam <- generateBPParam(ncores)
 
     if (is.null(num_top_gene)) {
         num_top_gene <- min(nrow(alldata$data), 1500)
     }
 
-    top_gene <- scFeatures:::find_var_gene(alldata,
+    top_gene <- find_var_gene(alldata,
         num_top_gene = num_top_gene,
         ncores = ncores, celltype = FALSE
     )

@@ -10,7 +10,7 @@ helper_CCI <- function( alldata , ncores = 1  ){
  
   capture.output( suppressMessages( individual_cci <- BiocParallel::bplapply(  unique(alldata$sample), function(x){
     
-                        data_dataframe  <- alldata$data[, alldata$sample == x]
+                        data_dataframe  <- alldata$data[, alldata$sample == x, drop=F]
                         
                         celltype <- as.factor( alldata$celltype[ alldata$sample == x])
                         celltype_numeric <- as.numeric(  celltype)
