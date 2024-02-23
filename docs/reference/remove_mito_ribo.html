@@ -14,7 +14,7 @@ genes are typically not  interesting to look at."><!-- mathjax --><script src="h
     
     <a class="navbar-brand me-2" href="../index.html">scFeatures</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@ genes are typically not  interesting to look at.</p>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>data</dt>
+    <dl><dt>alldata</dt>
 <dd><p>A list object containing expression data</p></dd>
 
 </dl></div>
@@ -82,9 +82,10 @@ correlated genes removed</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"example_scrnaseq"</span> , package <span class="op">=</span> <span class="st">"scFeatures"</span><span class="op">)</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in data("example_scrnaseq", package = "scFeatures"):</span> could not find function "data"</span>
-<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">example_scrnaseq</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">example_scrnaseq</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'example_scrnaseq' not found</span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span><span class="op">@</span><span class="va">assays</span><span class="op">$</span><span class="va">RNA</span><span class="op">@</span><span class="va">data</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'data' not found</span>
 <span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">remove_mito_ribo</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'data' not found</span>
 <span class="r-in"><span></span></span>
