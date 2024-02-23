@@ -54,7 +54,7 @@ in a list format.
 }
 \examples{
 
-data("example_scrnaseq" , package = "scFeatures")
+utils::data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq[, 1:20]
 celltype <- data$celltype
 sample <- data$sample

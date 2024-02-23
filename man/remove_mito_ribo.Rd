@@ -7,7 +7,7 @@
 remove_mito_ribo(alldata)
 }
 \arguments{
-\item{data}{A list object containing expression data}
+\item{alldata}{A list object containing expression data}
 }
 \value{
 The list object with the mitochrondrial and ribosomal genes and other highly

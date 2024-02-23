@@ -27,7 +27,7 @@ It supports scRNA-seq.
 }
 \examples{
 
-data("example_scrnaseq" , package = "scFeatures")
+utils::data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq[1:1000, 1:100]
 celltype <- data$celltype
 sample <- data$sample

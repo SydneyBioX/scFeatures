@@ -29,7 +29,7 @@ The function supports spatial proteomics and spatial transcriptomics.
 }
 \examples{
 
-data("example_scrnaseq" , package = "scFeatures")
+utils::data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq[1:50, 1:20]
 celltype <- data$celltype 
 data <- data@assays$RNA@data

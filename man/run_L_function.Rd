@@ -26,7 +26,7 @@ The function supports  spatial proteomics and spatial transcriptomics.
 }
 \examples{
 
-data("example_scrnaseq" , package = "scFeatures")
+utils::data("example_scrnaseq" , package = "scFeatures")
 celltype <- example_scrnaseq$celltype 
 data <- example_scrnaseq@assays$RNA@data
 sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )

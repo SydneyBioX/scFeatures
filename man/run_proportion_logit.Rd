@@ -26,7 +26,7 @@ The function supports scRNA-seq and spatial proteomics.
 The function returns a dataframe with samples as rows and cell types as columns.
 }
 \examples{
-data("example_scrnaseq" , package = "scFeatures")
+utils::data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq[1:50, 1:20]
 celltype <- data$celltype
 sample <- data$sample

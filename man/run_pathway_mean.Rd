@@ -43,7 +43,7 @@ Alternatively, users can provide their own gene sets of interest in a list forma
 }
 \examples{
 
-data("example_scrnaseq" , package = "scFeatures")
+utils::data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq[1:500, 1:200]
 celltype <- data$celltype
 sample <- data$sample

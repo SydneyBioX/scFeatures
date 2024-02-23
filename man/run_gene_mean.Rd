@@ -39,7 +39,7 @@ and spatial transcriptomics.
 }
 \examples{
 
-data("example_scrnaseq" , package = "scFeatures")
+utils::data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq
 celltype <- data$celltype
 sample <- data$sample

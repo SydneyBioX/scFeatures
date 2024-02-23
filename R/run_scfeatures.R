@@ -19,7 +19,7 @@
 #' representing proportions.
 #'
 #' @examples
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
 #' 
 #' celltype <- data$celltype
@@ -83,7 +83,7 @@ run_proportion_raw <- function(data, type = "scrna", ncores = 1) {
 #' representing proportions.
 #' 
 #' @examples
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
 #' celltype <- data$celltype
 #' sample <- data$sample
@@ -148,7 +148,7 @@ run_proportion_logit <- function(data, type = "scrna", ncores = 1) {
 #'
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
 #' 
 #' celltype <- data$celltype
@@ -216,7 +216,7 @@ run_proportion_ratio <- function(data, type = "scrna", ncores = 1) {
 #'
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:200, 1:200]
 #' celltype <- data$celltype
 #' sample <- data$sample
@@ -287,7 +287,7 @@ run_gene_mean_celltype <- function(data,
 #'
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[, 1:20]
 #' celltype <- data$celltype
 #' sample <- data$sample
@@ -361,7 +361,7 @@ run_gene_prop_celltype <- function(data,
 #'
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
 #' celltype <- data$celltype
 #' sample <- data$sample
@@ -442,7 +442,7 @@ run_gene_cor_celltype <- function(data,
 #' 
 #' @examples
 #' 
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[, 1:20]
 #' celltype <- data$celltype
 #' sample <- data$sample
@@ -536,7 +536,7 @@ run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
 #' 
 #' @examples
 #' 
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:500, 1:200]
 #' celltype <- data$celltype
 #' sample <- data$sample
@@ -621,7 +621,7 @@ run_pathway_mean <- function(data, geneset = NULL,
 #' 
 #' @examples
 #' 
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:100, 1:100]
 #' celltype <- data$celltype
 #' sample <- data$sample
@@ -701,7 +701,7 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' 
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:1000, 1:100]
 #' celltype <- data$celltype
 #' sample <- data$sample
@@ -766,7 +766,7 @@ run_CCI <- function( data, type = "scrna" , ncores = 1  ){
 #' 
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq
 #' celltype <- data$celltype
 #' sample <- data$sample
@@ -833,7 +833,7 @@ run_gene_mean <- function(data,
 #' 
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
 #' celltype <- data$celltype
 #' sample <- data$sample
@@ -893,7 +893,7 @@ run_gene_prop <- function(data, type = "scrna", genes = NULL, num_top_gene = NUL
 #' 
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:100, 1:200]
 #' celltype <- data$celltype
 #' sample <- data$sample
@@ -949,7 +949,7 @@ run_gene_cor <- function(data, type = "scrna", genes = NULL, num_top_gene = NULL
 #' 
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' celltype <- example_scrnaseq$celltype 
 #' data <- example_scrnaseq@assays$RNA@data
 #' sample <- sample( c("patient1", "patient2", "patient3"), ncol(data) , replace= TRUE )
@@ -1015,7 +1015,7 @@ run_L_function <- function(data, type = "spatial_p", ncores = 1) {
 #' 
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
 #' celltype <- data$celltype 
 #' data <- data@assays$RNA@data
@@ -1081,7 +1081,7 @@ run_celltype_interaction <- function(data, type = "spatial_p", ncores = 1) {
 #' 
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
 #' celltype <- data$celltype 
 #' data <- data@assays$RNA@data
@@ -1148,7 +1148,7 @@ run_Morans_I <- function(data, type = "spatial_p", ncores = 1) {
 #' 
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq[1:50, 1:20]
 #' celltype <- data$celltype 
 #' data <- data@assays$RNA@data
