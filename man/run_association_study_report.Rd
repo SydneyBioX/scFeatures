@@ -28,8 +28,9 @@ results of the association study. The report is saved to the specified
 output folder.
 }
 \examples{
+\dontrun{
 output_folder <- tempdir()
-data("scfeatures_result" , package = "scFeatures")
+utils::data("scfeatures_result" , package = "scFeatures")
 run_association_study_report(scfeatures_result, output_folder )
-
+}
 }

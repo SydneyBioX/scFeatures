@@ -37,7 +37,7 @@
 #' @return a list of dataframes containing the generated feature matrix in the form of sample x features
 #'
 #' @examples
-#' data("example_scrnaseq" , package = "scFeatures") 
+#' utils::data("example_scrnaseq" , package = "scFeatures") 
 #' data <- example_scrnaseq
 #' celltype <- data$celltype
 #' sample <- data$sample

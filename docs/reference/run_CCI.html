@@ -94,16 +94,6 @@ etc, with the numbers representing cell-cell interaction probability.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"example_scrnaseq"</span> , package <span class="op">=</span> <span class="st">"scFeatures"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">example_scrnaseq</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">]</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: SeuratObject</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: sp</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 'SeuratObject' was built with package 'Matrix' 1.6.1.1 but the current</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> version is 1.6.4; it is recomended that you reinstall 'SeuratObject' as</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> the ABI for 'Matrix' may have changed</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: 'SeuratObject'</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from 'package:base':</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect</span>
 <span class="r-in"><span><span class="va">celltype</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">celltype</span></span></span>
 <span class="r-in"><span><span class="va">sample</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">sample</span></span></span>
 <span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">@</span><span class="va">assays</span><span class="op">$</span><span class="va">RNA</span><span class="op">@</span><span class="va">data</span><span class="op">)</span></span></span>

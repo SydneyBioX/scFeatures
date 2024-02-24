@@ -64,7 +64,7 @@ containing single cell RNA-sequencing data. By default, all feature types will b
 and returned in a single list containing multiple data frames.
 }
 \examples{
-data("example_scrnaseq" , package = "scFeatures") 
+utils::data("example_scrnaseq" , package = "scFeatures") 
 data <- example_scrnaseq
 celltype <- data$celltype
 sample <- data$sample

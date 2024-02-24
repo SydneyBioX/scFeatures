@@ -20,7 +20,7 @@ genes are typically not  interesting to look at.
 }
 \examples{
 
-data("example_scrnaseq" , package = "scFeatures")
+utils::data("example_scrnaseq" , package = "scFeatures")
 data <- example_scrnaseq
 data <- list(data = data@assays$RNA@data)
 data <- remove_mito_ribo(data)

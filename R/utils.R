@@ -211,7 +211,7 @@ bulk_sample <- function(alldata, ncores = 1) {
 #'
 #' @examples
 #'
-#' data("example_scrnaseq" , package = "scFeatures")
+#' utils::data("example_scrnaseq" , package = "scFeatures")
 #' data <- example_scrnaseq@assays$RNA@data
 #' data <- list(data = data)
 #' number_of_cells <- get_num_cell_per_spot(data)
@@ -341,10 +341,11 @@ L_stats <- function(ppp_obj = NULL, from = NULL, to = NULL, L_dist = NULL) {
 #' argument
 #' 
 #' @examples
+#' \dontrun{
 #' output_folder <- tempdir()
-#' data("scfeatures_result" , package = "scFeatures")
+#' utils::data("scfeatures_result" , package = "scFeatures")
 #' run_association_study_report(scfeatures_result, output_folder )
-#' 
+#' }
 #' @import rmarkdown
 #' 
 #' @export
