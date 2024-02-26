@@ -82,7 +82,7 @@ find_de_CCI <- function(data){
     
     tT <- tT[ tT$P.Value < 0.1, ]
     
-    celltype <- unlist(lapply ( strsplit( rownames(tT), split = "..", fixed=TRUE ), `[`, 1))
+    celltype <- unlist(lapply ( strsplit( rownames(tT), split = "--", fixed=TRUE ), `[`, 1))
     
     celltype <-  sort(table(celltype), decreasing = TRUE) 
     celltype <- celltype[1:min(length(celltype), 3)]
@@ -642,8 +642,8 @@ plot_heatmap_bulk <- function(data , num_features = 20  ){
     top_gene <- rownames(top_gene )[1:min( num_features, nrow(top_gene)) ]
     rownames( condition) <- colnames(data)
     
-   if (length(top_gene ) == 0){
-          
+   if ( all(is.na(top_gene)) ){
+          p <- "no significant genes"
     }else if (length(top_gene) == 1){
              pheatmap( data[top_gene, , drop=FALSE]  ,   
                   annotation = condition,
@@ -897,7 +897,7 @@ plot_CCI <- function(data ){
     }
     
     condition <- unlist( lapply( strsplit( colnames(data), "_cond_"), `[`, 2) ) 
-    celltype <- unlist( lapply( strsplit( rownames(data), split = "..", fixed=TRUE ), `[`, 1) )
+    celltype <- unlist( lapply( strsplit( rownames(data), split = "--", fixed=TRUE ), `[`, 1) )
     
     thiscelltype <-  unique(celltype)[1]
     
@@ -910,8 +910,8 @@ plot_CCI <- function(data ){
        cond2_count <-data_thiscelltype[ , which( condition == unique( condition)[2])]
        cond2_count <- sum( cond2_count !=0 )/ncol(cond2_count)
        
-       temp <- data.frame(ligand  = strsplit( thiscelltype, split = "....", fixed=TRUE )[[1]][1],
-                          receptor = strsplit( thiscelltype, split = "....", fixed=TRUE )[[1]][2],
+       temp <- data.frame(ligand  = strsplit( thiscelltype, split = "->", fixed=TRUE )[[1]][1],
+                          receptor = strsplit( thiscelltype, split = "->", fixed=TRUE )[[1]][2],
                           diff = cond1_count - cond2_count )
        df <- rbind(df, temp)
     }
