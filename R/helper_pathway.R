@@ -55,19 +55,19 @@ helper_pathway_gsva <- function(alldata, method = "aucell", geneset, ncores = 1)
 
                 message("calculating ", start, " to ", finish, " cells")
                 thesecell <- as.matrix(alldata$data[, start:finish])
-                temp_topMatrixGSVA <- GSVA::gsva(thesecell, geneset,
-                    method = "ssgsea",
-                    min.sz = 10, max.sz = 999999, abs.ranking = FALSE, verbose = TRUE,
-                    parallel.sz = ncores
-                )
+                
+                gsvaPar <- GSVA::ssgseaParam(thesecell, geneset ,
+                                             minSize = 10, maxSize  = 999999)
+                temp_topMatrixGSVA <- GSVA::gsva(gsvaPar,  verbose=TRUE )
+      
                 topMatrixGSVA <- cbind(topMatrixGSVA, temp_topMatrixGSVA)
             }
         } else { # if <30000, can directly be used as input into the GSVA function
-            topMatrixGSVA <- GSVA::gsva(as.matrix(alldata$data), geneset,
-                method = "ssgsea",
-                min.sz = 10, max.sz = 999999, abs.ranking = FALSE, verbose = TRUE,
-                parallel.sz = ncores
-            )
+          
+           gsvaPar <- GSVA::ssgseaParam(as.matrix(alldata$data), geneset ,
+                                        minSize = 10, maxSize  = 999999)
+           topMatrixGSVA <- GSVA::gsva(gsvaPar,  verbose=TRUE )
+      
         }
 
 
