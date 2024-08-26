@@ -27,7 +27,7 @@ devtools::install_github("SydneyBioX/scFeatures")
 
 
 scFeatures can be run using one line of code 
-`scfeatures_result <- scFeatures(data)`
+`scfeatures_result <- scFeatures(data = data, sample = sample, celltype = celltype)`
 which generates a list of dataframes containing all feature types in the form of samples x features.
 
 Currently, scFeatures support scRNA-seq, spatial proteomics and spatial transcriptomics. 
