@@ -13,8 +13,6 @@ individual_celltype_interaction_sp <- function(this_sample) {
         x = this_sample$x_cord,
         y = this_sample$y_cord,
         check = FALSE,
-        yrange = c(0, max(this_sample$y_cord)),
-        xrange = c(0, max(this_sample$x_cord)),
         marks = as.factor(this_sample$celltype)
     )
 
