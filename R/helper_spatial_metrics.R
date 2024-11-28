@@ -12,7 +12,15 @@ individual_celltype_interaction_sp <- function(this_sample) {
     cell_points <- spatstat.geom::ppp(
         x = this_sample$x_cord,
         y = this_sample$y_cord,
-        check = FALSE,
+        check = FALSE,,
+        xrange = c(
+            min(as.numeric(this_sample$x_cord)),
+            max(as.numeric(this_sample$x_cord))
+        ),
+        yrange = c(
+            min(as.numeric(this_sample$y_cord)),
+            max(as.numeric(this_sample$y_cord))
+        ),
         marks = as.factor(this_sample$celltype)
     )
 
@@ -360,9 +368,15 @@ individual_L_stat_sp <- function(this_sample) {
     cell_points <- spatstat.geom::ppp(
         x = this_sample$x_cord ,
         y = this_sample$y_cord,
+        xrange = c(
+            min(as.numeric(this_sample$x_cord)),
+            max(as.numeric(this_sample$x_cord))
+        ),
+        yrange = c(
+            min(as.numeric(this_sample$y_cord)),
+            max(as.numeric(this_sample$y_cord))
+        ),
         check = FALSE,
-        yrange = c(0, max(this_sample$y_cord)),
-        xrange = c(0, max(this_sample$x_cord)),
         marks = as.factor(this_sample$celltype)
     )
 
