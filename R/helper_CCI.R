@@ -15,7 +15,7 @@ helper_CCI <- function( alldata , ncores = 1  ){
                         celltype <- as.factor( alldata$celltype[ alldata$sample == x])
                         celltype_numeric <- as.numeric(  celltype)
                         
-                        signal <-  SingleCellSignalR::cell_signaling(data = data_dataframe,
+                        signal <-  SingleCellSignalR::cell_signaling(data = as.matrix(data_dataframe),
                                                                      genes = rownames(data_dataframe), 
                                                                     cluster =   celltype_numeric,
                                                                     c.names = levels(celltype), write = FALSE)
