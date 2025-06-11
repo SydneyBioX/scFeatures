@@ -422,7 +422,7 @@ run_gene_cor_celltype <- function(data,
 #' @param data A list object containing `data` matrix and `celltype` and `sample` vector. 
 #' @param type The type of dataset, either "scrna", "spatial_t", or "spatial_p".
 #' @param method Type of pathway analysis method, currently support `ssgsea`
-#'  and `aucell`
+#'  and `aucell`, default to `aucell`
 #' @param geneset By default (when the `geneset` argument is not specified),
 #'  we use the 50 hallmark gene set from msigdb.
 #'  The users can also provide their geneset of interest in a list format, with
@@ -468,7 +468,7 @@ run_gene_cor_celltype <- function(data,
 #' @importFrom DelayedMatrixStats colMeans2
 #'
 #' @export
-run_pathway_gsva <- function(data, method = "ssgsea", geneset = NULL,
+run_pathway_gsva <- function(data, method = "aucell", geneset = NULL,
     species = "Homo sapiens",
     type = "scrna", subsample = TRUE, ncores = 1) {
     check_data(data, type)
