@@ -51,7 +51,7 @@ helper_pathway_gsva <- function(alldata, method = "aucell", geneset, ncores = 1)
 
             for (i in c(2:length(index))) {
                 start <- index[i - 1]
-                finish <- index[i] - 1
+                finish <- ifelse(i == length(index), index[i], index[i] - 1)
 
                 message("calculating ", start, " to ", finish, " cells")
                 thesecell <- as.matrix(alldata$data[, start:finish])
