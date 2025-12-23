@@ -712,7 +712,7 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' 
 #' @import dplyr
 #' @import DelayedArray
-#' @import SingleCellSignalR
+#' @import CellChat
 #' 
 #' @export
 run_CCI <- function( data, type = "scrna" ,  species = "human", ncores = 1  ){
