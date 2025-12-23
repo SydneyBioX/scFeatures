@@ -715,7 +715,7 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' @import CellChat
 #' 
 #' @export
-run_CCI <- function( data, type = "scrna" ,  species = "human", ncores = 1  ){
+run_CCI <- function( data, type = "scrna" ,  species = "Homo sapiens", ncores = 1  ){
   
   check_data(data, type)
   
