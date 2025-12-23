@@ -715,12 +715,12 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' @import SingleCellSignalR
 #' 
 #' @export
-run_CCI <- function( data, type = "scrna" , ncores = 1  ){
+run_CCI <- function( data, type = "scrna" ,  species = "human", ncores = 1  ){
   
   check_data(data, type)
   
   if ( type == "scrna" )  {
-      X <- helper_CCI(data, ncores =  ncores )
+      X <- helper_CCI(data, species = species, ncores =  ncores )
   }
   
   if ( type == "spatial_p" )  {
