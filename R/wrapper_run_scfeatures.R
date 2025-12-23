@@ -141,7 +141,7 @@ scFeatures <- function(data = NULL, sample = NULL ,  celltype = NULL,
             if (thisfeature == "CCI"){
                 message("generating CCI features")
                  return_list[["CCI"]] <- run_CCI(alldata , 
-                      type = type, ncores = ncores 
+                      type = type, species = species, ncores = ncores 
                 )
             }
             
