@@ -21,7 +21,7 @@ helper_CCI <- function( alldata , species, ncores = 1  ){
   # x <- unique(alldata$sample)[2]
  
  
-  individual_cci <- BiocParallel::bplapply(  unique(alldata$sample), function(x){
+  capture.output( suppressMessages( individual_cci <- BiocParallel::bplapply(  unique(alldata$sample), function(x){
            
  
     
@@ -103,7 +103,7 @@ helper_CCI <- function( alldata , species, ncores = 1  ){
       cellchat_score 
       }
   
-       }, BPPARAM = BPparam)  
+       }, BPPARAM = BPparam) ))
   
   
   
