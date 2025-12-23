@@ -4,11 +4,17 @@ helper_CCI <- function( alldata , species, ncores = 1  ){
  
   BPparam <-  generateBPParam(ncores)
  
+  data("CellChatDB.human", package="CellChat")
+  data("CellChatDB.mouse", package="CellChat")
+  data("PPI.human", package="CellChat")
+  data("PPI.mouse",package="CellChat" )
   
-  if (species == "human"){
+  if (species == "Homo sapiens"){
     CellChatDB <- CellChatDB.human
+    PPI <- PPI.human
   }else{
     CellChatDB <- CellChatDB.mouse
+    PPI <- PPI.mouse
   }
   
   
@@ -39,7 +45,7 @@ helper_CCI <- function( alldata , species, ncores = 1  ){
               # do parallel
               cellchat <- identifyOverExpressedGenes(cellchat)
               cellchat <- identifyOverExpressedInteractions(cellchat)
-              cellchat <- projectData(cellchat, PPI.human)
+              cellchat <- smoothData(cellchat, adj = PPI)
               cellchat <- computeCommunProb(cellchat)
               cellchat <- computeCommunProbPathway(cellchat)
               cellchat <- aggregateNet(cellchat)
@@ -49,7 +55,20 @@ helper_CCI <- function( alldata , species, ncores = 1  ){
               
      
               if ( nrow(  cellchat_score ) == 0 ){
-                cellchat_score <- data.frame(LRscore = 0, feature = "placeholder" )
+                cellchat_score <- data.frame(source = "placeholder", 
+                                             target = "placeholder",
+                                             ligand = "placeholder",
+                                             receptor = "placeholder",
+                                             prob =  "placeholder",
+                                             pval =  "placeholder",
+                                             interaction_name = "placeholder",
+                                             interaction_name_2 = "placeholder",
+                                             pathway_name = "placeholder",
+                                             annotation =  "placeholder",
+                                               evidence =  "placeholder",
+                                               source.target =  "placeholder",
+                                               prob.original =  "placeholder",
+                                             feature = "placeholder" )
               }else{
                 cellchat_score$feature <- paste0(  cellchat_score$source   , "->" , 
                                                    cellchat_score$target,
