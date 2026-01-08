@@ -1,48 +1,122 @@
  
 # helper function to run CCI 
-helper_CCI <- function( alldata , ncores = 1  ){
+helper_CCI <- function( alldata , species, ncores = 1  ){
  
   BPparam <-  generateBPParam(ncores)
  
-  data(LRdb, package = "SingleCellSignalR")
+  data("CellChatDB.human", package="CellChat")
+  data("CellChatDB.mouse", package="CellChat")
+  data("PPI.human", package="CellChat")
+  data("PPI.mouse",package="CellChat" )
   
-  # x <- unique(alldata$sample)[1]
+  if (species == "Homo sapiens"){
+    CellChatDB <- CellChatDB.human
+    PPI <- PPI.human
+  }else{
+    CellChatDB <- CellChatDB.mouse
+    PPI <- PPI.mouse
+  }
+  
+  
+  # x <- unique(alldata$sample)[2]
+ 
  
   capture.output( suppressMessages( individual_cci <- BiocParallel::bplapply(  unique(alldata$sample), function(x){
+           
+ 
     
-                        data_dataframe  <- alldata$data[, alldata$sample == x, drop=F]
-                        
-                        celltype <- as.factor( alldata$celltype[ alldata$sample == x])
-                        celltype_numeric <- as.numeric(  celltype)
-                        
-                        signal <-  SingleCellSignalR::cell_signaling(data = data_dataframe,
-                                                                     genes = rownames(data_dataframe), 
-                                                                    cluster =   celltype_numeric,
-                                                                    c.names = levels(celltype), write = FALSE)
-                        
-                        if ( length(signal) == 0 ){
-                           all_interaction <- data.frame(LRscore = 0, feature = "placeholder" )
-                        }else{
-                          # concat interaction from each cell type
-                          all_interaction <- NULL
-                          for ( i in 1:length(signal)){
-                            this_celltype <- signal[[i]]
-                            this_celltype$feature <- paste0( colnames( this_celltype )[1] , "->" , colnames( this_celltype )[2],
-                                                             "--", 
-                                                             this_celltype[, 1]  , "->", this_celltype[, 2])
-                            this_celltype <-   this_celltype[, c("LRscore", "feature")]
-                            all_interaction <- rbind( all_interaction,    this_celltype )
-                          }
-                        }
-                       
-                        all_interaction
-               }, BPPARAM = BPparam) ) )
+    err <- try({
+              this_sample_data <- alldata$data[, alldata$sample == x]
+              colnames(  this_sample_data) <- make.unique( colnames(   this_sample_data) ) 
+              
+               
+              meta = data.frame(labels = alldata$celltype[ alldata$sample == x]   )   
+              rownames(meta) <-  colnames(   this_sample_data) 
+          
+              cellchat  <- createCellChat(object =  this_sample_data , meta = meta, 
+                                          group.by = "labels")
+          
+              
+              cellchat <- setIdent(cellchat, ident.use = "labels") # set "labels" as default cell identity
+              
+              
+             
+              groupSize <- as.numeric(table(cellchat@idents)) # number of cells in each cell group
+           
+              cellchat@DB <- CellChatDB # set the used database in the object
+              
+              cellchat <- subsetData(cellchat) # subset the expression data of signaling genes for saving computation cost
+             
+              
+          
+               # do parallel
+              cellchat <- identifyOverExpressedGenes(cellchat)
+              cellchat <- identifyOverExpressedInteractions(cellchat)
+              cellchat <- smoothData(cellchat, adj = PPI)
+              
+            
+              cellchat <- computeCommunProb(cellchat)
+              cellchat <- computeCommunProbPathway(cellchat)
+              cellchat <- aggregateNet(cellchat)
+              
+              
+          
+              cellchat_score <-   netVisual_bubble(   cellchat,   return.data = TRUE )   
+              cellchat_score  <- cellchat_score $communication
+              
+            
+              
+                cellchat_score$feature <- paste0(  cellchat_score$source   , "->" , 
+                                                   cellchat_score$target,
+                                                   "--", 
+                                                  cellchat_score$ligand  , "->", 
+                                                  cellchat_score$receptor)
+
+               
+           
+              cellchat_score 
+              
+             
+    })
+    
+    if (class(err) == "try-error"){
+ 
+        cellchat_score <- data.frame(source = "placeholder", 
+                                     target = "placeholder",
+                                     ligand = "placeholder",
+                                     receptor = "placeholder",
+                                     prob =  0,
+                                     pval = 0,
+                                     interaction_name = "placeholder",
+                                     interaction_name_2 = "placeholder",
+                                     pathway_name = "placeholder",
+                                     annotation =  "placeholder",
+                                     evidence =  "placeholder",
+                                     source.target =  "placeholder",
+                                     prob.original =  0,
+                                     feature = "placeholder" )
+        
+        
+        cellchat_score 
+    
+    }else{
+      cellchat_score 
+      }
+  
+       }, BPPARAM = BPparam) ))
+  
+  
+  
+  
    
    
    # gather the cell - cell interaction probability into sample x interaction probability matrix 
    X <- NULL
    for (i in c(1:length( individual_cci))){
      temp <-   individual_cci[[i]]
+     
+     temp  <-    temp [, c("feature", "prob" )]
+     temp <- temp[ !is.na(temp$prob), ]
      temp <- temp[ !duplicated(temp$feature) ,]
    
      if (is.null(X)){
