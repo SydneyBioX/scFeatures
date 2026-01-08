@@ -462,7 +462,7 @@ plot_barplot <- function(data , dodge=F  ){
   data$patient <- unlist( lapply( strsplit( rownames(data ), "_cond_"), `[`, 1))
   data$condition <- unlist( lapply( strsplit( rownames(data ), "_cond_"), `[`, 2))
   
-  data <- as.data.frame( melt(data, id=c("patient", "condition")) )
+  data <- as.data.frame(reshape2::melt(data,  id.vars = c("patient", "condition")))
  
   if(dodge){
    p <- ggplot(data , aes( x = patient , y = value , fill = variable) ) +   
@@ -508,7 +508,9 @@ plot_boxplot <- function(data, num_feature = 3   ){
      
     tT <- topTable(fit, n = Inf) 
 
-    data <- melt(data)
+    data <-   as.data.frame(reshape2::melt(data) )
+    
+    
     
   
     print(paste0( "up regulated in ", unique(condition$condition)[1]))
@@ -523,7 +525,7 @@ plot_boxplot <- function(data, num_feature = 3   ){
       data_toplot$cond <-  unlist( lapply( strsplit(as.character(data_toplot$Var2), "_cond_"), `[`, 2))
       data_toplot$Var1 <- factor(data_toplot$Var1, levels =top_gene )
       
-      p <- ggplot( data_toplot, aes( y = value, x = Var1 , colour = cond, text = Var2)) + geom_boxplot() +   geom_point(aes(fill = cond), size = 1, shape = 21, position = position_jitterdodge()) +  theme_minimal() + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))   
+      p <- ggplot( data_toplot, aes( y = value, x = Var1 , colour = cond )) + geom_boxplot() +   geom_point(aes(fill = cond), size = 1, shape = 21, position = position_jitterdodge()) +  theme_minimal() + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))   
      
    }
   
@@ -581,7 +583,7 @@ if ("proportion_raw" %in% names(scfeatures_result)){
   
   p <-  plot_barplot(data  ) 
   
-  ggplotly(p)
+  p
  
 } 
 ```
@@ -593,8 +595,9 @@ if ("proportion_raw" %in% names(scfeatures_result)){
 ```{r}
 if ("proportion_raw" %in% names(scfeatures_result)){
   data <- scfeatures_result$proportion_raw
-  p <- plot_boxplot(data ) 
-   ggplotly(p) |> layout(boxmode = "group") 
+   p <- plot_boxplot(data ) 
+   
+   p
 } 
 ```
 
@@ -605,7 +608,7 @@ if ("proportion_raw" %in% names(scfeatures_result)){
 if ("proportion_raw" %in% names(scfeatures_result)){
     data <- scfeatures_result$proportion_raw
     p <- plot_pca(data )  
-    ggplotly(p) 
+    p
 } 
 
 ```

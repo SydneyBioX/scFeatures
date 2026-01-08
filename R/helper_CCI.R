@@ -2,6 +2,13 @@
 # helper function to run CCI 
 helper_CCI <- function( alldata , species, ncores = 1  ){
  
+  if (!requireNamespace("CellChat", quietly = TRUE)) {
+    cli::cli_abort(c(
+      "CellChat is required to compute CCI features but is not installed.",
+      "i" = "Install it from GitHub, then re-run this feature type."
+    ))
+  }
+  
   BPparam <-  generateBPParam(ncores)
  
   data("CellChatDB.human", package="CellChat")
@@ -33,11 +40,11 @@ helper_CCI <- function( alldata , species, ncores = 1  ){
               meta = data.frame(labels = alldata$celltype[ alldata$sample == x]   )   
               rownames(meta) <-  colnames(   this_sample_data) 
           
-              cellchat  <- createCellChat(object =  this_sample_data , meta = meta, 
+              cellchat  <- CellChat::createCellChat(object =  this_sample_data , meta = meta, 
                                           group.by = "labels")
           
               
-              cellchat <- setIdent(cellchat, ident.use = "labels") # set "labels" as default cell identity
+              cellchat <- CellChat::setIdent(cellchat, ident.use = "labels") # set "labels" as default cell identity
               
               
              
@@ -45,23 +52,23 @@ helper_CCI <- function( alldata , species, ncores = 1  ){
            
               cellchat@DB <- CellChatDB # set the used database in the object
               
-              cellchat <- subsetData(cellchat) # subset the expression data of signaling genes for saving computation cost
+              cellchat <- CellChat::subsetData(cellchat) # subset the expression data of signaling genes for saving computation cost
              
               
           
                # do parallel
-              cellchat <- identifyOverExpressedGenes(cellchat)
-              cellchat <- identifyOverExpressedInteractions(cellchat)
-              cellchat <- smoothData(cellchat, adj = PPI)
+              cellchat <- CellChat::identifyOverExpressedGenes(cellchat)
+              cellchat <- CellChat::identifyOverExpressedInteractions(cellchat)
+              cellchat <- CellChat::smoothData(cellchat, adj = PPI)
               
             
-              cellchat <- computeCommunProb(cellchat)
-              cellchat <- computeCommunProbPathway(cellchat)
-              cellchat <- aggregateNet(cellchat)
+              cellchat <- CellChat::computeCommunProb(cellchat)
+              cellchat <- CellChat::computeCommunProbPathway(cellchat)
+              cellchat <- CellChat::aggregateNet(cellchat)
               
               
           
-              cellchat_score <-   netVisual_bubble(   cellchat,   return.data = TRUE )   
+              cellchat_score <-   CellChat::netVisual_bubble(   cellchat,   return.data = TRUE )   
               cellchat_score  <- cellchat_score $communication
               
             

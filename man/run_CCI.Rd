@@ -4,7 +4,7 @@
 \alias{run_CCI}
 \title{Generate cell cell communication score}
 \usage{
-run_CCI(data, type = "scrna", ncores = 1)
+run_CCI(data, type = "scrna", species = "Homo sapiens", ncores = 1)
 }
 \arguments{
 \item{data}{A list object containing \code{data} matrix and \code{celltype} and \code{sample} vector.}
@@ -19,7 +19,7 @@ The features are in the form of ligand 1 receptor 2 celltype a, ligand 1 recepto
 etc, with the numbers representing cell-cell interaction probability.
 }
 \description{
-This function calculates the ligand receptor interaction score using SingleCellSignalR.
+This function calculates the ligand receptor interaction score using CellChat
 The output features are in the form of celltype a -> celltype b -- ligand 1 -> receptor 2 ,
 which indicates the interaction between ligand 1 in celltype a and receptor 2 in celltype b.
 
@@ -34,6 +34,7 @@ sample <- data$sample
 data <- as.matrix(data@assays$RNA@data)
 
 alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
-feature_CCI <- run_CCI(alldata, type = "scrna" ,  ncores = 1 )
-
+if (requireNamespace("CellChat", quietly = TRUE)) {
+  feature_CCI <- run_CCI(alldata, type = "scrna", ncores = 1)
+}
 }

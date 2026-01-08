@@ -685,7 +685,7 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' Generate cell cell communication score
 #' 
 #' @description 
-#' This function calculates the ligand receptor interaction score using SingleCellSignalR. 
+#' This function calculates the ligand receptor interaction score using CellChat
 #' The output features are in the form of celltype a -> celltype b -- ligand 1 -> receptor 2 ,
 #' which indicates the interaction between ligand 1 in celltype a and receptor 2 in celltype b. 
 #' 
@@ -708,11 +708,11 @@ run_pathway_prop <- function(data, geneset = NULL,
 #' data <- as.matrix(data@assays$RNA@data)
 #' 
 #' alldata <- scFeatures:::formatData(data = data, celltype = celltype, sample = sample )
-#' feature_CCI <- run_CCI(alldata, type = "scrna" ,  ncores = 1 )
-#' 
+#' if (requireNamespace("CellChat", quietly = TRUE)) {
+#'   feature_CCI <- run_CCI(alldata, type = "scrna", ncores = 1)
+#' }
 #' @import dplyr
 #' @import DelayedArray
-#' @import CellChat
 #' 
 #' @export
 run_CCI <- function( data, type = "scrna" ,  species = "Homo sapiens", ncores = 1  ){

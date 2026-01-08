@@ -6,7 +6,7 @@
 \usage{
 run_pathway_gsva(
   data,
-  method = "ssgsea",
+  method = "aucell",
   geneset = NULL,
   species = "Homo sapiens",
   type = "scrna",
@@ -18,7 +18,7 @@ run_pathway_gsva(
 \item{data}{A list object containing \code{data} matrix and \code{celltype} and \code{sample} vector.}
 
 \item{method}{Type of pathway analysis method, currently support \code{ssgsea}
-and \code{aucell}}
+and \code{aucell}, default to \code{aucell}}
 
 \item{geneset}{By default (when the \code{geneset} argument is not specified),
 we use the 50 hallmark gene set from msigdb.
