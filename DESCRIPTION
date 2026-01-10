@@ -55,8 +55,7 @@ Suggests:
     BiocStyle,
     ClassifyR,
     org.Hs.eg.db,
-    clusterProfiler,
-    CellChat
+    clusterProfiler
 VignetteBuilder: knitr
 URL: https://sydneybiox.github.io/scFeatures/ https://github.com/SydneyBioX/scFeatures/
 BugReports: https://github.com/SydneyBioX/scFeatures/issues
