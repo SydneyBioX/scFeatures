@@ -1,7 +1,7 @@
 Package: scFeatures
 Title: scFeatures: Multi-view representations of single-cell and spatial data
        for disease outcome prediction
-Version: 1.11.3
+Version: 1.11.4
 Authors@R: 
     c(
     person(given = "Yue",family = "Cao", email = "yue.cao@sydney.edu.au",  role=c("aut", "cre")),
@@ -55,7 +55,7 @@ Suggests:
     BiocStyle,
     ClassifyR,
     org.Hs.eg.db,
-    clusterProfiler
+    clusterProfiler,
     pheatmap
 VignetteBuilder: knitr
 URL: https://sydneybiox.github.io/scFeatures/ https://github.com/SydneyBioX/scFeatures/
