@@ -56,7 +56,15 @@ Suggests:
     ClassifyR,
     org.Hs.eg.db,
     clusterProfiler,
-    pheatmap
+    pheatmap,
+    limma,
+    ggplot2,
+    plotly,
+    igraph,
+    data.table
+    enrichplot,
+    DOSE,
+    rmarkdown
 VignetteBuilder: knitr
 URL: https://sydneybiox.github.io/scFeatures/ https://github.com/SydneyBioX/scFeatures/
 BugReports: https://github.com/SydneyBioX/scFeatures/issues

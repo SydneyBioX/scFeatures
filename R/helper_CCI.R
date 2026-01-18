@@ -26,7 +26,8 @@ helper_CCI <- function(alldata, species, ncores = 1) {
   if (!requireNamespace("CellChat", quietly = TRUE)) {
     cli::cli_abort(c(
       "CellChat is required to compute CCI features but is not installed.",
-      "i" = "Install it from GitHub, then re-run this feature type."
+      "i" = "Install it from GitHub, then re-run this feature type:",
+      " " = "devtools::install_github('immunogenomics/presto')\ndevtools::install_github('jinworks/CellChat')"
     ))
   }
   
