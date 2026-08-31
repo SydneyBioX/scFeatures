@@ -49,6 +49,10 @@ scFeatures <- function(data = NULL, sample = NULL ,  celltype = NULL,
                        spatialCoords = NULL,  spotProbability = NULL , 
                        feature_types = NULL, type = "scrna", ncores = 1,
     species = "Homo sapiens", celltype_genes = NULL, aggregated_genes = NULL, geneset = NULL ) {
+
+    if (!is.null(spatialCoords) && !methods::is(spatialCoords, "list")) {
+        stop("'spatialCoords' must be a list of two vectors containing x and y coordinates.", call. = FALSE)
+    }
     
     alldata <- formatData( data, sample, celltype,  spatialCoords , spotProbability)
   
@@ -239,8 +243,5 @@ formatData <- function(data = NULL,
   
  return(alldata) 
 }
-  
-
  
-
 
